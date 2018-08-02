@@ -23,6 +23,8 @@
     "no-underscore-dangle": "off",
     "jsx-filename-extension": "off",
     "no-extraneous-dependencies": "off",
-    "import/no-extraneous-dependencies": "off"
+    "import/no-extraneous-dependencies": "off",
+    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }]
+
   }
 }

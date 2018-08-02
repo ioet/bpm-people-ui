@@ -1,12 +1,13 @@
 
 
-import React, { Component } from 'react';
+import React from 'react';
+import PageContainer from './component/PageContainer';
 
-class App extends Component {
-  render() {
-    return (
-      <div>IOET BPM people app is running!</div>
-    );
-  }
-}
+const App = () => (
+  <div>
+    <PageContainer />
+  </div>
+);
+
+
 export default App;
