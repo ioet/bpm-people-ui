@@ -6,7 +6,7 @@
   "scripts": {
     "start": "webpack-dev-server --mode development --open",
     "build": "webpack --mode production",
-    "test": "jest"
+    "test": "jest --coverage"
   },
   "keywords": [],
   "author": "",
@@ -30,6 +30,7 @@
     "css-loader": "1.0.0",
     "enzyme": "3.3.0",
     "enzyme-adapter-react-16": "1.1.1",
+    "enzyme-to-json": "^3.3.4",
     "eslint": "5.2.0",
     "eslint-config-airbnb": "17.0.0",
     "eslint-loader": "2.1.0",
