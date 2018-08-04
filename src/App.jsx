@@ -2,9 +2,9 @@ import React from 'react';
 import PageContainer from './component/PageContainer';
 
 const App = () => (
-  <div>
+  <React.Fragment>
     <PageContainer />
-  </div>
+  </React.Fragment>
 );
 
 
