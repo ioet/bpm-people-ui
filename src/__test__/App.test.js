@@ -1,7 +1,5 @@
-
-
 import React from 'react';
-import App from '../App.jsx';
+import App from '../App';
 
 describe('<App/>', () => {
   test('Component Shallow Test', () => {
