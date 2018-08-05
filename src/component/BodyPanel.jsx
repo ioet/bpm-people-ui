@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './generalStyle.css';
+import styles from '../generalStyle.css';
 
 
 const BodyPanel = () => (

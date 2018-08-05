@@ -1,6 +1,6 @@
 import React from 'react';
 import MenuPanel from './MenuPanel';
-import styles from './generalStyle.css';
+import styles from '../generalStyle.css';
 import BodyPanel from './BodyPanel';
 
 class PageContainer extends React.Component {

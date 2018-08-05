@@ -4,9 +4,9 @@ import PageContainer from '../component/PageContainer';
 
 describe('<App/>', () => {
   test('Component Renders correctly', () => {
-    const appWrapper = global.shallow(<App />);
+    const appWrapper = shallow(<App />);
 
-    expect(global.toJson(appWrapper)).toMatchSnapshot();
+    expect(toJson(appWrapper)).toMatchSnapshot();
 
     expect(appWrapper.find(PageContainer).exists()).toBe(true);
   });
