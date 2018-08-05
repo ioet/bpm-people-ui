@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<MenuItem/> Component renders default value for prop 1`] = `
+<div
+  className="menuItemStyle"
+>
+  item
+</div>
+`;

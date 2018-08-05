@@ -1,6 +1,6 @@
 import React from 'react';
 import MenuItem from './MenuItem';
-import styles from './generalStyle.css';
+import styles from '../generalStyle.css';
 
 const MenuPanel = () => (
   <div className={styles.menuPanelStyle}>
