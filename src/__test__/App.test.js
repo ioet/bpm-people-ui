@@ -1,6 +1,5 @@
 import React from 'react';
 import App from '../App';
-import PageContainer from '../component/PageContainer';
 
 describe('<App/>', () => {
   test('Component Renders correctly', () => {
@@ -8,6 +7,6 @@ describe('<App/>', () => {
 
     expect(toJson(appWrapper)).toMatchSnapshot();
 
-    expect(appWrapper.find(PageContainer).exists()).toBe(true);
+    expect(appWrapper.find('PageContainer').length).toEqual(1);
   });
 });
