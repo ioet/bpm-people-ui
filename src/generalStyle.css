@@ -1,0 +1,37 @@
+
+:local(.pageContainerStyle) {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+}
+
+:local(.bodyPanelStyle) {
+    border: solid thin rgba(155, 49, 255, 0.05);
+    background-color: rgba(226, 226, 226, 0.62);
+    flex: 6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+:local(.menuPanelStyle) {
+    border: solid thin rgba(0, 0, 255, 0.16);
+    background-color: rgba(0, 0, 255, 0.15);
+    flex: 1;
+
+}
+
+
+:local(.menuItemStyle) {
+    height: 20%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+
+:local(.menuItemStyle):hover {
+    text-decoration: underline;
+    transform: rotate(20deg);
+}
