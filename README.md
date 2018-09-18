@@ -19,3 +19,15 @@ npm start
 ```
 npm test
 ```
+
+
+## Docker?
+
+```
+$ docker build -t bpm-people-ui .
+```
+
+
+```
+$ docker run -p 8080:8080 bpm-people-ui
+```
