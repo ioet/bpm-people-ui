@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types,react/destructuring-assignment,react/jsx-tag-spacing */
 import React from 'react';
 import Typography from '@material-ui/core/Typography/Typography';
 import Table from '@material-ui/core/Table/Table';
@@ -27,11 +28,9 @@ const styles = theme => ({
 const List = (props) => {
   const { classes } = props;
 
-  const users = props.userList.map((user) => {
-    return (
-      <ListItemContainer key={user.guid} user={user}/>
-    );
-  });
+  const users = props.userList.map(user => (
+    <ListItemContainer key={user.guid} user={user}/>
+  ));
 
   return (
     <div>

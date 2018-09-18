@@ -1,4 +1,4 @@
-/* eslint-disable camelcase */
+/* eslint-disable camelcase,max-len,no-undef */
 import { connect } from 'react-redux';
 import CreateUser from '../presentational/CreateUser';
 
