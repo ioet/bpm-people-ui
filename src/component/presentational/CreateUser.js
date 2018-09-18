@@ -1,3 +1,4 @@
+/* eslint-disable react/destructuring-assignment,react/prop-types,react/prefer-stateless-function,no-class-assign */
 import React from 'react';
 import { connect } from 'react-redux';
 import Button from '@material-ui/core/Button';
@@ -21,7 +22,6 @@ const theme = createMuiTheme({
 });
 
 class CreateUser extends React.Component {
-
   render() {
     const { classes } = this.props;
     return (
@@ -68,10 +68,10 @@ class CreateUser extends React.Component {
             Create user
           </Button>
         </form>
-        <br/>
+        <br />
       </div>
     );
-  };
+  }
 }
 
 CreateUser = connect()(CreateUser);

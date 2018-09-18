@@ -1,3 +1,4 @@
+/* eslint-disable react/destructuring-assignment,react/prop-types */
 import React from 'react';
 import TableRow from '@material-ui/core/TableRow/TableRow';
 import TableCell from '@material-ui/core/TableCell/TableCell';
@@ -19,19 +20,19 @@ class ListItem extends React.Component {
       <TableRow>
         <TableCell component="th" scope="row">
           {this.display_name}
-          {/*<input name="display_name" type="text"*/}
-          {/*defaultValue={this.display_name}*/}
-          {/*ref={node => {*/}
-          {/*this.display_name = node;*/}
-          {/*}}/>*/}
+          {/* <input name="display_name" type="text" */}
+          {/* defaultValue={this.display_name} */}
+          {/* ref={node => { */}
+          {/* this.display_name = node; */}
+          {/* }}/> */}
         </TableCell>
         <TableCell>
           {this.authentication_identity}
-          {/*<input name="authentication_identity" type="text"*/}
-          {/*defaultValue={this.authentication_identity}*/}
-          {/*ref={node => {*/}
-          {/*this.authentication_identity = node;*/}
-          {/*}}/>*/}
+          {/* <input name="authentication_identity" type="text" */}
+          {/* defaultValue={this.authentication_identity} */}
+          {/* ref={node => { */}
+          {/* this.authentication_identity = node; */}
+          {/* }}/> */}
         </TableCell>
         <TableCell
           numeric
@@ -44,7 +45,7 @@ class ListItem extends React.Component {
           {/* pencil icon */}
           &#x270E;
           {/* check mark */}
-          {/*&#10004;*/}
+          {/* &#10004; */}
         </TableCell>
         <TableCell
           numeric

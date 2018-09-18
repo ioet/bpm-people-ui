@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import { connect } from 'react-redux';
 import ListItem from '../presentational/ListItem';
 
@@ -44,7 +45,7 @@ const mapDispatchToProps = dispatch => ({
   },
   onUserRemoved: (user) => {
     // delete user per api
-    const url = 'http://localhost:3001/people/' + user.guid;
+    const url = `http://localhost:3001/people/${user.guid}`;
     fetch(url, {
       method: 'delete',
     })

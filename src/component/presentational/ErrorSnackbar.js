@@ -1,3 +1,4 @@
+/* eslint-disable react/destructuring-assignment,react/prop-types */
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Snackbar from '@material-ui/core/Snackbar';
@@ -14,7 +15,6 @@ const styles = theme => ({
 });
 
 function ErrorSnackbar(props) {
-  const { classes } = props;
   return (
     <Snackbar
       style={snackbarStyle}

@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types,react/jsx-tag-spacing */
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button/Button';
