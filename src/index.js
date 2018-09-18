@@ -46,8 +46,8 @@ const userEditData = (state = [], action) => {
     case 'EDIT_USER_END':
       return ({
         guid: '',
-        display_name: '',
-        authentication_identity: '',
+        display_name: null,
+        authentication_identity: null,
       });
     default:
       return state;
