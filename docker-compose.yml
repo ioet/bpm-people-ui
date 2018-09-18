@@ -1,0 +1,16 @@
+version: '3.5'
+
+services:
+
+  bpm-people-api:
+    container_name: bpm-people-ui
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+    - '.:/usr/src/app'
+    - '/usr/src/app/node_modules'
+    ports:
+    - '8080:8080'
+    environment:
+    - NODE_ENV=development
