@@ -57,7 +57,6 @@ function createUser(dispatch) {
 }
 
 const mapStateToProps = (state) => {
-  console.log('map state to props', state);
   return ({
     display_name: state.userCreationData.display_name,
     authentication_identity: state.userCreationData.authentication_identity,
