@@ -1,22 +1,10 @@
 /* eslint-disable no-undef,camelcase,prefer-destructuring,max-len */
 import { connect } from 'react-redux';
 import ListItem from '../presentational/ListItem';
+import { handleErrors, validateEmail } from '../utils/Utils';
 
 let display_name = null;
 let authentication_identity = null;
-
-function validateEmail(email) {
-  const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-  return re.test(email);
-}
-
-function handleErrors(response) {
-  if (!response.ok) {
-    alert(response.statusText);
-    throw Error(response.statusText);
-  }
-  return response;
-}
 
 const updateUser = (user, dispatch) => {
   // TODO create PUT method in API

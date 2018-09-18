@@ -1,22 +1,10 @@
 /* eslint-disable camelcase,max-len,no-undef */
 import { connect } from 'react-redux';
 import CreateUser from '../presentational/CreateUser';
+import { handleErrors, validateEmail } from '../utils/Utils';
 
 let display_name;
 let authentication_identity;
-
-function validateEmail(email) {
-  const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-  return re.test(email);
-}
-
-function handleErrors(response) {
-  if (!response.ok) {
-    alert(response.statusText);
-    throw Error(response.statusText);
-  }
-  return response;
-}
 
 function createUser(dispatch) {
   const url = 'http://localhost:3001/people';
