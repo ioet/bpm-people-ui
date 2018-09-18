@@ -2,8 +2,8 @@
 import { connect } from 'react-redux';
 import ListItem from '../presentational/ListItem';
 
-let display_name = '';
-let authentication_identity = '';
+let display_name = null;
+let authentication_identity = null;
 
 function validateEmail(email) {
   const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -44,7 +44,20 @@ const updateUser = (user, dispatch) => {
   dispatch({
     type: 'EDIT_USER_END',
   });
+
+  if (display_name === null && authentication_identity === null) return;
+  if (display_name === null) display_name = user.display_name;
+  if (authentication_identity === null) authentication_identity = user.authentication_identity;
+
   if (typeof display_name === 'undefined' || display_name === '') {
+    dispatch({
+      type: 'ERROR_MESSAGE',
+      open: true,
+      message: 'Please enter a valid name',
+    });
+    return;
+  }
+  if (typeof authentication_identity === 'undefined' || authentication_identity === '') {
     dispatch({
       type: 'ERROR_MESSAGE',
       open: true,
@@ -60,8 +73,6 @@ const updateUser = (user, dispatch) => {
     });
     return;
   }
-  if (display_name === '') display_name = user.display_name;
-  if (authentication_identity === '') authentication_identity = user.authentication_identity;
   dispatch({
     type: 'UPDATE_USER',
     user: {
@@ -70,8 +81,8 @@ const updateUser = (user, dispatch) => {
       authentication_identity,
     },
   });
-  display_name = '';
-  authentication_identity = '';
+  display_name = null;
+  authentication_identity = null;
 };
 
 const mapStateToProps = (state, ownProps) => ({
