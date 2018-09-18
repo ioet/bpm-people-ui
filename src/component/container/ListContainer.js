@@ -1,14 +1,7 @@
 /* eslint-disable no-undef */
 import { connect } from 'react-redux';
 import List from '../presentational/List';
-
-function handleErrors(response) {
-  if (!response.ok) {
-    alert(response.statusText);
-    throw Error(response.statusText);
-  }
-  return response;
-}
+import { handleErrors } from '../utils/Utils';
 
 const getUsers = (dispatch) => {
   const url = 'http://localhost:3001/people';
