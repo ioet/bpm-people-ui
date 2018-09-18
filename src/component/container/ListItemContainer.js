@@ -1,6 +1,14 @@
-/* eslint-disable no-undef */
+/* eslint-disable no-undef,camelcase,prefer-destructuring,max-len */
 import { connect } from 'react-redux';
 import ListItem from '../presentational/ListItem';
+
+let display_name = '';
+let authentication_identity = '';
+
+function validateEmail(email) {
+  const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return re.test(email);
+}
 
 function handleErrors(response) {
   if (!response.ok) {
@@ -10,37 +18,88 @@ function handleErrors(response) {
   return response;
 }
 
+const updateUser = (user, dispatch) => {
+  // TODO create PUT method in API
+
+  // update user per api
+
+  // let url = 'http://localhost:3001/people/' + guid;
+  // fetch(url, {
+  //     method: 'put',
+  //     headers: {
+  //         'Content-Type': 'application/json'
+  //     },
+  //     body: JSON.stringify({
+  //         name: user.display_name,
+  //         authentication_identity: user.authentication_identity
+  //     })
+  // })
+  //     .then(handleErrors)
+  //     .then(() => this.props.onUserUpdated(user))
+  //     .catch(function (error) {
+  //         alert(error);
+  //         console.log(error);
+  //     });
+
+  dispatch({
+    type: 'EDIT_USER_END',
+  });
+  if (typeof display_name === 'undefined' || display_name === '') {
+    dispatch({
+      type: 'ERROR_MESSAGE',
+      open: true,
+      message: 'Please enter a valid name',
+    });
+    return;
+  }
+  if (!validateEmail(authentication_identity)) {
+    dispatch({
+      type: 'ERROR_MESSAGE',
+      open: true,
+      message: 'Please enter a valid email',
+    });
+    return;
+  }
+  if (display_name === '') display_name = user.display_name;
+  if (authentication_identity === '') authentication_identity = user.authentication_identity;
+  dispatch({
+    type: 'UPDATE_USER',
+    user: {
+      guid: user.guid,
+      display_name,
+      authentication_identity,
+    },
+  });
+  display_name = '';
+  authentication_identity = '';
+};
+
 const mapStateToProps = (state, ownProps) => ({
   user: ownProps.user,
+  edit: (typeof state.userEditData.guid === 'undefined') ? '' : state.userEditData.guid,
 });
 
 const mapDispatchToProps = dispatch => ({
-  onUserUpdated: (user) => {
-    // TODO create PUT method in API
-
-    // update user per api
-
-    // let url = 'http://localhost:3001/people/' + guid;
-    // fetch(url, {
-    //     method: 'put',
-    //     headers: {
-    //         'Content-Type': 'application/json'
-    //     },
-    //     body: JSON.stringify({
-    //         name: user.display_name,
-    //         authentication_identity: user.authentication_identity
-    //     })
-    // })
-    //     .then(handleErrors)
-    //     .then(() => this.props.onUserUpdated(user))
-    //     .catch(function (error) {
-    //         alert(error);
-    //         console.log(error);
-    //     });
-
+  onUserEdit: (event, user) => {
+    if (event.target.innerHTML === '✎') {
+      dispatch({
+        type: 'EDIT_USER_GUID',
+        user,
+      });
+    } else {
+      updateUser(user, dispatch);
+    }
+  },
+  onChange: (event) => {
+    if (event.target.name === 'display_name') {
+      display_name = event.target.value;
+    } else {
+      authentication_identity = event.target.value;
+    }
     dispatch({
-      type: 'UPDATE_USER',
-      user,
+      type: 'EDIT_USER_DATA',
+      display_name,
+      authentication_identity,
     });
   },
   onUserRemoved: (user) => {

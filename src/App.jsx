@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types,react/jsx-tag-spacing */
 import React from 'react';
 import Paper from '@material-ui/core/Paper/Paper';
 import withStyles from '@material-ui/core/styles/withStyles';
@@ -14,7 +15,7 @@ const styles = theme => ({
     paddingBottom: theme.spacing.unit * 1,
     paddingLeft: theme.spacing.unit * 2,
     paddingRight: theme.spacing.unit * 2,
-    width: '40%',
+    width: '50%',
     margin: 'auto',
   },
 });

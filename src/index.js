@@ -1,3 +1,4 @@
+/* eslint-disable no-plusplus,no-undef */
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
@@ -24,6 +25,29 @@ const userCreationData = (state = [], action) => {
       return ({
         display_name: action.display_name,
         authentication_identity: action.authentication_identity,
+      });
+    default:
+      return state;
+  }
+};
+
+const userEditData = (state = [], action) => {
+  switch (action.type) {
+    case 'EDIT_USER_GUID':
+      return ({
+        guid: action.user.guid,
+      });
+    case 'EDIT_USER_DATA':
+      return ({
+        guid: state.guid,
+        display_name: action.display_name,
+        authentication_identity: action.authentication_identity,
+      });
+    case 'EDIT_USER_END':
+      return ({
+        guid: '',
+        display_name: '',
+        authentication_identity: '',
       });
     default:
       return state;
@@ -94,6 +118,7 @@ const peopleApp = combineReducers({
   userCreationData,
   userList,
   error,
+  userEditData,
 });
 
 document.addEventListener('DOMContentLoaded', () => {
