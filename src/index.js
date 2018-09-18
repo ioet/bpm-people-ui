@@ -7,10 +7,10 @@ import App from './App';
 console.log('Hello World!');
 
 const error = (state = [], action) => {
-  console.log('dispatched', action);
   switch (action.type) {
     case 'ERROR_MESSAGE':
       return ({
+        open: action.open,
         message: action.message,
       });
     default:

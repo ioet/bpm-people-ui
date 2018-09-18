@@ -35,9 +35,9 @@ const mapDispatchToProps = (dispatch) => {
   getUsers(dispatch);
 };
 
-const ListData = connect(
+const ListContainer = connect(
   mapStateToProps,
   mapDispatchToProps,
 )(List);
 
-export default ListData;
+export default ListContainer;

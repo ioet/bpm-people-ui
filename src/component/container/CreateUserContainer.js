@@ -33,32 +33,36 @@ function createUser(dispatch) {
     .then(handleErrors)
     .then(res => res.json())
     .then((result) => {
-        // update the list
-        dispatch({
-          type: 'ADD_USER',
-          guid: result.guid,
-          display_name,
-          authentication_identity,
-        });
+      // update the list
+      dispatch({
+        type: 'ADD_USER',
+        guid: result.guid,
+        display_name,
+        authentication_identity,
+      });
 
-        // clear the fields
-        dispatch({
-          type: 'USER_CREATION_DATA',
-          display_name: '',
-          authentication_identity: '',
-        });
-      }
-    )
+      // clear the fields
+      display_name = '';
+      authentication_identity = '';
+      dispatch({
+        type: 'USER_CREATION_DATA',
+        display_name: '',
+        authentication_identity: '',
+      });
+    })
     .catch((e) => {
       alert(e);
       console.log(e);
     });
 }
 
-const mapStateToProps = state => ({
-  display_name: state.userCreationData.display_name,
-  authentication_identity: state.userCreationData.authentication_identity,
-});
+const mapStateToProps = (state) => {
+  console.log('map state to props', state);
+  return ({
+    display_name: state.userCreationData.display_name,
+    authentication_identity: state.userCreationData.authentication_identity,
+  });
+};
 
 const mapDispatchToProps = dispatch => ({
   onChange: (event) => {
@@ -74,17 +78,20 @@ const mapDispatchToProps = dispatch => ({
     });
   },
   validateInput: () => {
-    console.log('display_name', display_name);
     if (typeof display_name === 'undefined' || display_name === '') {
-      console.log('dispatching');
       dispatch({
         type: 'ERROR_MESSAGE',
-        message: 'Empty fields not supported',
+        open: true,
+        message: 'Please enter a valid name',
       });
       return;
     }
     if (!validateEmail(authentication_identity)) {
-      console.log('Please enter a valid email');
+      dispatch({
+        type: 'ERROR_MESSAGE',
+        open: true,
+        message: 'Please enter a valid email',
+      });
       return;
     }
     createUser(dispatch);
