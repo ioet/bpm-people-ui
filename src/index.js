@@ -1,9 +1,10 @@
-/* eslint-disable no-plusplus,no-undef */
+/* eslint-disable no-plusplus,no-undef,react/jsx-tag-spacing */
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { createStore, combineReducers } from 'redux';
 import App from './App';
+import { compareUsersByFirstName } from './component/utils/Utils';
 
 console.log('Hello World!');
 
@@ -87,12 +88,12 @@ const userList = (state = [], action) => {
       return [
         ...state,
         user(undefined, action),
-      ];
+      ].sort(compareUsersByFirstName);
     case 'ADD_USERS':
       return [
         ...state,
         ...user(undefined, action),
-      ];
+      ].sort(compareUsersByFirstName);
     case 'UPDATE_USER':
       for (let i = 0; i < copy.length; i++) {
         if (copy[i].guid === action.user.guid) {
@@ -124,7 +125,7 @@ const peopleApp = combineReducers({
 document.addEventListener('DOMContentLoaded', () => {
   ReactDOM.render(
     <Provider store={createStore(peopleApp)}>
-      <App />
+      <App/>
     </Provider>,
     document.getElementById('root'),
   );
