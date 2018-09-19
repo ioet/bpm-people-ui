@@ -1,7 +1,7 @@
-/* eslint-disable no-undef,camelcase,prefer-destructuring,max-len */
+/* eslint-disable no-undef,camelcase,prefer-destructuring,max-len,prefer-arrow-callback */
 import { connect } from 'react-redux';
 import ListItem from '../presentational/ListItem';
-import { handleErrors, validateEmail } from '../utils/Utils';
+import { handleErrors, PEOPLE_API, validateEmail } from '../utils/Utils';
 
 let display_name = null;
 let authentication_identity = null;
@@ -11,8 +11,7 @@ const updateUser = (user, dispatch) => {
 
   // update user per api
 
-  // let url = 'http://localhost:3001/people/' + guid;
-  // fetch(url, {
+  // fetch(`${PEOPLE_API}/${user.guid}`, {
   //     method: 'put',
   //     headers: {
   //         'Content-Type': 'application/json'
@@ -103,8 +102,7 @@ const mapDispatchToProps = dispatch => ({
   },
   onUserRemoved: (user) => {
     // delete user per api
-    const url = `http://localhost:3001/people/${user.guid}`;
-    fetch(url, {
+    fetch(`${PEOPLE_API}/${user.guid}`, {
       method: 'delete',
     })
       .then(handleErrors)
@@ -115,7 +113,7 @@ const mapDispatchToProps = dispatch => ({
           user,
         });
       })
-      .catch((error) => {
+      .catch(function (error) {
         alert(error);
         console.log(error);
       });
