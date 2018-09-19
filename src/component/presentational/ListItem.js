@@ -9,6 +9,12 @@ import { blue } from '@material-ui/core/colors';
 import withStyles from '@material-ui/core/styles/withStyles';
 import Typography from '@material-ui/core/Typography/Typography';
 
+const tableCellStyle = {
+  padding: '4px 24px',
+  maxWidth: '120px',
+  minWidth: '120px',
+};
+
 const pointerButtonStyle = {
   cursor: 'pointer',
   padding: '7px',
@@ -38,7 +44,7 @@ class ListItem extends React.Component {
 
     return (
       <TableRow>
-        <TableCell component="th" scope="row">
+        <TableCell component="th" scope="row" style={tableCellStyle}>
           {
             (this.props.edit === this.props.user.guid)
               ? (
@@ -62,7 +68,7 @@ class ListItem extends React.Component {
               )
           }
         </TableCell>
-        <TableCell>
+        <TableCell style={tableCellStyle}>
           {
             (this.props.edit === this.props.user.guid)
               ? (
