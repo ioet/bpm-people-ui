@@ -14,3 +14,13 @@ export function handleErrors(response) {
   }
   return response;
 }
+
+export function compareUsersByFirstName(a, b) {
+  if (a.display_name.toLowerCase() < b.display_name.toLowerCase()) {
+    return -1;
+  }
+  if (a.display_name.toLowerCase() > b.display_name.toLowerCase()) {
+    return 1;
+  }
+  return 0;
+}
