@@ -1,14 +1,13 @@
 /* eslint-disable camelcase,max-len,no-undef */
 import { connect } from 'react-redux';
 import CreateUser from '../presentational/CreateUser';
-import { handleErrors, validateEmail } from '../utils/Utils';
+import { handleErrors, PEOPLE_API, validateEmail } from '../utils/Utils';
 
 let display_name;
 let authentication_identity;
 
 function createUser(dispatch) {
-  const url = 'http://localhost:3001/people';
-  fetch(url, {
+  fetch(PEOPLE_API, {
     method: 'post',
     headers: {
       'Content-Type': 'application/json',
@@ -44,12 +43,10 @@ function createUser(dispatch) {
     });
 }
 
-const mapStateToProps = (state) => {
-  return ({
-    display_name: state.userCreationData.display_name,
-    authentication_identity: state.userCreationData.authentication_identity,
-  });
-};
+const mapStateToProps = state => ({
+  display_name: state.userCreationData.display_name,
+  authentication_identity: state.userCreationData.authentication_identity,
+});
 
 const mapDispatchToProps = dispatch => ({
   onChange: (event) => {

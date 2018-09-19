@@ -37,7 +37,11 @@ class CreateUser extends React.Component {
           <MuiThemeProvider theme={theme}>
             <TextField
               name="display_name"
-              value={this.props.display_name}
+              value={
+                (typeof this.props.display_name === 'undefined')
+                  ? ''
+                  : this.props.display_name
+              }
               className={classes.margin}
               label="Enter your name"
               id="mui-theme-provider-input"
@@ -52,7 +56,11 @@ class CreateUser extends React.Component {
           <MuiThemeProvider theme={theme}>
             <TextField
               name="authentication_identity"
-              value={this.props.authentication_identity}
+              value={
+                (typeof this.props.authentication_identity === 'undefined')
+                  ? ''
+                  : this.props.authentication_identity
+              }
               className={classes.margin}
               label="Enter your email"
               id="mui-theme-provider-input"
