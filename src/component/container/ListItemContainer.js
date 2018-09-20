@@ -7,31 +7,11 @@ let display_name = null;
 let authentication_identity = null;
 
 const updateUser = (user, dispatch) => {
-  // TODO create PUT method in API
-
-  // update user per api
-
-  // fetch(`${PEOPLE_API}/${user.guid}`, {
-  //     method: 'put',
-  //     headers: {
-  //         'Content-Type': 'application/json'
-  //     },
-  //     body: JSON.stringify({
-  //         name: user.display_name,
-  //         authentication_identity: user.authentication_identity
-  //     })
-  // })
-  //     .then(handleErrors)
-  //     .then(() => this.props.onUserUpdated(user))
-  //     .catch(function (error) {
-  //         alert(error);
-  //         console.log(error);
-  //     });
-
   dispatch({
     type: 'EDIT_USER_END',
   });
 
+  // check input
   if (display_name === null && authentication_identity === null) return;
   if (display_name === null) display_name = user.display_name;
   if (authentication_identity === null) authentication_identity = user.authentication_identity;
@@ -60,16 +40,35 @@ const updateUser = (user, dispatch) => {
     });
     return;
   }
-  dispatch({
-    type: 'UPDATE_USER',
-    user: {
-      guid: user.guid,
+
+  // update user per api
+  fetch(`${PEOPLE_API}/${user.guid}`, {
+    method: 'put',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
       display_name,
       authentication_identity,
-    },
-  });
-  display_name = null;
-  authentication_identity = null;
+    }),
+  })
+    .then(handleErrors)
+    .then(() => {
+      dispatch({
+        type: 'UPDATE_USER',
+        user: {
+          guid: user.guid,
+          display_name,
+          authentication_identity,
+        },
+      });
+      display_name = null;
+      authentication_identity = null;
+    })
+    .catch(function (error) {
+      alert(error);
+      console.log(error);
+    });
 };
 
 const mapStateToProps = (state, ownProps) => ({
