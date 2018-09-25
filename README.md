@@ -8,6 +8,12 @@ In order to set up and run the project, follow these steps:
 npm install
 ```
 
+## Configure environment variables
+
+```
+export REACT_APP_BPM_PEOPLE_API_URL=http://yourURL.example/path
+```
+
 ## Running the app
 
 ```
