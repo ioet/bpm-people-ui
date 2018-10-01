@@ -2,7 +2,9 @@
 import { connect } from 'react-redux';
 import CreateUser from '../presentational/CreateUser';
 import { handleErrors, PEOPLE_API, validateEmail } from '../utils/Utils';
-import { addUser, resetUserCreationData, setErrorMessage, setUserCreationData } from '../../index';
+import {
+  addUser, resetUserCreationData, setErrorMessage, setUserCreationData,
+} from '../../actions';
 
 let name;
 let authentication_identity;
