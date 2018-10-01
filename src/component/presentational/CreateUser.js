@@ -31,7 +31,7 @@ class CreateUser extends React.Component {
         </Typography>
         <form onSubmit={(e) => {
           e.preventDefault();
-          this.props.validateInput();
+          this.props.createUser();
         }}
         >
           <MuiThemeProvider theme={theme}>

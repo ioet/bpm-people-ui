@@ -10,8 +10,7 @@ export function validateEmail(email) {
 
 export function handleErrors(response) {
   if (!response.ok) {
-    alert(response.statusText);
-    throw Error(response.statusText);
+    throw Error(response.status);
   }
   return response;
 }
