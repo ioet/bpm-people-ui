@@ -2,7 +2,7 @@
 import { connect } from 'react-redux';
 import List from '../presentational/List';
 import { handleErrors, PEOPLE_API } from '../utils/Utils';
-import { addUsers } from '../../index';
+import { addUsers } from '../../actions';
 
 const getUsers = (dispatch) => {
   fetch(PEOPLE_API)

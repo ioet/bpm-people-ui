@@ -8,8 +8,8 @@ import {
   setEditUserFinished,
   setEditUserId,
   setErrorMessage,
-  setUpdateUser
-} from '../../index';
+  setUpdateUser,
+} from '../../actions';
 
 let name = null;
 let authentication_identity = null;
