@@ -2,15 +2,25 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import { createStore } from 'redux';
+import thunkMiddleware from 'redux-thunk';
+import { applyMiddleware, createStore } from 'redux';
 import App from './App';
-import { peopleApp } from './reducers';
+import rootReducer from './reducers';
+import { getAllUsersAsync } from './actions';
 
 console.log('Hello World!');
 
+const store = createStore(
+  rootReducer,
+  applyMiddleware(
+    thunkMiddleware, // lets us dispatch() functions
+  ),
+);
+store.dispatch(getAllUsersAsync());
+
 document.addEventListener('DOMContentLoaded', () => {
   ReactDOM.render(
-    <Provider store={createStore(peopleApp)}>
+    <Provider store={store}>
       <App/>
     </Provider>,
     document.getElementById('root'),

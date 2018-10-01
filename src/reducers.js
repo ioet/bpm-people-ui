@@ -1,9 +1,17 @@
 import { combineReducers } from 'redux';
 import { compareUsersByFirstName } from './component/utils/Utils';
+import {
+  ADD_USER, ADD_USERS,
+  USER_CREATION_DATA,
+  EDIT_USER_ID, EDIT_USER_DATA, EDIT_USER_FINISH,
+  REMOVE_USER,
+  UPDATE_USER,
+  ERROR_MESSAGE, USER_CREATION_DATA_RESET,
+} from './actions';
 
 const error = (state = [], action) => {
   switch (action.type) {
-    case 'ERROR_MESSAGE':
+    case ERROR_MESSAGE:
       return ({
         open: action.open,
         message: action.message,
@@ -15,11 +23,16 @@ const error = (state = [], action) => {
 
 const userCreationData = (state = [], action) => {
   switch (action.type) {
-    case 'USER_CREATION_DATA':
+    case USER_CREATION_DATA:
       return ({
-        name: action.name,
-        authentication_identity: action.authentication_identity,
+        ...state,
+        [action.field]: action.name,
       });
+    case USER_CREATION_DATA_RESET:
+      return {
+        name: '',
+        authentication_identity: '',
+      };
     default:
       return state;
   }
@@ -27,17 +40,16 @@ const userCreationData = (state = [], action) => {
 
 const userEditData = (state = [], action) => {
   switch (action.type) {
-    case 'EDIT_USER_ID':
+    case EDIT_USER_ID:
       return ({
         id: action.id,
       });
-    case 'EDIT_USER_DATA':
+    case EDIT_USER_DATA:
       return ({
-        id: state.id,
-        name: action.name,
-        authentication_identity: action.authentication_identity,
+        ...state,
+        [action.field]: action.name,
       });
-    case 'EDIT_USER_FINISH':
+    case EDIT_USER_FINISH:
       return ({
         id: '',
         name: null,
@@ -50,15 +62,15 @@ const userEditData = (state = [], action) => {
 
 const user = (state, action) => {
   switch (action.type) {
-    case 'ADD_USER':
+    case ADD_USER:
       return {
         id: action.id,
         name: action.name,
         authentication_identity: action.authentication_identity,
       };
-    case 'ADD_USERS':
+    case ADD_USERS:
       return action.user.map(u => u);
-    case 'UPDATE_USER':
+    case UPDATE_USER:
       // check if state.id is accessible here
       if (state.id !== action.user.id) {
         return state;
@@ -77,17 +89,17 @@ const user = (state, action) => {
 const userList = (state = [], action) => {
   const copy = state.slice();
   switch (action.type) {
-    case 'ADD_USER':
+    case ADD_USER:
       return [
         ...state,
         user(undefined, action),
       ].sort(compareUsersByFirstName);
-    case 'ADD_USERS':
+    case ADD_USERS:
       return [
         ...state,
         ...user(undefined, action),
       ].sort(compareUsersByFirstName);
-    case 'UPDATE_USER':
+    case UPDATE_USER:
       for (let i = 0; i < copy.length; i++) {
         if (copy[i].id === action.user.id) {
           copy[i] = action.user;
@@ -95,7 +107,7 @@ const userList = (state = [], action) => {
         }
       }
       return [...copy];
-    case 'REMOVE_USER':
+    case REMOVE_USER:
       for (let i = 0; i < copy.length; i++) {
         if (copy[i].id === action.user.id) {
           copy.splice(i, 1);
@@ -108,9 +120,11 @@ const userList = (state = [], action) => {
   }
 };
 
-export const peopleApp = combineReducers({
+const rootReducer = combineReducers({
   userCreationData,
   userList,
   error,
   userEditData,
 });
+
+export default rootReducer;
