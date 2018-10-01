@@ -29,7 +29,7 @@ const List = (props) => {
   const { classes } = props;
 
   const users = props.userList.map(user => (
-    <ListItemContainer key={user.guid} user={user}/>
+    <ListItemContainer key={user.id} user={user}/>
   ));
 
   return (
