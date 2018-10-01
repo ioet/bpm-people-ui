@@ -1,5 +1,6 @@
 import { connect } from 'react-redux';
 import ErrorSnackbar from '../presentational/ErrorSnackbar';
+import { hideErrorMessage } from '../../index';
 
 const mapStateToProps = state => ({
   open: state.error.open,
@@ -8,11 +9,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   handleClose: () => {
-    dispatch({
-      type: 'ERROR_MESSAGE',
-      open: false,
-      message: '',
-    });
+    dispatch(hideErrorMessage());
   },
 });
 

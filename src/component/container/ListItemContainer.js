@@ -2,14 +2,20 @@
 import { connect } from 'react-redux';
 import ListItem from '../presentational/ListItem';
 import { handleErrors, PEOPLE_API, validateEmail } from '../utils/Utils';
+import {
+  removeUser,
+  setEditUserData,
+  setEditUserFinished,
+  setEditUserId,
+  setErrorMessage,
+  setUpdateUser
+} from '../../index';
 
 let name = null;
 let authentication_identity = null;
 
 const updateUser = (user, dispatch) => {
-  dispatch({
-    type: 'EDIT_USER_END',
-  });
+  dispatch(setEditUserFinished());
 
   // check input
   if (name === null && authentication_identity === null) return;
@@ -17,27 +23,15 @@ const updateUser = (user, dispatch) => {
   if (authentication_identity === null) authentication_identity = user.authentication_identity;
 
   if (typeof name === 'undefined' || name === '') {
-    dispatch({
-      type: 'ERROR_MESSAGE',
-      open: true,
-      message: 'Please enter a valid name',
-    });
+    dispatch(setErrorMessage('Please enter a valid name'));
     return;
   }
   if (typeof authentication_identity === 'undefined' || authentication_identity === '') {
-    dispatch({
-      type: 'ERROR_MESSAGE',
-      open: true,
-      message: 'Please enter a valid name',
-    });
+    dispatch(setErrorMessage('Please enter a valid email'));
     return;
   }
   if (!validateEmail(authentication_identity)) {
-    dispatch({
-      type: 'ERROR_MESSAGE',
-      open: true,
-      message: 'Please enter a valid email',
-    });
+    dispatch(setErrorMessage('Please enter a valid email'));
     return;
   }
 
@@ -54,14 +48,12 @@ const updateUser = (user, dispatch) => {
   })
     .then(handleErrors)
     .then(() => {
-      dispatch({
-        type: 'UPDATE_USER',
-        user: {
-          id: user.id,
-          name,
-          authentication_identity,
-        },
-      });
+      const userToUpdate = {
+        id: user.id,
+        name,
+        authentication_identity,
+      };
+      dispatch(setUpdateUser(userToUpdate));
       name = null;
       authentication_identity = null;
     })
@@ -79,10 +71,7 @@ const mapStateToProps = (state, ownProps) => ({
 const mapDispatchToProps = dispatch => ({
   onUserEdit: (event, user) => {
     if (event.target.innerHTML === '✎') {
-      dispatch({
-        type: 'EDIT_USER_ID',
-        user,
-      });
+      dispatch(setEditUserId(user.id));
     } else {
       updateUser(user, dispatch);
     }
@@ -93,11 +82,7 @@ const mapDispatchToProps = dispatch => ({
     } else {
       authentication_identity = event.target.value;
     }
-    dispatch({
-      type: 'EDIT_USER_DATA',
-      name,
-      authentication_identity,
-    });
+    dispatch(setEditUserData(name, authentication_identity));
   },
   onUserRemoved: (user) => {
     // delete user per api
@@ -107,10 +92,7 @@ const mapDispatchToProps = dispatch => ({
       .then(handleErrors)
       .then(() => {
         // on success remove user from state
-        dispatch({
-          type: 'REMOVE_USER',
-          user,
-        });
+        dispatch(removeUser(user));
       })
       .catch(function (error) {
         alert(error);

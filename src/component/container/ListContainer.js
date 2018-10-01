@@ -2,16 +2,14 @@
 import { connect } from 'react-redux';
 import List from '../presentational/List';
 import { handleErrors, PEOPLE_API } from '../utils/Utils';
+import { addUsers } from '../../index';
 
 const getUsers = (dispatch) => {
   fetch(PEOPLE_API)
     .then(handleErrors)
     .then(res => res.json())
-    .then((result) => {
-      dispatch({
-        type: 'ADD_USERS',
-        user: result,
-      });
+    .then((allUsers) => {
+      dispatch(addUsers(allUsers));
     })
     .catch(function (error) {
       alert(error);
