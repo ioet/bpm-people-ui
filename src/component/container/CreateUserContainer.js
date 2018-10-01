@@ -2,6 +2,7 @@
 import { connect } from 'react-redux';
 import CreateUser from '../presentational/CreateUser';
 import { handleErrors, PEOPLE_API, validateEmail } from '../utils/Utils';
+import { addUser, resetUserCreationData, setErrorMessage, setUserCreationData } from '../../index';
 
 let name;
 let authentication_identity;
@@ -21,21 +22,17 @@ function createUser(dispatch) {
     .then(res => res.json())
     .then((result) => {
       // update the list
-      dispatch({
-        type: 'ADD_USER',
+      const user = {
         id: result.id,
         name,
         authentication_identity,
-      });
+      };
+      dispatch(addUser(user));
 
       // clear the fields
       name = '';
       authentication_identity = '';
-      dispatch({
-        type: 'USER_CREATION_DATA',
-        name: '',
-        authentication_identity: '',
-      });
+      dispatch(resetUserCreationData());
     })
     .catch((e) => {
       alert(e);
@@ -55,27 +52,15 @@ const mapDispatchToProps = dispatch => ({
     } else {
       authentication_identity = event.target.value;
     }
-    dispatch({
-      type: 'USER_CREATION_DATA',
-      name,
-      authentication_identity,
-    });
+    dispatch(setUserCreationData(name, authentication_identity));
   },
   validateInput: () => {
     if (typeof name === 'undefined' || name === '') {
-      dispatch({
-        type: 'ERROR_MESSAGE',
-        open: true,
-        message: 'Please enter a valid name',
-      });
+      dispatch(setErrorMessage('Please enter a valid name'));
       return;
     }
     if (!validateEmail(authentication_identity)) {
-      dispatch({
-        type: 'ERROR_MESSAGE',
-        open: true,
-        message: 'Please enter a valid email',
-      });
+      dispatch(setErrorMessage('Please enter a valid email'));
       return;
     }
     createUser(dispatch);
