@@ -39,19 +39,19 @@ class ListItem extends React.Component {
     const { classes } = this.props;
 
     // save the user data passed as props so that we can display it right away
-    this.display_name = this.props.user.display_name;
+    this.name = this.props.user.name;
     this.authentication_identity = this.props.user.authentication_identity;
 
     return (
       <TableRow>
         <TableCell component="th" scope="row" style={tableCellStyle}>
           {
-            (this.props.edit === this.props.user.guid)
+            (this.props.edit === this.props.user.id)
               ? (
                 <MuiThemeProvider theme={theme}>
                   <TextField
-                    name="display_name"
-                    defaultValue={this.display_name}
+                    name="name"
+                    defaultValue={this.name}
                     className={classes.margin}
                     label="Edit your name"
                     id="mui-theme-provider-input"
@@ -64,13 +64,13 @@ class ListItem extends React.Component {
                   />
                 </MuiThemeProvider>
               ) : (
-                this.display_name
+                this.name
               )
           }
         </TableCell>
         <TableCell style={tableCellStyle}>
           {
-            (this.props.edit === this.props.user.guid)
+            (this.props.edit === this.props.user.id)
               ? (
                 <MuiThemeProvider theme={theme}>
                   <TextField
@@ -101,7 +101,7 @@ class ListItem extends React.Component {
           }}
         >
           {
-            (this.props.edit === this.props.user.guid)
+            (this.props.edit === this.props.user.id)
               ? (
                 // check mark
                 <Typography variant="headline" component="h6">
