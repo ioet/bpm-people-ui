@@ -36,11 +36,11 @@ class CreateUser extends React.Component {
         >
           <MuiThemeProvider theme={theme}>
             <TextField
-              name="display_name"
+              name="name"
               value={
-                (typeof this.props.display_name === 'undefined')
+                (typeof this.props.name === 'undefined')
                   ? ''
-                  : this.props.display_name
+                  : this.props.name
               }
               className={classes.margin}
               label="Enter your name"

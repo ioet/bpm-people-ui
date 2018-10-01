@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import CreateUser from '../presentational/CreateUser';
 import { handleErrors, PEOPLE_API, validateEmail } from '../utils/Utils';
 
-let display_name;
+let name;
 let authentication_identity;
 
 function createUser(dispatch) {
@@ -13,7 +13,7 @@ function createUser(dispatch) {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      name: display_name,
+      name,
       authentication_identity,
     }),
   })
@@ -23,17 +23,17 @@ function createUser(dispatch) {
       // update the list
       dispatch({
         type: 'ADD_USER',
-        guid: result.guid,
-        display_name,
+        id: result.id,
+        name,
         authentication_identity,
       });
 
       // clear the fields
-      display_name = '';
+      name = '';
       authentication_identity = '';
       dispatch({
         type: 'USER_CREATION_DATA',
-        display_name: '',
+        name: '',
         authentication_identity: '',
       });
     })
@@ -44,25 +44,25 @@ function createUser(dispatch) {
 }
 
 const mapStateToProps = state => ({
-  display_name: state.userCreationData.display_name,
+  name: state.userCreationData.name,
   authentication_identity: state.userCreationData.authentication_identity,
 });
 
 const mapDispatchToProps = dispatch => ({
   onChange: (event) => {
-    if (event.target.name === 'display_name') {
-      display_name = event.target.value;
+    if (event.target.name === 'name') {
+      name = event.target.value;
     } else {
       authentication_identity = event.target.value;
     }
     dispatch({
       type: 'USER_CREATION_DATA',
-      display_name,
+      name,
       authentication_identity,
     });
   },
   validateInput: () => {
-    if (typeof display_name === 'undefined' || display_name === '') {
+    if (typeof name === 'undefined' || name === '') {
       dispatch({
         type: 'ERROR_MESSAGE',
         open: true,

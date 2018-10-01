@@ -17,10 +17,10 @@ export function handleErrors(response) {
 }
 
 export function compareUsersByFirstName(a, b) {
-  if (a.display_name.toLowerCase() < b.display_name.toLowerCase()) {
+  if (a.name.toLowerCase() < b.name.toLowerCase()) {
     return -1;
   }
-  if (a.display_name.toLowerCase() > b.display_name.toLowerCase()) {
+  if (a.name.toLowerCase() > b.name.toLowerCase()) {
     return 1;
   }
   return 0;

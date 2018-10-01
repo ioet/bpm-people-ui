@@ -24,7 +24,7 @@ const userCreationData = (state = [], action) => {
   switch (action.type) {
     case 'USER_CREATION_DATA':
       return ({
-        display_name: action.display_name,
+        name: action.name,
         authentication_identity: action.authentication_identity,
       });
     default:
@@ -34,20 +34,20 @@ const userCreationData = (state = [], action) => {
 
 const userEditData = (state = [], action) => {
   switch (action.type) {
-    case 'EDIT_USER_GUID':
+    case 'EDIT_USER_ID':
       return ({
-        guid: action.user.guid,
+        id: action.user.id,
       });
     case 'EDIT_USER_DATA':
       return ({
-        guid: state.guid,
-        display_name: action.display_name,
+        id: state.id,
+        name: action.name,
         authentication_identity: action.authentication_identity,
       });
     case 'EDIT_USER_END':
       return ({
-        guid: '',
-        display_name: null,
+        id: '',
+        name: null,
         authentication_identity: null,
       });
     default:
@@ -59,21 +59,21 @@ const user = (state, action) => {
   switch (action.type) {
     case 'ADD_USER':
       return {
-        guid: action.guid,
-        display_name: action.display_name,
+        id: action.id,
+        name: action.name,
         authentication_identity: action.authentication_identity,
       };
     case 'ADD_USERS':
       return action.user.map(u => u);
     case 'UPDATE_USER':
-      // check if state.guid is accessible here
-      if (state.guid !== action.user.guid) {
+      // check if state.id is accessible here
+      if (state.id !== action.user.id) {
         return state;
       }
       return [
         ...state,
         {
-          display_name: action.display_name,
+          name: action.name,
           authentication_identity: action.authentication_identity,
         },
       ];
@@ -96,7 +96,7 @@ const userList = (state = [], action) => {
       ].sort(compareUsersByFirstName);
     case 'UPDATE_USER':
       for (let i = 0; i < copy.length; i++) {
-        if (copy[i].guid === action.user.guid) {
+        if (copy[i].id === action.user.id) {
           copy[i] = action.user;
           break;
         }
@@ -104,7 +104,7 @@ const userList = (state = [], action) => {
       return [...copy];
     case 'REMOVE_USER':
       for (let i = 0; i < copy.length; i++) {
-        if (copy[i].guid === action.user.guid) {
+        if (copy[i].id === action.user.id) {
           copy.splice(i, 1);
           break;
         }
