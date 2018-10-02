@@ -1,7 +1,10 @@
 import { handleErrors, PEOPLE_API, validateEmail } from './component/utils/Utils';
 
-const ENTER_VALID_NAME = 'Please enter a valid name';
-const ENTER_VALID_EMAIL = 'Please enter a valid email';
+const ENTER_VALID_NAME = 'Please enter a valid name.';
+const ENTER_VALID_EMAIL = 'Please enter a valid email.';
+const CHANGES_DISCARDED = 'Your changes have been discarded.';
+const CHANGES_UPDATED_SUCCESSFULLY = 'Your changes have been updated successfully.';
+const USER_DELETED_SUCCESSFULLY = ' has been deleted successfully.';
 
 export const ADD_USERS = 'ADD_USERS';
 const addUsers = allUsers => ({
@@ -29,7 +32,7 @@ export const setUserCreationData = (field, name) => ({
 });
 
 export const ERROR_MESSAGE = 'ERROR_MESSAGE';
-export const setErrorMessage = errorMessage => ({
+export const showMessage = errorMessage => ({
   type: ERROR_MESSAGE,
   open: true,
   message: errorMessage,
@@ -41,7 +44,7 @@ export const hideErrorMessage = () => ({
 });
 
 export const EDIT_USER_ID = 'EDIT_USER_ID';
-export const setEditUserId = editUserId => ({
+const setEditUserId = editUserId => ({
   type: EDIT_USER_ID,
   id: editUserId,
 });
@@ -98,7 +101,7 @@ export const createUserAsync = () => (
     const userCreationData = getStore().userCreationData;
     const validData = validateUser(userCreationData);
     if (validData !== true) {
-      return dispatch(setErrorMessage(validData));
+      return dispatch(showMessage(validData));
     }
     return fetch(PEOPLE_API, {
       method: 'POST',
@@ -128,29 +131,26 @@ export const createUserAsync = () => (
   }
 );
 
-export const updateUserAsync = userToUpdate => (
+const updateUserAsync = userToUpdate => (
   (dispatch, getStore) => {
     const userEditData = getStore().userEditData;
 
-    // TODO switch this and use PUT instead
+    if (!('name' in userEditData) && !('authentication_identity' in userEditData)) {
+      return dispatch(setEditUserFinished());
+    }
+
     if (!('name' in userEditData)) {
       userEditData.name = userToUpdate.name;
     }
     if (!('authentication_identity' in userEditData)) {
-      console.log('test');
       userEditData.authentication_identity = userToUpdate.authentication_identity;
     }
-    // if (!('name' in userEditData) && !('authentication_identity' in userEditData)) {
-    //   return dispatch(setEditUserFinished());
-    // }
 
-    if ('name' in userEditData
-      && !validateField(userEditData.name)) {
-      return dispatch(setErrorMessage(ENTER_VALID_NAME));
+    if (!validateField(userEditData.name)) {
+      return dispatch(showMessage(ENTER_VALID_NAME));
     }
-    if ('authentication_identity' in userEditData
-      && !validateEmail(userEditData.authentication_identity)) {
-      return dispatch(setErrorMessage(ENTER_VALID_EMAIL));
+    if (!validateEmail(userEditData.authentication_identity)) {
+      return dispatch(showMessage(ENTER_VALID_EMAIL));
     }
 
     return fetch(`${PEOPLE_API}/${userEditData.id}`, {
@@ -167,10 +167,24 @@ export const updateUserAsync = userToUpdate => (
       .then(() => {
         dispatch(setUpdateUser(userEditData));
         dispatch(setEditUserFinished());
+        dispatch(showMessage(CHANGES_UPDATED_SUCCESSFULLY));
       })
       .catch((error) => {
         alert(error);
       });
+  }
+);
+
+export const editOrUpdateUser = userToUpdate => (
+  (dispatch, getStore) => {
+    const userEditData = getStore().userEditData;
+    if ('id' in userEditData) {
+      if (userEditData.id === userToUpdate.id) {
+        return dispatch(updateUserAsync(userToUpdate));
+      }
+      dispatch(showMessage(CHANGES_DISCARDED));
+    }
+    return dispatch(setEditUserId(userToUpdate.id));
   }
 );
 
@@ -179,9 +193,11 @@ export const removeUserAsync = userToRemove => (
     method: 'DELETE',
   })
     .then(handleErrors)
-    .then(() => dispatch(removeUser(userToRemove)))
+    .then(() => {
+      dispatch(removeUser(userToRemove));
+      dispatch(showMessage(userToRemove.name + USER_DELETED_SUCCESSFULLY));
+    })
     .catch((error) => {
       alert(error);
-      console.log(error);
     })
 );
