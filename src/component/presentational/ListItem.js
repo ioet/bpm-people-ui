@@ -97,7 +97,7 @@ class ListItem extends React.Component {
           style={pointerButtonStyle}
           onClick={(e) => {
             e.preventDefault();
-            this.props.onUserEdit(e, this.props.user);
+            this.props.onUserEdit(this.props.user);
           }}
         >
           {

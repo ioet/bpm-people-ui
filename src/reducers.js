@@ -51,7 +51,6 @@ const userEditData = (state = [], action) => {
       });
     case EDIT_USER_FINISH:
       return ({
-        id: '',
         name: null,
         authentication_identity: null,
       });
