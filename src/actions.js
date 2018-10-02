@@ -1,10 +1,19 @@
-import { handleErrors, PEOPLE_API, validateEmail } from './component/utils/Utils';
+/* eslint-disable camelcase */
+import axios from 'axios';
+import { PEOPLE_API, validateEmail } from './component/utils/Utils';
 
 const ENTER_VALID_NAME = 'Please enter a valid name.';
 const ENTER_VALID_EMAIL = 'Please enter a valid email.';
+
 const CHANGES_DISCARDED = 'Your changes have been discarded.';
-const CHANGES_UPDATED_SUCCESSFULLY = 'Your changes have been updated successfully.';
+
+const CHANGES_UPDATED_SUCCESSFULLY = 'Your changes have been submitted successfully.';
 const USER_DELETED_SUCCESSFULLY = ' has been deleted successfully.';
+
+const FAILED_TO_LOAD_USERS = 'Failed to load all saved persons.';
+const FAILED_TO_CREATE_USER = 'Failed to create a new person.';
+const FAILED_TO_UPDATE_USER = 'Failed to update the person.';
+const FAILED_TO_REMOVE_USER = 'Failed to delete the person.';
 
 export const ADD_USERS = 'ADD_USERS';
 const addUsers = allUsers => ({
@@ -74,14 +83,12 @@ const removeUser = userToRemove => ({
 });
 
 export const getAllUsersAsync = () => (
-  dispatch => fetch(PEOPLE_API)
-    .then(handleErrors)
-    .then(res => res.json())
-    .then((allUsers) => {
-      dispatch(addUsers(allUsers));
+  dispatch => axios.get(PEOPLE_API)
+    .then((response) => {
+      dispatch(addUsers(response.data));
     })
     .catch((error) => {
-      alert(error);
+      dispatch(showMessage(`${FAILED_TO_LOAD_USERS}: ${error}`));
     })
 );
 
@@ -98,88 +105,68 @@ const validateUser = (user) => {
 
 export const createUserAsync = () => (
   (dispatch, getStore) => {
-    const userCreationData = getStore().userCreationData;
-    const validData = validateUser(userCreationData);
+    const validData = validateUser(getStore().userCreationData);
     if (validData !== true) {
       return dispatch(showMessage(validData));
     }
-    return fetch(PEOPLE_API, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        name: userCreationData.name,
-        authentication_identity: userCreationData.authentication_identity,
-      }),
+    const { name, authentication_identity } = getStore().userCreationData;
+    return axios.post(PEOPLE_API, {
+      name,
+      authentication_identity,
     })
-      .then(handleErrors)
-      .then(res => res.json())
-      .then((result) => {
-        // update the list
-        const user = {
-          id: result.id,
-          name: result.name,
-          authentication_identity: result.authentication_identity,
-        };
+      .then((response) => {
         dispatch(resetUserCreationData());
-        dispatch(addUser(user));
+        dispatch(addUser(response.data));
       })
       .catch((error) => {
-        alert(error);
+        dispatch(showMessage(`${FAILED_TO_CREATE_USER}: ${error}`));
       });
   }
 );
 
 const updateUserAsync = userToUpdate => (
   (dispatch, getStore) => {
-    const userEditData = getStore().userEditData;
+    const { id } = getStore().userEditData;
+    let { name, authentication_identity } = getStore().userEditData;
 
-    if (!('name' in userEditData) && !('authentication_identity' in userEditData)) {
+    if (!(typeof name !== 'undefined') && !(typeof authentication_identity !== 'undefined')) {
       return dispatch(setEditUserFinished());
     }
 
-    if (!('name' in userEditData)) {
-      userEditData.name = userToUpdate.name;
+    if (!(typeof name !== 'undefined')) {
+      name = userToUpdate.name;
     }
-    if (!('authentication_identity' in userEditData)) {
-      userEditData.authentication_identity = userToUpdate.authentication_identity;
+    if (!(typeof authentication_identity !== 'undefined')) {
+      authentication_identity = userToUpdate.authentication_identity;
     }
 
-    if (!validateField(userEditData.name)) {
+    if (!validateField(name)) {
       return dispatch(showMessage(ENTER_VALID_NAME));
     }
-    if (!validateEmail(userEditData.authentication_identity)) {
+    if (!validateEmail(authentication_identity)) {
       return dispatch(showMessage(ENTER_VALID_EMAIL));
     }
 
-    return fetch(`${PEOPLE_API}/${userEditData.id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        name: userEditData.name,
-        authentication_identity: userEditData.authentication_identity,
-      }),
+    return axios.put(`${PEOPLE_API}/${id}`, {
+      name,
+      authentication_identity,
     })
-      .then(handleErrors)
-      .then(() => {
-        dispatch(setUpdateUser(userEditData));
+      .then((response) => {
+        dispatch(setUpdateUser(response.data));
         dispatch(setEditUserFinished());
         dispatch(showMessage(CHANGES_UPDATED_SUCCESSFULLY));
       })
       .catch((error) => {
-        alert(error);
+        dispatch(showMessage(`${FAILED_TO_UPDATE_USER}: ${error}`));
       });
   }
 );
 
 export const editOrUpdateUser = userToUpdate => (
   (dispatch, getStore) => {
-    const userEditData = getStore().userEditData;
-    if ('id' in userEditData) {
-      if (userEditData.id === userToUpdate.id) {
+    const userEditId = getStore().userEditData.id;
+    if (typeof userEditId !== 'undefined') {
+      if (userEditId === userToUpdate.id) {
         return dispatch(updateUserAsync(userToUpdate));
       }
       dispatch(showMessage(CHANGES_DISCARDED));
@@ -189,15 +176,12 @@ export const editOrUpdateUser = userToUpdate => (
 );
 
 export const removeUserAsync = userToRemove => (
-  dispatch => fetch(`${PEOPLE_API}/${userToRemove.id}`, {
-    method: 'DELETE',
-  })
-    .then(handleErrors)
+  dispatch => axios.delete(`${PEOPLE_API}/${userToRemove.id}`)
     .then(() => {
       dispatch(removeUser(userToRemove));
       dispatch(showMessage(userToRemove.name + USER_DELETED_SUCCESSFULLY));
     })
     .catch((error) => {
-      alert(error);
+      dispatch(showMessage(`${FAILED_TO_REMOVE_USER}: ${error}`));
     })
 );

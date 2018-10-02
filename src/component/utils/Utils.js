@@ -8,13 +8,6 @@ export function validateEmail(email) {
   return re.test(email);
 }
 
-export function handleErrors(response) {
-  if (!response.ok) {
-    throw Error(response.status);
-  }
-  return response;
-}
-
 export function compareUsersByFirstName(a, b) {
   if (a.name.toLowerCase() < b.name.toLowerCase()) {
     return -1;
