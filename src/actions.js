@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 import axios from 'axios';
-import { PEOPLE_API, validateEmail } from './component/utils/Utils';
+import { validateEmail } from './component/utils/Utils';
 
 const ENTER_VALID_NAME = 'Please enter a valid name.';
 const ENTER_VALID_EMAIL = 'Please enter a valid email.';
@@ -14,6 +14,10 @@ const FAILED_TO_LOAD_USERS = 'Failed to load all saved persons.';
 const FAILED_TO_CREATE_USER = 'Failed to create a new person.';
 const FAILED_TO_UPDATE_USER = 'Failed to update the person.';
 const FAILED_TO_REMOVE_USER = 'Failed to delete the person.';
+
+const PEOPLE_API_PATH = '/people';
+axios.defaults.baseURL = process.env.REACT_APP_BPM_PEOPLE_API_URL;
+axios.defaults.headers.common['Content-Type'] = 'application/json';
 
 export const ADD_USERS = 'ADD_USERS';
 const addUsers = allUsers => ({
@@ -83,7 +87,7 @@ const removeUser = userToRemove => ({
 });
 
 export const getAllUsersAsync = () => (
-  dispatch => axios.get(PEOPLE_API)
+  dispatch => axios.get(PEOPLE_API_PATH)
     .then((response) => {
       dispatch(addUsers(response.data));
     })
@@ -110,7 +114,7 @@ export const createUserAsync = () => (
       return dispatch(showMessage(validData));
     }
     const { name, authentication_identity } = getStore().userCreationData;
-    return axios.post(PEOPLE_API, {
+    return axios.post(PEOPLE_API_PATH, {
       name,
       authentication_identity,
     })
@@ -147,7 +151,7 @@ const updateUserAsync = userToUpdate => (
       return dispatch(showMessage(ENTER_VALID_EMAIL));
     }
 
-    return axios.put(`${PEOPLE_API}/${id}`, {
+    return axios.put(`${PEOPLE_API_PATH}/${id}`, {
       name,
       authentication_identity,
     })
@@ -176,7 +180,7 @@ export const editOrUpdateUser = userToUpdate => (
 );
 
 export const removeUserAsync = userToRemove => (
-  dispatch => axios.delete(`${PEOPLE_API}/${userToRemove.id}`)
+  dispatch => axios.delete(`${PEOPLE_API_PATH}/${userToRemove.id}`)
     .then(() => {
       dispatch(removeUser(userToRemove));
       dispatch(showMessage(userToRemove.name + USER_DELETED_SUCCESSFULLY));
