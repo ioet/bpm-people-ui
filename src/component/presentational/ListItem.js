@@ -1,4 +1,4 @@
-/* eslint-disable react/destructuring-assignment,react/prop-types */
+/* eslint-disable react/prop-types,camelcase */
 import React from 'react';
 import TableRow from '@material-ui/core/TableRow/TableRow';
 import TableCell from '@material-ui/core/TableCell/TableCell';
@@ -8,6 +8,7 @@ import createMuiTheme from '@material-ui/core/styles/createMuiTheme';
 import { blue } from '@material-ui/core/colors';
 import withStyles from '@material-ui/core/styles/withStyles';
 import Typography from '@material-ui/core/Typography/Typography';
+import { ListItemConst } from '../../constants';
 
 const tableCellStyle = {
   padding: '4px 24px',
@@ -34,100 +35,98 @@ const theme = createMuiTheme({
   },
 });
 
-class ListItem extends React.Component {
-  render() {
-    const { classes } = this.props;
+const ListItem = (props) => {
+  const {
+    classes, edit, user, onChange, onUserEdit, onUserRemoved,
+  } = props;
+  const { id, name, authentication_identity } = user;
 
-    // save the user data passed as props so that we can display it right away
-    this.name = this.props.user.name;
-    this.authentication_identity = this.props.user.authentication_identity;
-
-    return (
-      <TableRow>
-        <TableCell component="th" scope="row" style={tableCellStyle}>
-          {
-            (this.props.edit === this.props.user.id)
-              ? (
-                <MuiThemeProvider theme={theme}>
-                  <TextField
-                    name="name"
-                    defaultValue={this.name}
-                    className={classes.margin}
-                    label="Edit your name"
-                    id="mui-theme-provider-input"
-                    onChange={
-                      (e) => {
-                        e.preventDefault();
-                        this.props.onChange(e);
-                      }
+  return (
+    <TableRow>
+      <TableCell component="th" scope="row" style={tableCellStyle}>
+        {
+          (edit === id)
+            ? (
+              <MuiThemeProvider theme={theme}>
+                <TextField
+                  name="name"
+                  defaultValue={name}
+                  className={classes.margin}
+                  label={ListItemConst.EDIT_NAME}
+                  id="mui-theme-provider-input"
+                  onChange={
+                    (e) => {
+                      e.preventDefault();
+                      onChange(e);
                     }
-                  />
-                </MuiThemeProvider>
-              ) : (
-                this.name
-              )
-          }
-        </TableCell>
-        <TableCell style={tableCellStyle}>
-          {
-            (this.props.edit === this.props.user.id)
-              ? (
-                <MuiThemeProvider theme={theme}>
-                  <TextField
-                    name="authentication_identity"
-                    defaultValue={this.authentication_identity}
-                    className={classes.margin}
-                    label="Edit your email"
-                    id="mui-theme-provider-input"
-                    onChange={
-                      (e) => {
-                        e.preventDefault();
-                        this.props.onChange(e);
-                      }
+                  }
+                />
+              </MuiThemeProvider>
+            ) : (
+              name
+            )
+        }
+      </TableCell>
+      <TableCell style={tableCellStyle}>
+        {
+          (edit === id)
+            ? (
+              <MuiThemeProvider theme={theme}>
+                <TextField
+                  name="authentication_identity"
+                  defaultValue={authentication_identity}
+                  className={classes.margin}
+                  label={ListItemConst.EDIT_EMAIL}
+                  id="mui-theme-provider-input"
+                  onChange={
+                    (e) => {
+                      e.preventDefault();
+                      onChange(e);
                     }
-                  />
-                </MuiThemeProvider>
-              ) : (
-                this.authentication_identity
-              )
-          }
-        </TableCell>
-        <TableCell
-          numeric
-          style={pointerButtonStyle}
-          onClick={(e) => {
-            e.preventDefault();
-            this.props.onUserEdit(this.props.user);
-          }}
-        >
-          {
-            (this.props.edit === this.props.user.id)
-              ? (
-                // check mark
-                <Typography variant="headline" component="h6">
-                  &#10004;
-                </Typography>
-              ) : (
-                // pencil icon
-                <Typography variant="headline" component="h6">
-                  &#x270E;
-                </Typography>
-              )
-          }
-        </TableCell>
-        <TableCell
-          numeric
-          style={pointerButtonStyle}
-          onClick={(e) => {
-            e.preventDefault();
-            this.props.onUserRemoved(this.props.user);
-          }}
-        >
-          &times;
-        </TableCell>
-      </TableRow>
-    );
-  }
-}
+                  }
+                />
+              </MuiThemeProvider>
+            ) : (
+              authentication_identity
+            )
+        }
+      </TableCell>
+      <TableCell
+        numeric
+        style={pointerButtonStyle}
+        onClick={(e) => {
+          e.preventDefault();
+          onUserEdit(user);
+        }}
+      >
+        {
+          (edit === id)
+            ? (
+              <Typography
+                variant="headline"
+                component="h6"
+                dangerouslySetInnerHTML={{ __html: ListItemConst.CHECK_MARK_ICON }}
+              />
+            ) : (
+              <Typography
+                variant="headline"
+                component="h6"
+                dangerouslySetInnerHTML={{ __html: ListItemConst.PENCIL_ICON }}
+              />
+            )
+        }
+      </TableCell>
+      <TableCell
+        numeric
+        style={pointerButtonStyle}
+        onClick={(e) => {
+          e.preventDefault();
+          onUserRemoved(user);
+        }}
+        dangerouslySetInnerHTML={{ __html: ListItemConst.X_ICON }}
+      />
+    </TableRow>
+  );
+};
 
 export default withStyles(styles)(ListItem);

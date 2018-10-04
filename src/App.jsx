@@ -15,7 +15,7 @@ const styles = theme => ({
     paddingBottom: theme.spacing.unit * 1,
     paddingLeft: theme.spacing.unit * 2,
     paddingRight: theme.spacing.unit * 2,
-    width: '50%',
+    width: '90%',
     margin: 'auto',
   },
 });

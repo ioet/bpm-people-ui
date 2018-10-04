@@ -1,4 +1,3 @@
-/* eslint-disable no-undef,camelcase,prefer-destructuring,max-len,prefer-arrow-callback */
 import { connect } from 'react-redux';
 import ListItem from '../presentational/ListItem';
 import {
@@ -19,7 +18,6 @@ const mapDispatchToProps = dispatch => ({
     dispatch(setEditUserData(event.target.name, event.target.value));
   },
   onUserRemoved: (user) => {
-    // delete user per api
     dispatch(removeUserAsync(user));
   },
 });

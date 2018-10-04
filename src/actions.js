@@ -1,108 +1,88 @@
-/* eslint-disable camelcase */
+/* eslint-disable camelcase,prefer-destructuring */
 import axios from 'axios';
 import { validateEmail } from './component/utils/Utils';
+import { ErrorAction, UserAction } from './action-types';
+import {
+  ErrorMessage, NotificationMessage, PeopleApi, PromptMessage,
+} from './constants';
 
-const ENTER_VALID_NAME = 'Please enter a valid name.';
-const ENTER_VALID_EMAIL = 'Please enter a valid email.';
-
-const CHANGES_DISCARDED = 'Your changes have been discarded.';
-
-const CHANGES_UPDATED_SUCCESSFULLY = 'Your changes have been submitted successfully.';
-const USER_DELETED_SUCCESSFULLY = ' has been deleted successfully.';
-
-const FAILED_TO_LOAD_USERS = 'Failed to load all saved persons.';
-const FAILED_TO_CREATE_USER = 'Failed to create a new person.';
-const FAILED_TO_UPDATE_USER = 'Failed to update the person.';
-const FAILED_TO_REMOVE_USER = 'Failed to delete the person.';
-
-const PEOPLE_API_PATH = '/people';
 axios.defaults.baseURL = process.env.REACT_APP_BPM_PEOPLE_API_URL;
 axios.defaults.headers.common['Content-Type'] = 'application/json';
 
-export const ADD_USERS = 'ADD_USERS';
 const addUsers = allUsers => ({
-  type: ADD_USERS,
+  type: UserAction.ADD_USERS,
   user: allUsers,
 });
 
-export const ADD_USER = 'ADD_USER';
 export const addUser = oneUser => ({
-  type: ADD_USER,
+  type: UserAction.ADD_USER,
   id: oneUser.id,
   name: oneUser.name,
   authentication_identity: oneUser.authentication_identity,
 });
 
-export const USER_CREATION_DATA_RESET = 'USER_CREATION_DATA_RESET';
 export const resetUserCreationData = () => ({
-  type: USER_CREATION_DATA_RESET,
+  type: UserAction.USER_CREATION_DATA_RESET,
 });
-export const USER_CREATION_DATA = 'USER_CREATION_DATA';
 export const setUserCreationData = (field, name) => ({
-  type: USER_CREATION_DATA,
+  type: UserAction.USER_CREATION_DATA,
   field,
   name,
 });
 
-export const ERROR_MESSAGE = 'ERROR_MESSAGE';
 export const showMessage = errorMessage => ({
-  type: ERROR_MESSAGE,
+  type: ErrorAction.ERROR_MESSAGE,
   open: true,
   message: errorMessage,
 });
 export const hideErrorMessage = () => ({
-  type: ERROR_MESSAGE,
+  type: ErrorAction.ERROR_MESSAGE,
   open: false,
   message: '',
 });
 
-export const EDIT_USER_ID = 'EDIT_USER_ID';
 const setEditUserId = editUserId => ({
-  type: EDIT_USER_ID,
+  type: UserAction.EDIT_USER_ID,
   id: editUserId,
 });
 
-export const EDIT_USER_DATA = 'EDIT_USER_DATA';
 export const setEditUserData = (field, name) => ({
-  type: EDIT_USER_DATA,
+  type: UserAction.EDIT_USER_DATA,
   field,
   name,
 });
 
-export const EDIT_USER_FINISH = 'EDIT_USER_FINISH';
 export const setEditUserFinished = () => ({
-  type: EDIT_USER_FINISH,
+  type: UserAction.EDIT_USER_FINISH,
 });
 
-export const UPDATE_USER = 'UPDATE_USER';
 export const setUpdateUser = userToUpdate => ({
-  type: UPDATE_USER,
+  type: UserAction.UPDATE_USER,
   user: userToUpdate,
 });
 
-export const REMOVE_USER = 'REMOVE_USER';
 const removeUser = userToRemove => ({
-  type: REMOVE_USER,
+  type: UserAction.REMOVE_USER,
   user: userToRemove,
 });
 
 export const getAllUsersAsync = () => (
-  dispatch => axios.get(PEOPLE_API_PATH)
+  dispatch => axios.get(PeopleApi.PATH)
     .then((response) => {
       dispatch(addUsers(response.data));
     })
     .catch((error) => {
-      dispatch(showMessage(`${FAILED_TO_LOAD_USERS}: ${error}`));
+      dispatch(showMessage(`${ErrorMessage.FAILED_TO_LOAD_USERS}: ${error}`));
     })
 );
 
 const validateField = input => !(typeof input === 'undefined' || input === '');
 
 const validateUser = (user) => {
-  if (!validateField(user.name)) return ENTER_VALID_NAME;
+  if (!validateField(user.name)) return PromptMessage.ENTER_VALID_NAME;
 
   if (!validateEmail(user.authentication_identity)) {
-    return ENTER_VALID_EMAIL;
+    return PromptMessage.ENTER_VALID_EMAIL;
   }
   return true;
 };
@@ -114,7 +94,7 @@ export const createUserAsync = () => (
       return dispatch(showMessage(validData));
     }
     const { name, authentication_identity } = getStore().userCreationData;
-    return axios.post(PEOPLE_API_PATH, {
+    return axios.post(PeopleApi.PATH, {
       name,
       authentication_identity,
     })
@@ -123,7 +103,7 @@ export const createUserAsync = () => (
         dispatch(addUser(response.data));
       })
       .catch((error) => {
-        dispatch(showMessage(`${FAILED_TO_CREATE_USER}: ${error}`));
+        dispatch(showMessage(`${ErrorMessage.FAILED_TO_CREATE_USER}: ${error}`));
       });
   }
 );
@@ -145,23 +125,23 @@ const updateUserAsync = userToUpdate => (
     }
 
     if (!validateField(name)) {
-      return dispatch(showMessage(ENTER_VALID_NAME));
+      return dispatch(showMessage(PromptMessage.ENTER_VALID_NAME));
     }
     if (!validateEmail(authentication_identity)) {
-      return dispatch(showMessage(ENTER_VALID_EMAIL));
+      return dispatch(showMessage(PromptMessage.ENTER_VALID_EMAIL));
     }
 
-    return axios.put(`${PEOPLE_API_PATH}/${id}`, {
+    return axios.put(`${PeopleApi.PATH}/${id}`, {
       name,
       authentication_identity,
     })
       .then((response) => {
         dispatch(setUpdateUser(response.data));
         dispatch(setEditUserFinished());
-        dispatch(showMessage(CHANGES_UPDATED_SUCCESSFULLY));
+        dispatch(showMessage(NotificationMessage.CHANGES_UPDATED_SUCCESSFULLY));
       })
       .catch((error) => {
-        dispatch(showMessage(`${FAILED_TO_UPDATE_USER}: ${error}`));
+        dispatch(showMessage(`${ErrorMessage.FAILED_TO_UPDATE_USER}: ${error}`));
       });
   }
 );
@@ -173,19 +153,19 @@ export const editOrUpdateUser = userToUpdate => (
       if (userEditId === userToUpdate.id) {
         return dispatch(updateUserAsync(userToUpdate));
       }
-      dispatch(showMessage(CHANGES_DISCARDED));
+      dispatch(showMessage(NotificationMessage.CHANGES_DISCARDED));
     }
     return dispatch(setEditUserId(userToUpdate.id));
   }
 );
 
 export const removeUserAsync = userToRemove => (
-  dispatch => axios.delete(`${PEOPLE_API_PATH}/${userToRemove.id}`)
+  dispatch => axios.delete(`${PeopleApi.PATH}/${userToRemove.id}`)
     .then(() => {
       dispatch(removeUser(userToRemove));
-      dispatch(showMessage(userToRemove.name + USER_DELETED_SUCCESSFULLY));
+      dispatch(showMessage(userToRemove.name + NotificationMessage.USER_DELETED_SUCCESSFULLY));
     })
     .catch((error) => {
-      dispatch(showMessage(`${FAILED_TO_REMOVE_USER}: ${error}`));
+      dispatch(showMessage(`${ErrorMessage.FAILED_TO_REMOVE_USER}: ${error}`));
     })
 );

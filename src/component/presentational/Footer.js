@@ -2,6 +2,7 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button/Button';
+import { FooterConst } from '../../constants';
 
 const styles = theme => ({
   button: {
@@ -16,7 +17,7 @@ const Footer = (props) => {
     <div>
       <br/>
       <Button color="primary" href="https://github.com/ioet/" className={classes.button}>
-        Learn more about bpm
+        { FooterConst.LEARN_MORE }
       </Button>
     </div>
   );

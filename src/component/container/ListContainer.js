@@ -1,4 +1,3 @@
-/* eslint-disable no-undef,prefer-arrow-callback */
 import { connect } from 'react-redux';
 import List from '../presentational/List';
 

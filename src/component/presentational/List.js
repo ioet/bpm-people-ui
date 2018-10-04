@@ -1,4 +1,4 @@
-/* eslint-disable react/prop-types,react/destructuring-assignment,react/jsx-tag-spacing */
+/* eslint-disable react/prop-types,react/jsx-tag-spacing */
 import React from 'react';
 import Typography from '@material-ui/core/Typography/Typography';
 import Table from '@material-ui/core/Table/Table';
@@ -20,15 +20,12 @@ const styles = theme => ({
     marginTop: theme.spacing.unit * 3,
     overflowX: 'auto',
   },
-  table: {
-    minWidth: 700,
-  },
 });
 
 const List = (props) => {
-  const { classes } = props;
+  const { classes, userList } = props;
 
-  const users = props.userList.map(user => (
+  const users = userList.map(user => (
     <ListItemContainer key={user.id} user={user}/>
   ));
 

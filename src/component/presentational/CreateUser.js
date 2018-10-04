@@ -1,6 +1,5 @@
-/* eslint-disable react/destructuring-assignment,react/prop-types,react/prefer-stateless-function,no-class-assign */
+/* eslint-disable react/prop-types,camelcase */
 import React from 'react';
-import { connect } from 'react-redux';
 import Button from '@material-ui/core/Button';
 import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
 import TextField from '@material-ui/core/TextField/TextField';
@@ -8,6 +7,7 @@ import { blue } from '@material-ui/core/colors';
 import createMuiTheme from '@material-ui/core/styles/createMuiTheme';
 import withStyles from '@material-ui/core/styles/withStyles';
 import Typography from '@material-ui/core/Typography/Typography';
+import { CreateUserConst } from '../../constants';
 
 const styles = theme => ({
   margin: {
@@ -21,66 +21,65 @@ const theme = createMuiTheme({
   },
 });
 
-class CreateUser extends React.Component {
-  render() {
-    const { classes } = this.props;
-    return (
-      <div>
-        <Typography variant="headline" component="h3">
-          Create a new user
-        </Typography>
-        <form onSubmit={(e) => {
-          e.preventDefault();
-          this.props.createUser();
-        }}
-        >
-          <MuiThemeProvider theme={theme}>
-            <TextField
-              name="name"
-              value={
-                (typeof this.props.name === 'undefined')
-                  ? ''
-                  : this.props.name
+const CreateUser = (props) => {
+  const {
+    classes, name, authentication_identity, createUser, onChange,
+  } = props;
+  return (
+    <div>
+      <Typography variant="headline" component="h3">
+        {CreateUserConst.CREATE_NEW_USER}
+      </Typography>
+      <form onSubmit={(e) => {
+        e.preventDefault();
+        createUser();
+      }}
+      >
+        <MuiThemeProvider theme={theme}>
+          <TextField
+            name="name"
+            value={
+              (typeof name === 'undefined')
+                ? ''
+                : name
+            }
+            className={classes.margin}
+            label={CreateUserConst.ENTER_NAME}
+            id="mui-theme-provider-input"
+            onChange={
+              (e) => {
+                e.preventDefault();
+                onChange(e);
               }
-              className={classes.margin}
-              label="Enter your name"
-              id="mui-theme-provider-input"
-              onChange={
-                (e) => {
-                  e.preventDefault();
-                  this.props.onChange(e);
-                }
+            }
+          />
+        </MuiThemeProvider>
+        <MuiThemeProvider theme={theme}>
+          <TextField
+            name="authentication_identity"
+            value={
+              (typeof authentication_identity === 'undefined')
+                ? ''
+                : authentication_identity
+            }
+            className={classes.margin}
+            label={CreateUserConst.ENTER_EMAIL}
+            id="mui-theme-provider-input"
+            onChange={
+              (e) => {
+                e.preventDefault();
+                onChange(e);
               }
-            />
-          </MuiThemeProvider>
-          <MuiThemeProvider theme={theme}>
-            <TextField
-              name="authentication_identity"
-              value={
-                (typeof this.props.authentication_identity === 'undefined')
-                  ? ''
-                  : this.props.authentication_identity
-              }
-              className={classes.margin}
-              label="Enter your email"
-              id="mui-theme-provider-input"
-              onChange={
-                (e) => {
-                  e.preventDefault();
-                  this.props.onChange(e);
-                }
-              }
-            />
-          </MuiThemeProvider>
-          <Button type="submit" variant="contained" color="primary">
-            Create user
-          </Button>
-        </form>
-        <br />
-      </div>
-    );
-  }
-}
+            }
+          />
+        </MuiThemeProvider>
+        <Button type="submit" variant="contained" color="primary">
+          {CreateUserConst.CREATE}
+        </Button>
+      </form>
+      <br />
+    </div>
+  );
+};
 
-CreateUser = connect()(CreateUser);
 export default withStyles(styles)(CreateUser);

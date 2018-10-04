@@ -8,8 +8,6 @@ import App from './App';
 import rootReducer from './reducers';
 import { getAllUsersAsync } from './actions';
 
-console.log('Hello World!');
-
 const store = createStore(
   rootReducer,
   applyMiddleware(
