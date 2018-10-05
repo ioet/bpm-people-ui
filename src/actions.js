@@ -1,9 +1,9 @@
 /* eslint-disable camelcase,prefer-destructuring */
 import axios from 'axios';
 import { validateEmail } from './component/utils/Utils';
-import { ErrorAction, UserAction } from './action-types';
+import { InputErrorAction, MessageAction, UserAction } from './action-types';
 import {
-  ErrorMessage, NotificationMessage, PeopleApi, PromptMessage,
+  ErrorMessage, NotificationMessage, PeopleApi, PromptMessage, Variable,
 } from './constants';
 
 axios.defaults.baseURL = process.env.REACT_APP_BPM_PEOPLE_API_URL;
@@ -30,13 +30,22 @@ export const setUserCreationData = (field, name) => ({
   name,
 });
 
+const setInputError = field => ({
+  type: InputErrorAction.ADD,
+  field,
+});
+const removeInputError = field => ({
+  type: InputErrorAction.REMOVE,
+  field,
+});
+
 export const showMessage = errorMessage => ({
-  type: ErrorAction.ERROR_MESSAGE,
+  type: MessageAction.MESSAGE,
   open: true,
   message: errorMessage,
 });
-export const hideErrorMessage = () => ({
-  type: ErrorAction.ERROR_MESSAGE,
+export const hideMessage = () => ({
+  type: MessageAction.MESSAGE,
   open: false,
   message: '',
 });
@@ -113,6 +122,9 @@ const updateUserAsync = userToUpdate => (
     const { id } = getStore().userEditData;
     let { name, authentication_identity } = getStore().userEditData;
 
+    dispatch(removeInputError(Variable.NAME));
+    dispatch(removeInputError(Variable.AUTHENTICATION_IDENTITY));
+
     if (!(typeof name !== 'undefined') && !(typeof authentication_identity !== 'undefined')) {
       return dispatch(setEditUserFinished());
     }
@@ -125,9 +137,11 @@ const updateUserAsync = userToUpdate => (
     }
 
     if (!validateField(name)) {
+      dispatch(setInputError(Variable.NAME));
       return dispatch(showMessage(PromptMessage.ENTER_VALID_NAME));
     }
     if (!validateEmail(authentication_identity)) {
+      dispatch(setInputError(Variable.AUTHENTICATION_IDENTITY));
       return dispatch(showMessage(PromptMessage.ENTER_VALID_EMAIL));
     }
 
@@ -137,6 +151,8 @@ const updateUserAsync = userToUpdate => (
     })
       .then((response) => {
         dispatch(setUpdateUser(response.data));
+        dispatch(removeInputError(Variable.NAME));
+        dispatch(removeInputError(Variable.AUTHENTICATION_IDENTITY));
         dispatch(setEditUserFinished());
         dispatch(showMessage(NotificationMessage.CHANGES_UPDATED_SUCCESSFULLY));
       })

@@ -1,14 +1,31 @@
 /* eslint-disable no-plusplus */
 import { combineReducers } from 'redux';
 import { compareUsersByFirstName } from './component/utils/Utils';
-import { UserAction, ErrorAction } from './action-types';
+import { UserAction, MessageAction, InputErrorAction } from './action-types';
 
-const error = (state = { open: false }, action) => {
+const message = (state = { open: false }, action) => {
   switch (action.type) {
-    case ErrorAction.ERROR_MESSAGE:
+    case MessageAction.MESSAGE:
       return ({
         open: action.open,
         message: action.message,
+      });
+    default:
+      return state;
+  }
+};
+
+const inputError = (state = {}, action) => {
+  switch (action.type) {
+    case InputErrorAction.ADD:
+      return ({
+        ...state,
+        [action.field]: true,
+      });
+    case InputErrorAction.REMOVE:
+      return ({
+        ...state,
+        [action.field]: false,
       });
     default:
       return state;
@@ -116,7 +133,8 @@ const userList = (state = [], action) => {
 const rootReducer = combineReducers({
   userCreationData,
   userList,
-  error,
+  message,
+  inputError,
   userEditData,
 });
 

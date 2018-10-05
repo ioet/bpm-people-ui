@@ -8,6 +8,7 @@ import {
 const mapStateToProps = (state, ownProps) => ({
   user: ownProps.user,
   editId: (typeof state.userEditData.id === 'undefined') ? '' : state.userEditData.id,
+  inputError: state.inputError,
 });
 
 const mapDispatchToProps = dispatch => ({

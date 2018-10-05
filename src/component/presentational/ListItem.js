@@ -12,7 +12,7 @@ import { ListItemStyles } from '../../styles';
 
 const ListItem = (props) => {
   const {
-    classes, editId, user, onChange, onUserEdit, onUserRemoved,
+    classes, editId, user, onChange, onUserEdit, onUserRemoved, inputError,
   } = props;
   const { id, name, authentication_identity } = user;
 
@@ -23,6 +23,7 @@ const ListItem = (props) => {
           (editId === id)
             ? (
               <TextField
+                error={inputError.name}
                 name="name"
                 defaultValue={name}
                 label={ListItemConst.EDIT_NAME}
@@ -44,6 +45,7 @@ const ListItem = (props) => {
           (editId === id)
             ? (
               <TextField
+                error={inputError.authentication_identity}
                 name="authentication_identity"
                 defaultValue={authentication_identity}
                 label={ListItemConst.EDIT_EMAIL}
@@ -104,6 +106,7 @@ ListItem.propTypes = {
   onChange: PropTypes.func.isRequired,
   onUserEdit: PropTypes.func.isRequired,
   onUserRemoved: PropTypes.func.isRequired,
+  inputError: PropTypes.object.isRequired,
 };
 
 export default withStyles(ListItemStyles)(ListItem);

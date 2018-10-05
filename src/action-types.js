@@ -10,6 +10,11 @@ export const UserAction = {
   REMOVE_USER: 'REMOVE_USER',
 };
 
-export const ErrorAction = {
-  ERROR_MESSAGE: 'ERROR_MESSAGE',
+export const MessageAction = {
+  MESSAGE: 'MESSAGE',
+};
+
+export const InputErrorAction = {
+  ADD: 'ADD',
+  REMOVE: 'REMOVE',
 };
