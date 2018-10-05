@@ -31,7 +31,7 @@ export const CreateUserConst = {
 };
 
 export const ErrorSnackbarConst = {
-  AUTO_HIDE_DURATION: 300000,
+  AUTO_HIDE_DURATION: 3000,
 };
 
 export const FooterConst = {

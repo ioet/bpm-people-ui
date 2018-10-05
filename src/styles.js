@@ -21,9 +21,8 @@ export const AppStyles = theme => ({
 });
 
 export const SnackbarStyles = theme => ({
-  close: {
-    minWidth: '10px',
-    height: theme.spacing.unit * 4,
+  snackbar: {
+    marginBottom: theme.spacing.unit * 3,
   },
 });
 

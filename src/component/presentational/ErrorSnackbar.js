@@ -13,7 +13,7 @@ const ErrorSnackbar = (props) => {
 
   return (
     <Snackbar
-      className={classes.root}
+      className={classes.snackbar}
       anchorOrigin={{
         vertical: 'bottom',
         horizontal: 'center',
