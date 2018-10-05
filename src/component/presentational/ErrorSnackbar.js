@@ -1,42 +1,47 @@
-/* eslint-disable react/prop-types */
+/* eslint-disable react/forbid-prop-types */
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
-import Snackbar from '@material-ui/core/Snackbar';
+import Snackbar from '@material-ui/core/Snackbar/Snackbar';
+import PropTypes from 'prop-types';
 import { ErrorSnackbarConst } from '../../constants';
-
-const snackbarStyle = {
-  bottom: '15px',
-};
-
-const styles = theme => ({
-  close: {
-    width: ErrorSnackbarConst.WIDTH,
-    height: theme.spacing.unit * 4,
-  },
-});
+import { SnackbarStyles } from '../../styles';
 
 const ErrorSnackbar = (props) => {
-  const { open, handleClose, message } = props;
+  const {
+    classes, open, handleClose, message,
+  } = props;
 
-  return (<Snackbar
-    style={snackbarStyle}
-    anchorOrigin={{
-      vertical: 'bottom',
-      horizontal: 'center',
-    }}
-    open={open}
-    autoHideDuration={ErrorSnackbarConst.AUTO_HIDE_DURATION}
-    onClose={handleClose}
-    ContentProps={{
-      'aria-describedby': 'message-id',
-    }}
-    message={(
-      <span id="message-id">
-        {message}
-      </span>
+  return (
+    <Snackbar
+      className={classes.root}
+      anchorOrigin={{
+        vertical: 'bottom',
+        horizontal: 'center',
+      }}
+      open={open}
+      autoHideDuration={ErrorSnackbarConst.AUTO_HIDE_DURATION}
+      onClose={handleClose}
+      ContentProps={{
+        'aria-describedby': 'message-id',
+      }}
+      message={(
+        <span id="message-id">
+          {message}
+        </span>
       )}
-  />
+    />
   );
 };
 
-export default withStyles(styles)(ErrorSnackbar);
+ErrorSnackbar.defaultProps = {
+  message: '',
+};
+
+ErrorSnackbar.propTypes = {
+  classes: PropTypes.object.isRequired,
+  open: PropTypes.bool.isRequired,
+  handleClose: PropTypes.func.isRequired,
+  message: PropTypes.string,
+};
+
+export default withStyles(SnackbarStyles)(ErrorSnackbar);

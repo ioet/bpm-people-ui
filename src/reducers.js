@@ -3,7 +3,7 @@ import { combineReducers } from 'redux';
 import { compareUsersByFirstName } from './component/utils/Utils';
 import { UserAction, ErrorAction } from './action-types';
 
-const error = (state = [], action) => {
+const error = (state = { open: false }, action) => {
   switch (action.type) {
     case ErrorAction.ERROR_MESSAGE:
       return ({

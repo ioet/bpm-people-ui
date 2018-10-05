@@ -20,26 +20,35 @@ export const PromptMessage = {
   ENTER_VALID_EMAIL: 'Please enter a valid email.',
 };
 
-export const CreateUserConst = {
+export const AppConst = {
   CREATE_NEW_USER: 'Create a new user',
+};
+
+export const CreateUserConst = {
   ENTER_NAME: 'Enter your name',
   ENTER_EMAIL: 'Enter your email',
   CREATE: 'Create',
 };
 
 export const ErrorSnackbarConst = {
-  AUTO_HIDE_DURATION: 3000,
-  WIDTH: '40%',
+  AUTO_HIDE_DURATION: 300000,
 };
 
 export const FooterConst = {
   LEARN_MORE: 'Learn more about bpm',
+  BPM_GITHUB: 'https://github.com/ioet/',
 };
 
 export const ListItemConst = {
   EDIT_NAME: 'Edit your name',
   EDIT_EMAIL: 'Edit your email',
-  CHECK_MARK_ICON: '&#10004;',
-  PENCIL_ICON: '&#x270E;',
-  X_ICON: '&times;',
+};
+
+export const ListConst = {
+  HEADER: 'Here are all users currently saved in our system:',
+  LOADING: 'Loading...',
+  COLUMN_1: 'Name',
+  COLUMN_2: 'Email',
+  COLUMN_3: 'Edit',
+  COLUMN_4: 'Delete',
 };

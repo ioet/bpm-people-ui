@@ -7,7 +7,7 @@ import {
 
 const mapStateToProps = (state, ownProps) => ({
   user: ownProps.user,
-  edit: (typeof state.userEditData.id === 'undefined') ? '' : state.userEditData.id,
+  editId: (typeof state.userEditData.id === 'undefined') ? '' : state.userEditData.id,
 });
 
 const mapDispatchToProps = dispatch => ({

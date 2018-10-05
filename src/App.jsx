@@ -3,36 +3,36 @@ import React from 'react';
 import Paper from '@material-ui/core/Paper/Paper';
 import withStyles from '@material-ui/core/styles/withStyles';
 import Divider from '@material-ui/core/Divider/Divider';
+import Typography from '@material-ui/core/Typography/Typography';
+import AppBar from '@material-ui/core/AppBar/AppBar';
+import Toolbar from '@material-ui/core/Toolbar/Toolbar';
 import ListContainer from './component/container/ListContainer';
 import CreateUserContainer from './component/container/CreateUserContainer';
 import ErrorSnackbarContainer from './component/container/ErrorSnackbarContainer';
 import Footer from './component/presentational/Footer';
-
-const styles = theme => ({
-  root: {
-    marginTop: theme.spacing.unit * 3,
-    paddingTop: theme.spacing.unit * 2,
-    paddingBottom: theme.spacing.unit * 1,
-    paddingLeft: theme.spacing.unit * 2,
-    paddingRight: theme.spacing.unit * 2,
-    width: '90%',
-    margin: 'auto',
-  },
-});
+import { AppStyles } from './styles';
+import { AppConst } from './constants';
 
 function App(props) {
   const { classes } = props;
   return (
     <div>
+      <AppBar position="sticky">
+        <Toolbar>
+          <Typography variant="title" color="inherit" >
+            {AppConst.CREATE_NEW_USER}
+          </Typography>
+        </Toolbar>
+      </AppBar>
       <Paper className={classes.root} elevation={1}>
         <CreateUserContainer/>
         <Divider/>
         <ListContainer/>
-        <Footer />
+        <Footer/>
       </Paper>
       <ErrorSnackbarContainer/>
     </div>
   );
 }
 
-export default withStyles(styles)(App);
+export default withStyles(AppStyles)(App);

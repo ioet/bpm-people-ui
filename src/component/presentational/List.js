@@ -1,4 +1,4 @@
-/* eslint-disable react/prop-types,react/jsx-tag-spacing */
+/* eslint-disable react/jsx-tag-spacing,react/forbid-prop-types */
 import React from 'react';
 import Typography from '@material-ui/core/Typography/Typography';
 import Table from '@material-ui/core/Table/Table';
@@ -7,20 +7,10 @@ import TableHead from '@material-ui/core/TableHead/TableHead';
 import TableRow from '@material-ui/core/TableRow/TableRow';
 import TableCell from '@material-ui/core/TableCell/TableCell';
 import TableBody from '@material-ui/core/TableBody/TableBody';
+import PropTypes from 'prop-types';
 import ListItemContainer from '../container/ListItemContainer';
-
-const tableHeadStyle = {
-  textAlign: 'center',
-  paddingRight: '24px',
-};
-
-const styles = theme => ({
-  root: {
-    width: '100%',
-    marginTop: theme.spacing.unit * 3,
-    overflowX: 'auto',
-  },
-});
+import { ListStyles } from '../../styles';
+import { ListConst } from '../../constants';
 
 const List = (props) => {
   const { classes, userList } = props;
@@ -30,26 +20,25 @@ const List = (props) => {
   ));
 
   return (
-    <div>
-      <br/>
-      <Typography variant="title" component="h5">
-        Here are all users currently saved in our system:
+    <div className={classes.root}>
+      <Typography variant="title" className={classes.tableHeading}>
+        {ListConst.HEADER}
       </Typography>
       {users.length > 0 ? (
-        <Table className={classes.table}>
+        <Table>
           <TableHead>
             <TableRow>
-              <TableCell>
-                Name
+              <TableCell className={classes.tableHead}>
+                {ListConst.COLUMN_1}
               </TableCell>
-              <TableCell>
-                Email
+              <TableCell className={classes.tableHead}>
+                {ListConst.COLUMN_2}
               </TableCell>
-              <TableCell numeric style={tableHeadStyle}>
-                Edit
+              <TableCell className={[classes.tableHead, classes.tableHeadIcon].join(' ')} numeric>
+                {ListConst.COLUMN_3}
               </TableCell>
-              <TableCell numeric style={tableHeadStyle}>
-                Delete
+              <TableCell className={[classes.tableHead, classes.tableHeadIcon].join(' ')} numeric>
+                {ListConst.COLUMN_4}
               </TableCell>
             </TableRow>
           </TableHead>
@@ -57,14 +46,18 @@ const List = (props) => {
             {users}
           </TableBody>
         </Table>
-
       ) : (
-        <Typography variant="subheading" component="h5">
-          Loading...
+        <Typography variant="subheading">
+          {ListConst.LOADING}
         </Typography>
       )}
     </div>
   );
 };
 
-export default withStyles(styles)(List);
+List.propTypes = {
+  classes: PropTypes.object.isRequired,
+  userList: PropTypes.array.isRequired,
+};
+
+export default withStyles(ListStyles)(List);
