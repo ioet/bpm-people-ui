@@ -5,7 +5,7 @@ import withStyles from '@material-ui/core/styles/withStyles';
 import Typography from '@material-ui/core/Typography/Typography';
 import AppBar from '@material-ui/core/AppBar/AppBar';
 import Toolbar from '@material-ui/core/Toolbar/Toolbar';
-import ListContainer from './component/container/ListContainer';
+import UserListContainer from './component/container/UserListContainer';
 import ErrorSnackbarContainer from './component/container/ErrorSnackbarContainer';
 import Footer from './component/presentational/Footer';
 import { AppStyles } from './styles';
@@ -25,7 +25,7 @@ function App(props) {
         </Toolbar>
       </AppBar>
       <Paper className={classes.root} elevation={1}>
-        <ListContainer/>
+        <UserListContainer/>
         <Footer/>
         <FloatingActionButtonContainer/>
       </Paper>

@@ -8,9 +8,9 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  handleClose: (user) => {
+  handleClose: (accepted, user) => {
     dispatch(hideDeleteDialog());
-    if (typeof user !== 'undefined') {
+    if (accepted === true) {
       dispatch(removeUserAsync(user));
     }
   },

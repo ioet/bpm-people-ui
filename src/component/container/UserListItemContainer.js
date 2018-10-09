@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import ListItem from '../presentational/ListItem';
+import ListItem from '../presentational/UserListItem';
 import {
   clearUser, editUpdateOrCreateUser, setUserEditData, showDeleteDialog,
 } from '../../actions';
@@ -26,9 +26,9 @@ const mapDispatchToProps = dispatch => ({
   },
 });
 
-const ListItemContainer = connect(
+const UserListItemContainer = connect(
   mapStateToProps,
   mapDispatchToProps,
 )(ListItem);
 
-export default ListItemContainer;
+export default UserListItemContainer;

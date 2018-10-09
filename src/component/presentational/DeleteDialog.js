@@ -42,7 +42,7 @@ const DeleteDialog = (props) => {
         <Button
           onClick={(e) => {
             e.preventDefault();
-            handleClose();
+            handleClose(false);
           }}
           color="primary"
         >
@@ -51,7 +51,7 @@ const DeleteDialog = (props) => {
         <Button
           onClick={(e) => {
             e.preventDefault();
-            handleClose(user);
+            handleClose(true, user);
           }}
           color="primary"
         >

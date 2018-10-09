@@ -28,7 +28,9 @@ export const FabStyles = () => ({
 
 export const SnackbarStyles = theme => ({
   snackbar: {
-    marginBottom: theme.spacing.unit * 3,
+    [theme.breakpoints.up('md')]: {
+      marginBottom: theme.spacing.unit * 3,
+    },
   },
 });
 
@@ -41,7 +43,7 @@ export const FooterStyles = theme => ({
   },
 });
 
-export const ListStyles = theme => ({
+export const UserListStyles = theme => ({
   root: {
     width: '100%',
     marginTop: theme.spacing.unit * 3,
@@ -55,7 +57,7 @@ export const ListStyles = theme => ({
   },
 });
 
-export const ListItemStyles = () => ({
+export const UserListItemStyles = theme => ({
   tableCell: {
     padding: '0px 2px',
     maxWidth: '90px',
@@ -66,17 +68,32 @@ export const ListItemStyles = () => ({
     textAlign: 'center',
     fontSize: '1.3rem',
   },
-});
-
-export const CreateUserStyles = theme => ({
-  root: {
-    marginBottom: '2%',
+  phoneRoot: {
+    width: '100%',
+    padding: '0px',
   },
-  margin: {
-    margin: theme.spacing.unit,
+  phoneCard: {
+    width: '100%',
+    margin: '6px 2px',
   },
-  button: {
-    verticalAlign: 'bottom',
-    margin: '8px',
+  phoneButtonWrapper: {
+    width: '100%',
+    display: 'inline-block',
+  },
+  phoneButtons: {
+    float: 'right',
+  },
+  phoneContent: {
+    padding: theme.spacing.unit * 1,
+    paddingTop: '0px',
+  },
+  phoneForm: {
+    marginTop: theme.spacing.unit * 1,
+  },
+  phoneHeaderWrapper: {
+    display: 'flex',
+  },
+  phoneHeader: {
+    paddingRight: theme.spacing.unit * 1,
   },
 });

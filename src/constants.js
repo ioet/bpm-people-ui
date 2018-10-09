@@ -39,16 +39,18 @@ export const FooterConst = {
   BPM_GITHUB: 'https://github.com/ioet/',
 };
 
-export const ListItemConst = {
+export const UserListItemConst = {
   TOOLTIP_EDIT: 'Edit',
   TOOLTIP_SAVE: 'Save',
   TOOLTIP_DISCARD: 'Discard',
   TOOLTIP_DELETE: 'Delete',
   EDIT_NAME: 'Edit your name',
   EDIT_EMAIL: 'Edit your email',
+  NAME: 'Name:',
+  EMAIL: 'Email:',
 };
 
-export const ListConst = {
+export const UserListConst = {
   LOADING: 'Loading...',
   COLUMN_1: 'Name',
   COLUMN_2: 'Email',
