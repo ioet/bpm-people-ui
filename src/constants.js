@@ -30,12 +30,6 @@ export const AppConst = {
   APP_TITLE: 'Here are all users currently saved in our system',
 };
 
-export const CreateUserConst = {
-  ENTER_NAME: 'Enter your name',
-  ENTER_EMAIL: 'Enter your email',
-  CREATE: 'Create',
-};
-
 export const ErrorSnackbarConst = {
   AUTO_HIDE_DURATION: 3000,
 };
@@ -56,4 +50,12 @@ export const ListConst = {
   COLUMN_2: 'Email',
   COLUMN_3: 'Edit',
   COLUMN_4: 'Delete',
+};
+
+export const DeleteDialogConst = {
+  TITLE: 'Delete user',
+  CONTENT_TEXT_1: 'Do you really want to delete ',
+  CONTENT_TEXT_2: ' permanently?',
+  DISAGREE: 'No',
+  AGREE: 'Yes',
 };

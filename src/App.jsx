@@ -11,6 +11,7 @@ import Footer from './component/presentational/Footer';
 import { AppStyles } from './styles';
 import { AppConst } from './constants';
 import FloatingActionButtonContainer from './component/container/FloatingActionButtonContainer';
+import DeleteDialogContainer from './component/container/DeleteDialogContainer';
 
 function App(props) {
   const { classes } = props;
@@ -29,6 +30,7 @@ function App(props) {
         <FloatingActionButtonContainer/>
       </Paper>
       <ErrorSnackbarContainer/>
+      <DeleteDialogContainer/>
     </div>
   );
 }

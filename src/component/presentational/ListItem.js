@@ -94,7 +94,7 @@ const ListItem = (props) => {
         numeric
         onClick={(e) => {
           e.preventDefault();
-          onUserRemoved(user);
+          onUserRemoved(user, editId);
         }}
       >
         <IconButton color="primary">

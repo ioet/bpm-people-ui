@@ -1,7 +1,9 @@
 /* eslint-disable camelcase,prefer-destructuring */
 import axios from 'axios';
 import { getEmptyUser, validateEmail } from './component/utils/Utils';
-import { InputErrorAction, MessageAction, UserAction } from './action-types';
+import {
+  DeleteAction, InputErrorAction, MessageAction, UserAction,
+} from './action-types';
 import {
   ErrorMessage, NotificationMessage, PeopleApi, PromptMessage, Variable,
 } from './constants';
@@ -38,6 +40,16 @@ export const hideMessage = () => ({
   type: MessageAction.MESSAGE,
   open: false,
   message: '',
+});
+
+export const showDeleteDialog = user => ({
+  type: DeleteAction.SHOW_DIALOG,
+  open: true,
+  user,
+});
+export const hideDeleteDialog = () => ({
+  type: DeleteAction.HIDE_DIALOG,
+  open: false,
 });
 
 export const startCreateUser = () => ({
@@ -170,16 +182,16 @@ export const editUpdateOrCreateUser = userToUpdate => (
         return dispatch(updateUserAsync(userToUpdate));
       }
       if (userEditId === getEmptyUser().id) {
+        dispatch(showMessage(NotificationMessage.CHANGES_DISCARDED));
         dispatch(removeAllInputErrors());
         dispatch(endCreateUser());
       }
     }
-    dispatch(showMessage(NotificationMessage.CHANGES_DISCARDED));
     return dispatch(startEditUser(userToUpdate.id));
   }
 );
 
-const removeUserAsync = userToRemove => (
+export const removeUserAsync = userToRemove => (
   dispatch => axios.delete(`${PeopleApi.PATH}/${userToRemove.id}`)
     .then(() => {
       dispatch(removeUser(userToRemove));
@@ -190,19 +202,16 @@ const removeUserAsync = userToRemove => (
     })
 );
 
-export const removeOrClearUser = userToRemove => (
+export const clearUser = userToClear => (
   (dispatch, getState) => {
     const userEditId = getState().userEdit.id;
-    if (typeof userEditId !== 'undefined') {
-      if (userEditId === getEmptyUser().id) {
-        dispatch(endCreateUser());
-      }
-      if (userEditId === userToRemove.id) {
-        dispatch(endEditUser());
-      }
-      dispatch(removeAllInputErrors());
-      return dispatch(showMessage(NotificationMessage.CHANGES_DISCARDED));
+    if (userEditId === getEmptyUser().id) {
+      dispatch(endCreateUser());
     }
-    return dispatch(removeUserAsync(userToRemove));
+    if (userEditId === userToClear.id) {
+      dispatch(endEditUser());
+    }
+    dispatch(removeAllInputErrors());
+    return dispatch(showMessage(NotificationMessage.CHANGES_DISCARDED));
   }
 );

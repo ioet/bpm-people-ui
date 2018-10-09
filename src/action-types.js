@@ -18,3 +18,8 @@ export const InputErrorAction = {
   ADD: 'ERROR_ADD',
   REMOVE_ALL: 'ERROR_REMOVE_ALL',
 };
+
+export const DeleteAction = {
+  SHOW_DIALOG: 'SHOW_DIALOG',
+  HIDE_DIALOG: 'HIDE_DIALOG',
+};

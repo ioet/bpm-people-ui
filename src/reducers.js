@@ -1,7 +1,9 @@
 /* eslint-disable no-plusplus */
 import { combineReducers } from 'redux';
 import { compareUsersByFirstName, getEmptyUser } from './component/utils/Utils';
-import { UserAction, MessageAction, InputErrorAction } from './action-types';
+import {
+  DeleteAction, InputErrorAction, MessageAction, UserAction,
+} from './action-types';
 
 const message = (state = { open: false }, action) => {
   switch (action.type) {
@@ -62,6 +64,23 @@ const userEdit = (state = { create: false, update: false }, action) => {
         name: null,
         authentication_identity: null,
       });
+    default:
+      return state;
+  }
+};
+
+const userDelete = (state = { open: false, user: {} }, action) => {
+  switch (action.type) {
+    case DeleteAction.SHOW_DIALOG:
+      return {
+        open: action.open,
+        user: action.user,
+      };
+    case DeleteAction.HIDE_DIALOG:
+      return {
+        open: false,
+        user: {},
+      };
     default:
       return state;
   }
@@ -130,6 +149,7 @@ const rootReducer = combineReducers({
   message,
   inputError,
   userEdit,
+  userDelete,
 });
 
 export default rootReducer;

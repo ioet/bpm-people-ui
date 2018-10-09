@@ -1,6 +1,8 @@
 import { connect } from 'react-redux';
 import ListItem from '../presentational/ListItem';
-import { editUpdateOrCreateUser, removeOrClearUser, setUserEditData } from '../../actions';
+import {
+  clearUser, editUpdateOrCreateUser, setUserEditData, showDeleteDialog,
+} from '../../actions';
 
 const mapStateToProps = (state, ownProps) => ({
   user: ownProps.user,
@@ -15,8 +17,12 @@ const mapDispatchToProps = dispatch => ({
   onChange: (event) => {
     dispatch(setUserEditData(event.target.name, event.target.value));
   },
-  onUserRemoved: (user) => {
-    dispatch(removeOrClearUser(user));
+  onUserRemoved: (user, editId) => {
+    if (user.id === editId) {
+      dispatch(clearUser(user));
+    } else {
+      dispatch(showDeleteDialog(user, editId));
+    }
   },
 });
 
