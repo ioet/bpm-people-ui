@@ -5,11 +5,12 @@ import TableCell from '@material-ui/core/TableCell/TableCell';
 import TextField from '@material-ui/core/TextField/TextField';
 import withStyles from '@material-ui/core/styles/withStyles';
 import IconButton from '@material-ui/core/IconButton/IconButton';
+import Tooltip from '@material-ui/core/Tooltip/Tooltip';
 import {
   Clear, Delete, Done, Edit,
 } from '@material-ui/icons';
 import PropTypes from 'prop-types';
-import { ListItemConst } from '../../constants';
+import { ListItemConst, TooltipConst } from '../../constants';
 import { ListItemStyles } from '../../styles';
 
 const ListItem = (props) => {
@@ -78,16 +79,29 @@ const ListItem = (props) => {
           onUserEdit(user);
         }}
       >
-        <IconButton color="primary">
-          {
+        <Tooltip
+          title={
             (editId === id)
               ? (
-                <Done/>
+                ListItemConst.TOOLTIP_SAVE
               ) : (
-                <Edit/>
-              )
-          }
-        </IconButton>
+                ListItemConst.TOOLTIP_EDIT
+              )}
+          placement="left"
+          enterDelay={TooltipConst.ENTER_DELAY}
+          leaveDelay={TooltipConst.LEAVE_DELAY}
+        >
+          <IconButton color="primary">
+            {
+              (editId === id)
+                ? (
+                  <Done/>
+                ) : (
+                  <Edit/>
+                )
+            }
+          </IconButton>
+        </Tooltip>
       </TableCell>
       <TableCell
         className={[classes.tableCell, classes.pointerButton].join(' ')}
@@ -97,16 +111,29 @@ const ListItem = (props) => {
           onUserRemoved(user, editId);
         }}
       >
-        <IconButton color="primary">
-          {
+        <Tooltip
+          title={
             (editId === id)
               ? (
-                <Clear/>
+                ListItemConst.TOOLTIP_DISCARD
               ) : (
-                <Delete/>
-              )
-          }
-        </IconButton>
+                ListItemConst.TOOLTIP_DELETE
+              )}
+          placement="left"
+          enterDelay={TooltipConst.ENTER_DELAY}
+          leaveDelay={TooltipConst.LEAVE_DELAY}
+        >
+          <IconButton color="primary">
+            {
+              (editId === id)
+                ? (
+                  <Clear/>
+                ) : (
+                  <Delete/>
+                )
+            }
+          </IconButton>
+        </Tooltip>
       </TableCell>
     </TableRow>
   );

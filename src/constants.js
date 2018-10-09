@@ -40,6 +40,10 @@ export const FooterConst = {
 };
 
 export const ListItemConst = {
+  TOOLTIP_EDIT: 'Edit',
+  TOOLTIP_SAVE: 'Save',
+  TOOLTIP_DISCARD: 'Discard',
+  TOOLTIP_DELETE: 'Delete',
   EDIT_NAME: 'Edit your name',
   EDIT_EMAIL: 'Edit your email',
 };
@@ -58,4 +62,14 @@ export const DeleteDialogConst = {
   CONTENT_TEXT_2: ' permanently?',
   DISAGREE: 'No',
   AGREE: 'Yes',
+};
+
+export const FloatingActionButtonConst = {
+  TOOLTIP_ADD: 'Add new people',
+  TOOLTIP_DISCARD: 'Discard',
+};
+
+export const TooltipConst = {
+  ENTER_DELAY: 400,
+  LEAVE_DELAY: 200,
 };
