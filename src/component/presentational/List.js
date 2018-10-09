@@ -8,22 +8,14 @@ import TableRow from '@material-ui/core/TableRow/TableRow';
 import TableCell from '@material-ui/core/TableCell/TableCell';
 import TableBody from '@material-ui/core/TableBody/TableBody';
 import PropTypes from 'prop-types';
-import ListItemContainer from '../container/ListItemContainer';
 import { ListStyles } from '../../styles';
 import { ListConst } from '../../constants';
 
 const List = (props) => {
-  const { classes, userList } = props;
-
-  const users = userList.map(user => (
-    <ListItemContainer key={user.id} user={user}/>
-  ));
+  const { classes, users } = props;
 
   return (
     <div className={classes.root}>
-      <Typography variant="title" className={classes.tableHeading}>
-        {ListConst.HEADER}
-      </Typography>
       {users.length > 0 ? (
         <Table>
           <TableHead>
@@ -57,7 +49,7 @@ const List = (props) => {
 
 List.propTypes = {
   classes: PropTypes.object.isRequired,
-  userList: PropTypes.array.isRequired,
+  users: PropTypes.array.isRequired,
 };
 
 export default withStyles(ListStyles)(List);

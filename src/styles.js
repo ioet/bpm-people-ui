@@ -11,12 +11,18 @@ export const RootTheme = createMuiTheme({
 export const AppStyles = theme => ({
   root: {
     marginTop: theme.spacing.unit * 3,
-    paddingTop: theme.spacing.unit * 2,
-    paddingBottom: theme.spacing.unit * 1,
-    paddingLeft: theme.spacing.unit * 2,
-    paddingRight: theme.spacing.unit * 2,
+    marginBottom: theme.spacing.unit * 2,
+    padding: theme.spacing.unit * 2,
     width: '90%',
     margin: 'auto',
+  },
+});
+
+export const FabStyles = () => ({
+  fab: {
+    position: 'absolute',
+    bottom: '3%',
+    right: '5%',
   },
 });
 
@@ -40,9 +46,6 @@ export const ListStyles = theme => ({
     width: '100%',
     marginTop: theme.spacing.unit * 3,
     overflowX: 'auto',
-  },
-  tableHeading: {
-    margin: '8px 0px',
   },
   tableHead: {
     padding: '2px',

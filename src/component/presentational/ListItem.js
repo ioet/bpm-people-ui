@@ -5,7 +5,9 @@ import TableCell from '@material-ui/core/TableCell/TableCell';
 import TextField from '@material-ui/core/TextField/TextField';
 import withStyles from '@material-ui/core/styles/withStyles';
 import IconButton from '@material-ui/core/IconButton/IconButton';
-import { Delete, Done, Edit } from '@material-ui/icons';
+import {
+  Clear, Delete, Done, Edit,
+} from '@material-ui/icons';
 import PropTypes from 'prop-types';
 import { ListItemConst } from '../../constants';
 import { ListItemStyles } from '../../styles';
@@ -31,7 +33,7 @@ const ListItem = (props) => {
                 onChange={
                   (e) => {
                     e.preventDefault();
-                    onChange(e);
+                    onChange(e, editId);
                   }
                 }
               />
@@ -44,19 +46,25 @@ const ListItem = (props) => {
         {
           (editId === id)
             ? (
-              <TextField
-                error={inputError.authentication_identity}
-                name="authentication_identity"
-                defaultValue={authentication_identity}
-                label={ListItemConst.EDIT_EMAIL}
-                id="mui-theme-provider-input"
-                onChange={
-                  (e) => {
-                    e.preventDefault();
-                    onChange(e);
+              <form onSubmit={(e) => {
+                e.preventDefault();
+                onUserEdit(user);
+              }}
+              >
+                <TextField
+                  error={inputError.authentication_identity}
+                  name="authentication_identity"
+                  defaultValue={authentication_identity}
+                  label={ListItemConst.EDIT_EMAIL}
+                  id="mui-theme-provider-input"
+                  onChange={
+                    (e) => {
+                      e.preventDefault();
+                      onChange(e, editId);
+                    }
                   }
-                }
-              />
+                />
+              </form>
             ) : (
               authentication_identity
             )
@@ -70,18 +78,16 @@ const ListItem = (props) => {
           onUserEdit(user);
         }}
       >
-        {
-          (editId === id)
-            ? (
-              <IconButton color="primary">
+        <IconButton color="primary">
+          {
+            (editId === id)
+              ? (
                 <Done/>
-              </IconButton>
-            ) : (
-              <IconButton color="primary">
+              ) : (
                 <Edit/>
-              </IconButton>
-            )
-        }
+              )
+          }
+        </IconButton>
       </TableCell>
       <TableCell
         className={[classes.tableCell, classes.pointerButton].join(' ')}
@@ -92,7 +98,14 @@ const ListItem = (props) => {
         }}
       >
         <IconButton color="primary">
-          <Delete/>
+          {
+            (editId === id)
+              ? (
+                <Clear/>
+              ) : (
+                <Delete/>
+              )
+          }
         </IconButton>
       </TableCell>
     </TableRow>

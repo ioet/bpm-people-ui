@@ -1,25 +1,22 @@
 import { connect } from 'react-redux';
 import ListItem from '../presentational/ListItem';
-import {
-  editOrUpdateUser, removeUserAsync,
-  setEditUserData,
-} from '../../actions';
+import { editUpdateOrCreateUser, removeOrClearUser, setUserEditData } from '../../actions';
 
 const mapStateToProps = (state, ownProps) => ({
   user: ownProps.user,
-  editId: (typeof state.userEditData.id === 'undefined') ? '' : state.userEditData.id,
+  editId: (typeof state.userEdit.id === 'undefined') ? '' : state.userEdit.id,
   inputError: state.inputError,
 });
 
 const mapDispatchToProps = dispatch => ({
   onUserEdit: (user) => {
-    dispatch(editOrUpdateUser(user));
+    dispatch(editUpdateOrCreateUser(user));
   },
   onChange: (event) => {
-    dispatch(setEditUserData(event.target.name, event.target.value));
+    dispatch(setUserEditData(event.target.name, event.target.value));
   },
   onUserRemoved: (user) => {
-    dispatch(removeUserAsync(user));
+    dispatch(removeOrClearUser(user));
   },
 });
 

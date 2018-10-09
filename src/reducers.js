@@ -1,6 +1,6 @@
 /* eslint-disable no-plusplus */
 import { combineReducers } from 'redux';
-import { compareUsersByFirstName } from './component/utils/Utils';
+import { compareUsersByFirstName, getEmptyUser } from './component/utils/Utils';
 import { UserAction, MessageAction, InputErrorAction } from './action-types';
 
 const message = (state = { open: false }, action) => {
@@ -22,46 +22,43 @@ const inputError = (state = {}, action) => {
         ...state,
         [action.field]: true,
       });
-    case InputErrorAction.REMOVE:
-      return ({
-        ...state,
-        [action.field]: false,
-      });
+    case InputErrorAction.REMOVE_ALL:
+      return {};
     default:
       return state;
   }
 };
 
-const userCreationData = (state = [], action) => {
+const userEdit = (state = { create: false, update: false }, action) => {
   switch (action.type) {
-    case UserAction.USER_CREATION_DATA:
+    case UserAction.CREATION_START:
       return ({
-        ...state,
-        [action.field]: action.name,
+        id: getEmptyUser().id,
+        create: true,
+        update: false,
       });
-    case UserAction.USER_CREATION_DATA_RESET:
-      return {
-        name: '',
-        authentication_identity: '',
-      };
-    default:
-      return state;
-  }
-};
-
-const userEditData = (state = [], action) => {
-  switch (action.type) {
-    case UserAction.EDIT_USER_ID:
+    case UserAction.EDIT_START:
       return ({
         id: action.id,
+        create: false,
+        update: true,
       });
-    case UserAction.EDIT_USER_DATA:
+    case UserAction.EDIT_DATA:
       return ({
         ...state,
         [action.field]: action.name,
       });
-    case UserAction.EDIT_USER_FINISH:
+    case UserAction.EDIT_END:
       return ({
+        create: false,
+        update: false,
+        name: null,
+        authentication_identity: null,
+      });
+    case UserAction.CREATION_END:
+      return ({
+        create: false,
+        update: false,
         name: null,
         authentication_identity: null,
       });
@@ -72,6 +69,8 @@ const userEditData = (state = [], action) => {
 
 const user = (state, action) => {
   switch (action.type) {
+    case UserAction.CREATION_START:
+      return getEmptyUser();
     case UserAction.ADD_USER:
       return {
         id: action.id,
@@ -80,18 +79,6 @@ const user = (state, action) => {
       };
     case UserAction.ADD_USERS:
       return action.user.map(u => u);
-    case UserAction.UPDATE_USER:
-      // check if state.id is accessible here
-      if (state.id !== action.user.id) {
-        return state;
-      }
-      return [
-        ...state,
-        {
-          name: action.name,
-          authentication_identity: action.authentication_identity,
-        },
-      ];
     default:
       return state;
   }
@@ -99,6 +86,14 @@ const user = (state, action) => {
 const userList = (state = [], action) => {
   const copy = state.slice();
   switch (action.type) {
+    case UserAction.CREATION_START:
+      return [
+        user(undefined, action),
+        ...state,
+      ];
+    case UserAction.CREATION_END:
+      copy.shift();
+      return [...copy];
     case UserAction.ADD_USER:
       return [
         ...state,
@@ -109,15 +104,15 @@ const userList = (state = [], action) => {
         ...state,
         ...user(undefined, action),
       ].sort(compareUsersByFirstName);
-    case UserAction.UPDATE_USER:
+    case UserAction.UPDATE:
       for (let i = 0; i < copy.length; i++) {
         if (copy[i].id === action.user.id) {
           copy[i] = action.user;
           break;
         }
       }
-      return [...copy];
-    case UserAction.REMOVE_USER:
+      return [...copy].sort(compareUsersByFirstName);
+    case UserAction.REMOVE:
       for (let i = 0; i < copy.length; i++) {
         if (copy[i].id === action.user.id) {
           copy.splice(i, 1);
@@ -131,11 +126,10 @@ const userList = (state = [], action) => {
 };
 
 const rootReducer = combineReducers({
-  userCreationData,
   userList,
   message,
   inputError,
-  userEditData,
+  userEdit,
 });
 
 export default rootReducer;

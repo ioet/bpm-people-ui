@@ -13,3 +13,11 @@ export function compareUsersByFirstName(a, b) {
   }
   return 0;
 }
+
+export const getEmptyUser = () => (
+  {
+    id: 'tbd',
+    name: '',
+    authentication_identity: '',
+  }
+);

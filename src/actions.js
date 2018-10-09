@@ -1,6 +1,6 @@
 /* eslint-disable camelcase,prefer-destructuring */
 import axios from 'axios';
-import { validateEmail } from './component/utils/Utils';
+import { getEmptyUser, validateEmail } from './component/utils/Utils';
 import { InputErrorAction, MessageAction, UserAction } from './action-types';
 import {
   ErrorMessage, NotificationMessage, PeopleApi, PromptMessage, Variable,
@@ -21,22 +21,12 @@ export const addUser = oneUser => ({
   authentication_identity: oneUser.authentication_identity,
 });
 
-export const resetUserCreationData = () => ({
-  type: UserAction.USER_CREATION_DATA_RESET,
-});
-export const setUserCreationData = (field, name) => ({
-  type: UserAction.USER_CREATION_DATA,
-  field,
-  name,
-});
-
 const setInputError = field => ({
   type: InputErrorAction.ADD,
   field,
 });
-const removeInputError = field => ({
-  type: InputErrorAction.REMOVE,
-  field,
+const removeAllInputErrors = () => ({
+  type: InputErrorAction.REMOVE_ALL,
 });
 
 export const showMessage = errorMessage => ({
@@ -50,28 +40,33 @@ export const hideMessage = () => ({
   message: '',
 });
 
-const setEditUserId = editUserId => ({
-  type: UserAction.EDIT_USER_ID,
-  id: editUserId,
+export const startCreateUser = () => ({
+  type: UserAction.CREATION_START,
+});
+export const endCreateUser = () => ({
+  type: UserAction.CREATION_END,
 });
 
-export const setEditUserData = (field, name) => ({
-  type: UserAction.EDIT_USER_DATA,
+export const startEditUser = editUserId => ({
+  type: UserAction.EDIT_START,
+  id: editUserId,
+});
+export const setUserEditData = (field, name) => ({
+  type: UserAction.EDIT_DATA,
   field,
   name,
 });
-
-export const setEditUserFinished = () => ({
-  type: UserAction.EDIT_USER_FINISH,
+export const endEditUser = () => ({
+  type: UserAction.EDIT_END,
 });
 
 export const setUpdateUser = userToUpdate => ({
-  type: UserAction.UPDATE_USER,
+  type: UserAction.UPDATE,
   user: userToUpdate,
 });
 
 const removeUser = userToRemove => ({
-  type: UserAction.REMOVE_USER,
+  type: UserAction.REMOVE,
   user: userToRemove,
 });
 
@@ -87,29 +82,36 @@ export const getAllUsersAsync = () => (
 
 const validateField = input => !(typeof input === 'undefined' || input === '');
 
-const validateUser = (user) => {
-  if (!validateField(user.name)) return PromptMessage.ENTER_VALID_NAME;
+const validateInputWithErrorMessages = (dispatch, user) => {
+  if (!validateField(user.name)) {
+    dispatch(showMessage(PromptMessage.ENTER_VALID_NAME));
+    dispatch(setInputError(Variable.NAME));
+    return false;
+  }
 
   if (!validateEmail(user.authentication_identity)) {
-    return PromptMessage.ENTER_VALID_EMAIL;
+    dispatch(showMessage(PromptMessage.ENTER_VALID_EMAIL));
+    dispatch(setInputError(Variable.AUTHENTICATION_IDENTITY));
+    return false;
   }
   return true;
 };
 
-export const createUserAsync = () => (
-  (dispatch, getStore) => {
-    const validData = validateUser(getStore().userCreationData);
-    if (validData !== true) {
-      return dispatch(showMessage(validData));
-    }
-    const { name, authentication_identity } = getStore().userCreationData;
+const createUserAsync = () => (
+  (dispatch, getState) => {
+    const { name, authentication_identity } = getState().userEdit;
+
+    if (!validateInputWithErrorMessages(dispatch, getState().userEdit)) return null;
+
     return axios.post(PeopleApi.PATH, {
       name,
       authentication_identity,
     })
       .then((response) => {
-        dispatch(resetUserCreationData());
+        dispatch(removeAllInputErrors());
+        dispatch(endCreateUser());
         dispatch(addUser(response.data));
+        dispatch(showMessage(response.data.name + NotificationMessage.USER_CREATED_SUCCESSFULLY));
       })
       .catch((error) => {
         dispatch(showMessage(`${ErrorMessage.FAILED_TO_CREATE_USER}: ${error}`));
@@ -118,31 +120,27 @@ export const createUserAsync = () => (
 );
 
 const updateUserAsync = userToUpdate => (
-  (dispatch, getStore) => {
-    const { id } = getStore().userEditData;
-    let { name, authentication_identity } = getStore().userEditData;
+  (dispatch, getState) => {
+    const { id } = getState().userEdit;
+    let { name, authentication_identity } = getState().userEdit;
 
-    dispatch(removeInputError(Variable.NAME));
-    dispatch(removeInputError(Variable.AUTHENTICATION_IDENTITY));
-
-    if (!(typeof name !== 'undefined') && !(typeof authentication_identity !== 'undefined')) {
-      return dispatch(setEditUserFinished());
+    if (typeof name === 'undefined' && typeof authentication_identity === 'undefined') {
+      dispatch(removeAllInputErrors());
+      return dispatch(endEditUser());
     }
 
-    if (!(typeof name !== 'undefined')) {
+    if (typeof name === 'undefined') {
       name = userToUpdate.name;
     }
-    if (!(typeof authentication_identity !== 'undefined')) {
+    if (typeof authentication_identity === 'undefined') {
       authentication_identity = userToUpdate.authentication_identity;
     }
 
-    if (!validateField(name)) {
-      dispatch(setInputError(Variable.NAME));
-      return dispatch(showMessage(PromptMessage.ENTER_VALID_NAME));
-    }
-    if (!validateEmail(authentication_identity)) {
-      dispatch(setInputError(Variable.AUTHENTICATION_IDENTITY));
-      return dispatch(showMessage(PromptMessage.ENTER_VALID_EMAIL));
+    if (!validateInputWithErrorMessages(dispatch, {
+      name,
+      authentication_identity,
+    })) {
+      return null;
     }
 
     return axios.put(`${PeopleApi.PATH}/${id}`, {
@@ -150,10 +148,9 @@ const updateUserAsync = userToUpdate => (
       authentication_identity,
     })
       .then((response) => {
+        dispatch(removeAllInputErrors());
+        dispatch(endEditUser());
         dispatch(setUpdateUser(response.data));
-        dispatch(removeInputError(Variable.NAME));
-        dispatch(removeInputError(Variable.AUTHENTICATION_IDENTITY));
-        dispatch(setEditUserFinished());
         dispatch(showMessage(NotificationMessage.CHANGES_UPDATED_SUCCESSFULLY));
       })
       .catch((error) => {
@@ -162,20 +159,27 @@ const updateUserAsync = userToUpdate => (
   }
 );
 
-export const editOrUpdateUser = userToUpdate => (
-  (dispatch, getStore) => {
-    const userEditId = getStore().userEditData.id;
+export const editUpdateOrCreateUser = userToUpdate => (
+  (dispatch, getState) => {
+    const userEditId = getState().userEdit.id;
     if (typeof userEditId !== 'undefined') {
       if (userEditId === userToUpdate.id) {
+        if (userEditId === getEmptyUser().id) {
+          return dispatch(createUserAsync());
+        }
         return dispatch(updateUserAsync(userToUpdate));
       }
-      dispatch(showMessage(NotificationMessage.CHANGES_DISCARDED));
+      if (userEditId === getEmptyUser().id) {
+        dispatch(removeAllInputErrors());
+        dispatch(endCreateUser());
+      }
     }
-    return dispatch(setEditUserId(userToUpdate.id));
+    dispatch(showMessage(NotificationMessage.CHANGES_DISCARDED));
+    return dispatch(startEditUser(userToUpdate.id));
   }
 );
 
-export const removeUserAsync = userToRemove => (
+const removeUserAsync = userToRemove => (
   dispatch => axios.delete(`${PeopleApi.PATH}/${userToRemove.id}`)
     .then(() => {
       dispatch(removeUser(userToRemove));
@@ -184,4 +188,21 @@ export const removeUserAsync = userToRemove => (
     .catch((error) => {
       dispatch(showMessage(`${ErrorMessage.FAILED_TO_REMOVE_USER}: ${error}`));
     })
+);
+
+export const removeOrClearUser = userToRemove => (
+  (dispatch, getState) => {
+    const userEditId = getState().userEdit.id;
+    if (typeof userEditId !== 'undefined') {
+      if (userEditId === getEmptyUser().id) {
+        dispatch(endCreateUser());
+      }
+      if (userEditId === userToRemove.id) {
+        dispatch(endEditUser());
+      }
+      dispatch(removeAllInputErrors());
+      return dispatch(showMessage(NotificationMessage.CHANGES_DISCARDED));
+    }
+    return dispatch(removeUserAsync(userToRemove));
+  }
 );

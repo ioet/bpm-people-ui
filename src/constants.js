@@ -15,6 +15,7 @@ export const ErrorMessage = {
 };
 
 export const NotificationMessage = {
+  USER_CREATED_SUCCESSFULLY: ' was saved successfully.',
   CHANGES_DISCARDED: 'Your changes have been discarded.',
   CHANGES_UPDATED_SUCCESSFULLY: 'Your changes have been submitted successfully.',
   USER_DELETED_SUCCESSFULLY: ' has been deleted successfully.',
@@ -26,7 +27,7 @@ export const PromptMessage = {
 };
 
 export const AppConst = {
-  CREATE_NEW_USER: 'Create a new user',
+  APP_TITLE: 'Here are all users currently saved in our system',
 };
 
 export const CreateUserConst = {
@@ -50,7 +51,6 @@ export const ListItemConst = {
 };
 
 export const ListConst = {
-  HEADER: 'Here are all users currently saved in our system:',
   LOADING: 'Loading...',
   COLUMN_1: 'Name',
   COLUMN_2: 'Email',
