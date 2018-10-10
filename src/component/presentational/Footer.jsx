@@ -11,7 +11,7 @@ const Footer = (props) => {
 
   return (
     <div className={classes.root}>
-      <Button color="primary" href={FooterConst.BPM_GITHUB} className={classes.button}>
+      <Button color="primary" href={FooterConst.BPM_GITHUB} className={classes.button} target="_blank">
         { FooterConst.LEARN_MORE }
       </Button>
     </div>
