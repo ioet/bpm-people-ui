@@ -58,7 +58,7 @@ const UserList = (props) => {
     );
   }
   return (
-    <div className={classes.root}>
+    <div className={classes.phoneRoot}>
       {users.length > 0 ? (
         <List>
           {users}

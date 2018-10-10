@@ -2,7 +2,7 @@
 import { combineReducers } from 'redux';
 import { compareUsersByFirstName, getEmptyUser } from './component/utils/Utils';
 import {
-  DeleteAction, InputErrorAction, MessageAction, UserAction,
+  DeleteAction, HoverAction, InputErrorAction, MessageAction, UserAction,
 } from './action-types';
 
 const message = (state = { open: false }, action) => {
@@ -144,12 +144,29 @@ const userList = (state = [], action) => {
   }
 };
 
+const hover = (state = { hover: false }, action) => {
+  switch (action.type) {
+    case HoverAction.OVER:
+      return {
+        hover: true,
+        id: action.id,
+      };
+    case HoverAction.OUT:
+      return {
+        hover: false,
+      };
+    default:
+      return state;
+  }
+};
+
 const rootReducer = combineReducers({
   userList,
   message,
   inputError,
   userEdit,
   userDelete,
+  hover,
 });
 
 export default rootReducer;

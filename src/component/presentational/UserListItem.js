@@ -14,20 +14,33 @@ import {
 import PropTypes from 'prop-types';
 import ListItem from '@material-ui/core/ListItem/ListItem';
 import { isWidthUp } from '@material-ui/core/withWidth';
-import Card from '@material-ui/core/Card/Card';
 import Typography from '@material-ui/core/Typography/Typography';
-import { UserListItemConst, TooltipConst } from '../../constants';
+import { TooltipConst, UserListItemConst } from '../../constants';
 import { UserListItemStyles } from '../../styles';
 
 const UserListItem = (props) => {
   const {
     classes, width, editId, user, onChange, onUserEdit, onUserRemoved, inputError,
+    onMouseOver, onMouseOut, hover, hoverId,
   } = props;
   const { id, name, authentication_identity } = user;
+  const showItem = (hover && hoverId === user.id) ? classes.show : classes.hide;
 
   if (isWidthUp('sm', width)) {
     return (
-      <TableRow>
+      <TableRow
+        hover
+        onFocus={(e) => {
+          e.preventDefault();
+          onMouseOver(user.id);
+        }}
+        onMouseOver={(e) => {
+          e.preventDefault();
+          onMouseOver(user.id);
+        }}
+        onMouseOut={onMouseOut}
+        onBlur={onMouseOut}
+      >
         <TableCell className={classes.tableCell} component="td" scope="row">
           {
             (editId === id)
@@ -100,6 +113,7 @@ const UserListItem = (props) => {
                 e.preventDefault();
                 onUserEdit(user);
               }}
+              className={showItem}
             >
               {
                 (editId === id)
@@ -134,6 +148,7 @@ const UserListItem = (props) => {
                 e.preventDefault();
                 onUserRemoved(user, editId);
               }}
+              className={showItem}
             >
               {
                 (editId === id)
@@ -150,8 +165,22 @@ const UserListItem = (props) => {
     );
   }
   return (
-    <ListItem className={classes.phoneRoot}>
-      <Card className={classes.phoneCard}>
+    <ListItem
+      divider
+      selected={hover && hoverId === user.id}
+      className={classes.phoneRoot}
+      onFocus={(e) => {
+        e.preventDefault();
+        onMouseOver(user.id);
+      }}
+      onMouseOver={(e) => {
+        e.preventDefault();
+        onMouseOver(user.id);
+      }}
+      onMouseOut={onMouseOut}
+      onBlur={onMouseOut}
+    >
+      <div className={classes.phoneCard}>
         <div className={classes.phoneButtonWrapper}>
           <div className={classes.phoneButtons}>
             <Tooltip
@@ -276,9 +305,13 @@ const UserListItem = (props) => {
               )
           }
         </div>
-      </Card>
+      </div>
     </ListItem>
   );
+};
+
+UserListItem.defaultProps = {
+  hoverId: '',
 };
 
 UserListItem.propTypes = {
@@ -290,6 +323,10 @@ UserListItem.propTypes = {
   onUserEdit: PropTypes.func.isRequired,
   onUserRemoved: PropTypes.func.isRequired,
   inputError: PropTypes.object.isRequired,
+  onMouseOver: PropTypes.func.isRequired,
+  onMouseOut: PropTypes.func.isRequired,
+  hover: PropTypes.bool.isRequired,
+  hoverId: PropTypes.string,
 };
 
 export default compose(

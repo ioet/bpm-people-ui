@@ -23,3 +23,8 @@ export const DeleteAction = {
   SHOW_DIALOG: 'SHOW_DIALOG',
   HIDE_DIALOG: 'HIDE_DIALOG',
 };
+
+export const HoverAction = {
+  OVER: 'HOVER_OVER',
+  OUT: 'HOVER_OUT',
+};

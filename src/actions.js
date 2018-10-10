@@ -2,7 +2,7 @@
 import axios from 'axios';
 import { getEmptyUser, validateEmail } from './component/utils/Utils';
 import {
-  DeleteAction, InputErrorAction, MessageAction, UserAction,
+  DeleteAction, HoverAction, InputErrorAction, MessageAction, UserAction,
 } from './action-types';
 import {
   ErrorMessage, NotificationMessage, PeopleApi, PromptMessage, Variable,
@@ -215,3 +215,12 @@ export const clearUser = userToClear => (
     return dispatch(showMessage(NotificationMessage.CHANGES_DISCARDED));
   }
 );
+
+export const hoverOver = id => ({
+  type: HoverAction.OVER,
+  id,
+});
+
+export const hoverOut = () => ({
+  type: HoverAction.OUT,
+});

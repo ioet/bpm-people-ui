@@ -55,6 +55,9 @@ export const UserListStyles = theme => ({
   tableHeadIcon: {
     textAlign: 'center',
   },
+  phoneRoot: {
+    width: '100%',
+  },
 });
 
 export const UserListItemStyles = theme => ({
@@ -67,6 +70,12 @@ export const UserListItemStyles = theme => ({
     cursor: 'pointer',
     textAlign: 'center',
     fontSize: '1.3rem',
+  },
+  hide: {
+    visibility: 'hidden',
+  },
+  show: {
+    visibility: 'visible',
   },
   phoneRoot: {
     width: '100%',
