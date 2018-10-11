@@ -1,5 +1,4 @@
-/* eslint-disable max-len,no-undef */
-
+/* eslint-disable max-len */
 export function validateEmail(email) {
   const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return re.test(email);
@@ -14,3 +13,11 @@ export function compareUsersByFirstName(a, b) {
   }
   return 0;
 }
+
+export const getEmptyUser = () => (
+  {
+    id: 'tbd',
+    name: '',
+    authentication_identity: '',
+  }
+);

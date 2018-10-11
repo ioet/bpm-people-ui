@@ -1,17 +1,13 @@
+/* eslint-disable no-plusplus */
 import { combineReducers } from 'redux';
-import { compareUsersByFirstName } from './component/utils/Utils';
+import { compareUsersByFirstName, getEmptyUser } from './component/utils/Utils';
 import {
-  ADD_USER, ADD_USERS,
-  USER_CREATION_DATA,
-  EDIT_USER_ID, EDIT_USER_DATA, EDIT_USER_FINISH,
-  REMOVE_USER,
-  UPDATE_USER,
-  ERROR_MESSAGE, USER_CREATION_DATA_RESET,
-} from './actions';
+  DeleteAction, HoverAction, InputErrorAction, MessageAction, UserAction,
+} from './action-types';
 
-const error = (state = [], action) => {
+const message = (state = { open: false }, action) => {
   switch (action.type) {
-    case ERROR_MESSAGE:
+    case MessageAction.MESSAGE:
       return ({
         open: action.open,
         message: action.message,
@@ -21,36 +17,50 @@ const error = (state = [], action) => {
   }
 };
 
-const userCreationData = (state = [], action) => {
+const inputError = (state = {}, action) => {
   switch (action.type) {
-    case USER_CREATION_DATA:
+    case InputErrorAction.ADD:
       return ({
         ...state,
-        [action.field]: action.name,
+        [action.field]: true,
       });
-    case USER_CREATION_DATA_RESET:
-      return {
-        name: '',
-        authentication_identity: '',
-      };
+    case InputErrorAction.REMOVE_ALL:
+      return {};
     default:
       return state;
   }
 };
 
-const userEditData = (state = [], action) => {
+const userEdit = (state = { create: false, update: false }, action) => {
   switch (action.type) {
-    case EDIT_USER_ID:
+    case UserAction.CREATION_START:
+      return ({
+        id: getEmptyUser().id,
+        create: true,
+        update: false,
+      });
+    case UserAction.EDIT_START:
       return ({
         id: action.id,
+        create: false,
+        update: true,
       });
-    case EDIT_USER_DATA:
+    case UserAction.EDIT_DATA:
       return ({
         ...state,
         [action.field]: action.name,
       });
-    case EDIT_USER_FINISH:
+    case UserAction.EDIT_END:
       return ({
+        create: false,
+        update: false,
+        name: null,
+        authentication_identity: null,
+      });
+    case UserAction.CREATION_END:
+      return ({
+        create: false,
+        update: false,
         name: null,
         authentication_identity: null,
       });
@@ -59,28 +69,35 @@ const userEditData = (state = [], action) => {
   }
 };
 
+const userDelete = (state = { open: false, user: {} }, action) => {
+  switch (action.type) {
+    case DeleteAction.SHOW_DIALOG:
+      return {
+        open: action.open,
+        user: action.user,
+      };
+    case DeleteAction.HIDE_DIALOG:
+      return {
+        open: false,
+        user: {},
+      };
+    default:
+      return state;
+  }
+};
+
 const user = (state, action) => {
   switch (action.type) {
-    case ADD_USER:
+    case UserAction.CREATION_START:
+      return getEmptyUser();
+    case UserAction.ADD_USER:
       return {
         id: action.id,
         name: action.name,
         authentication_identity: action.authentication_identity,
       };
-    case ADD_USERS:
+    case UserAction.ADD_USERS:
       return action.user.map(u => u);
-    case UPDATE_USER:
-      // check if state.id is accessible here
-      if (state.id !== action.user.id) {
-        return state;
-      }
-      return [
-        ...state,
-        {
-          name: action.name,
-          authentication_identity: action.authentication_identity,
-        },
-      ];
     default:
       return state;
   }
@@ -88,25 +105,33 @@ const user = (state, action) => {
 const userList = (state = [], action) => {
   const copy = state.slice();
   switch (action.type) {
-    case ADD_USER:
+    case UserAction.CREATION_START:
+      return [
+        user(undefined, action),
+        ...state,
+      ];
+    case UserAction.CREATION_END:
+      copy.shift();
+      return [...copy];
+    case UserAction.ADD_USER:
       return [
         ...state,
         user(undefined, action),
       ].sort(compareUsersByFirstName);
-    case ADD_USERS:
+    case UserAction.ADD_USERS:
       return [
         ...state,
         ...user(undefined, action),
       ].sort(compareUsersByFirstName);
-    case UPDATE_USER:
+    case UserAction.UPDATE:
       for (let i = 0; i < copy.length; i++) {
         if (copy[i].id === action.user.id) {
           copy[i] = action.user;
           break;
         }
       }
-      return [...copy];
-    case REMOVE_USER:
+      return [...copy].sort(compareUsersByFirstName);
+    case UserAction.REMOVE:
       for (let i = 0; i < copy.length; i++) {
         if (copy[i].id === action.user.id) {
           copy.splice(i, 1);
@@ -119,11 +144,29 @@ const userList = (state = [], action) => {
   }
 };
 
+const hover = (state = { hover: false }, action) => {
+  switch (action.type) {
+    case HoverAction.OVER:
+      return {
+        hover: true,
+        id: action.id,
+      };
+    case HoverAction.OUT:
+      return {
+        hover: false,
+      };
+    default:
+      return state;
+  }
+};
+
 const rootReducer = combineReducers({
-  userCreationData,
   userList,
-  error,
-  userEditData,
+  message,
+  inputError,
+  userEdit,
+  userDelete,
+  hover,
 });
 
 export default rootReducer;
