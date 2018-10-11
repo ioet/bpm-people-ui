@@ -8,10 +8,28 @@ In order to set up and run the project, follow these steps:
 npm install
 ```
 
-## Configure environment variables
-
+## To run the app locally with docker-compose
+You will need a file called `aws.env` inside your root directory containing these environment variables.
 ```
-export REACT_APP_BPM_PEOPLE_API_URL=http://yourURL.example/path
+AWS_REGION=us-east-1
+AWS_ACCESS_KEY_ID=YOUR_ACCESS_KEY
+AWS_SECRET_ACCESS_KEY=YOUR_SECRET_ACCESS_KEY
+```
+ 
+Then run this command to start the edge-server, the eureka-server and the bpm-people-api
+```
+docker-compose up
+```
+
+## Configure environment variables
+So that the app can connect to the bpm-people-api
+```
+export REACT_APP_BPM_PEOPLE_API_URL=http://yourURL.example/api
+```
+
+When using docker-compose the URL is the following
+```
+export REACT_APP_BPM_PEOPLE_API_URL=http://localhost:9081/people-service
 ```
 
 ## Running the app
