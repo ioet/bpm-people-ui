@@ -19,7 +19,7 @@ function App(props) {
     <div>
       <AppBar position="sticky">
         <Toolbar>
-          <Typography variant="title" color="inherit" >
+          <Typography variant="h6" color="inherit" >
             {AppConst.APP_TITLE}
           </Typography>
         </Toolbar>

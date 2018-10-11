@@ -6,6 +6,9 @@ export const RootTheme = createMuiTheme({
     primary: teal,
     secondary: deepOrange,
   },
+  typography: {
+    useNextVariants: true,
+  },
 });
 
 export const AppStyles = theme => ({
@@ -99,10 +102,10 @@ export const UserListItemStyles = theme => ({
   phoneForm: {
     marginTop: theme.spacing.unit * 1,
   },
-  phoneHeaderWrapper: {
+  phoneKeyWrapper: {
     display: 'flex',
   },
-  phoneHeader: {
+  phoneKey: {
     paddingRight: theme.spacing.unit * 1,
   },
 });

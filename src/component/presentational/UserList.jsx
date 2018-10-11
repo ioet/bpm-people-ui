@@ -49,7 +49,7 @@ const UserList = (props) => {
             </TableBody>
           </Table>
         ) : (
-          <Typography variant="subheading">
+          <Typography variant="subtitle1">
             {UserListConst.LOADING}
           </Typography>
         )}
@@ -64,7 +64,7 @@ const UserList = (props) => {
           {users}
         </List>
       ) : (
-        <Typography variant="subheading">
+        <Typography variant="subtitle1">
           {UserListConst.LOADING}
         </Typography>
       )}

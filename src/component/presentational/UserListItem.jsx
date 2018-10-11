@@ -287,19 +287,19 @@ const UserListItem = (props) => {
                 </div>
               ) : (
                 <div>
-                  <div className={classes.phoneHeaderWrapper}>
-                    <Typography className={classes.phoneHeader}>
+                  <div className={classes.phoneKeyWrapper}>
+                    <Typography variant="subtitle1" className={classes.phoneKey}>
                       {UserListItemConst.NAME}
                     </Typography>
-                    <Typography>
+                    <Typography variant="subtitle1">
                       {name}
                     </Typography>
                   </div>
-                  <div className={classes.phoneHeaderWrapper}>
-                    <Typography className={classes.phoneHeader}>
+                  <div className={classes.phoneKeyWrapper}>
+                    <Typography variant="subtitle1" className={classes.phoneKey}>
                       {UserListItemConst.EMAIL}
                     </Typography>
-                    <Typography>
+                    <Typography variant="subtitle1">
                       {authentication_identity}
                     </Typography>
                   </div>
