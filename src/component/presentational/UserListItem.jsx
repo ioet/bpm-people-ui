@@ -46,19 +46,25 @@ const UserListItem = (props) => {
           {
             (editId === id)
               ? (
-                <TextField
-                  error={inputError.name}
-                  name="name"
-                  defaultValue={name}
-                  label={UserListItemConst.EDIT_NAME}
-                  id="mui-theme-provider-input"
-                  onChange={
-                    (e) => {
-                      e.preventDefault();
-                      onChange(e, editId);
+                <form onSubmit={(e) => {
+                  e.preventDefault();
+                  onUserEdit(user);
+                }}
+                >
+                  <TextField
+                    error={inputError.name}
+                    name="name"
+                    defaultValue={name}
+                    label={UserListItemConst.EDIT_NAME}
+                    id="mui-theme-provider-input"
+                    onChange={
+                      (e) => {
+                        e.preventDefault();
+                        onChange(e, editId);
+                      }
                     }
-                  }
-                />
+                  />
+                </form>
               ) : (
                 name
               )
@@ -250,19 +256,27 @@ const UserListItem = (props) => {
             (editId === id)
               ? (
                 <div>
-                  <TextField
-                    error={inputError.name}
-                    name="name"
-                    defaultValue={name}
-                    label={UserListItemConst.EDIT_NAME}
-                    id="mui-theme-provider-input"
-                    onChange={
-                      (e) => {
-                        e.preventDefault();
-                        onChange(e, editId);
+                  <form
+                    className={classes.phoneForm}
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      onUserEdit(user);
+                    }}
+                  >
+                    <TextField
+                      error={inputError.name}
+                      name="name"
+                      defaultValue={name}
+                      label={UserListItemConst.EDIT_NAME}
+                      id="mui-theme-provider-input"
+                      onChange={
+                        (e) => {
+                          e.preventDefault();
+                          onChange(e, editId);
+                        }
                       }
-                    }
-                  />
+                    />
+                  </form>
                   <form
                     className={classes.phoneForm}
                     onSubmit={(e) => {
