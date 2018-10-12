@@ -2,37 +2,37 @@
 import React from 'react';
 import Paper from '@material-ui/core/Paper/Paper';
 import withStyles from '@material-ui/core/styles/withStyles';
-import Divider from '@material-ui/core/Divider/Divider';
-import ListContainer from './component/container/ListContainer';
-import CreateUserContainer from './component/container/CreateUserContainer';
+import Typography from '@material-ui/core/Typography/Typography';
+import AppBar from '@material-ui/core/AppBar/AppBar';
+import Toolbar from '@material-ui/core/Toolbar/Toolbar';
+import UserListContainer from './component/container/UserListContainer';
 import ErrorSnackbarContainer from './component/container/ErrorSnackbarContainer';
 import Footer from './component/presentational/Footer';
-
-const styles = theme => ({
-  root: {
-    marginTop: theme.spacing.unit * 3,
-    paddingTop: theme.spacing.unit * 2,
-    paddingBottom: theme.spacing.unit * 1,
-    paddingLeft: theme.spacing.unit * 2,
-    paddingRight: theme.spacing.unit * 2,
-    width: '50%',
-    margin: 'auto',
-  },
-});
+import { AppStyles } from './styles';
+import { AppConst } from './constants';
+import FloatingActionButtonContainer from './component/container/FloatingActionButtonContainer';
+import DeleteDialogContainer from './component/container/DeleteDialogContainer';
 
 function App(props) {
   const { classes } = props;
   return (
     <div>
+      <AppBar position="sticky">
+        <Toolbar>
+          <Typography variant="h6" color="inherit" >
+            {AppConst.APP_TITLE}
+          </Typography>
+        </Toolbar>
+      </AppBar>
       <Paper className={classes.root} elevation={1}>
-        <CreateUserContainer/>
-        <Divider/>
-        <ListContainer/>
-        <Footer />
+        <UserListContainer/>
+        <Footer/>
+        <FloatingActionButtonContainer/>
       </Paper>
       <ErrorSnackbarContainer/>
+      <DeleteDialogContainer/>
     </div>
   );
 }
 
-export default withStyles(styles)(App);
+export default withStyles(AppStyles)(App);
