@@ -8,7 +8,9 @@ import {
   ErrorMessage, NotificationMessage, PeopleApi, PromptMessage, Variable,
 } from './constants';
 
-axios.defaults.baseURL = process.env.REACT_APP_BPM_PEOPLE_API_URL;
+axios.defaults.baseURL = Object.is(process.env.REACT_APP_BPM_PEOPLE_API_URL, undefined)
+  ? 'http://localhost:9081/people-service'
+  : process.env.REACT_APP_BPM_PEOPLE_API_URL;
 axios.defaults.headers.common['Content-Type'] = 'application/json';
 
 const addUsers = allUsers => ({
