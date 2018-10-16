@@ -21,3 +21,11 @@ export const getEmptyUser = () => (
     authentication_identity: '',
   }
 );
+
+export function getUserObjectFromArray(user) {
+  return {
+    id: user[0],
+    name: user[1],
+    authentication_identity: user[2],
+  };
+}

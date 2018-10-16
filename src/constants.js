@@ -7,6 +7,11 @@ export const Variable = {
   AUTHENTICATION_IDENTITY: 'authentication_identity',
 };
 
+export const ButtonType = {
+  EDIT: 'edit',
+  DELETE: 'delete',
+};
+
 export const ErrorMessage = {
   FAILED_TO_LOAD_USERS: 'Failed to load all saved persons.',
   FAILED_TO_CREATE_USER: 'Failed to create a new person.',
@@ -46,12 +51,10 @@ export const UserListItemConst = {
   TOOLTIP_DELETE: 'Delete',
   EDIT_NAME: 'Edit your name',
   EDIT_EMAIL: 'Edit your email',
-  NAME: 'Name:',
-  EMAIL: 'Email:',
 };
 
 export const UserListConst = {
-  LOADING: 'Loading...',
+  COLUMN_0: 'Id',
   COLUMN_1: 'Name',
   COLUMN_2: 'Email',
   COLUMN_3: 'Edit',
@@ -62,6 +65,7 @@ export const DeleteDialogConst = {
   TITLE: 'Delete user',
   CONTENT_TEXT_1: 'Do you really want to delete ',
   CONTENT_TEXT_2: ' permanently?',
+  CONTENT_TEXT_MULTI_USER: ' users',
   DISAGREE: 'No',
   AGREE: 'Yes',
 };

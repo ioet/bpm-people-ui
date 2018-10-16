@@ -9,21 +9,33 @@ export const RootTheme = createMuiTheme({
   typography: {
     useNextVariants: true,
   },
-});
-
-export const AppStyles = theme => ({
-  root: {
-    marginTop: theme.spacing.unit * 3,
-    marginBottom: theme.spacing.unit * 2,
-    padding: theme.spacing.unit * 2,
-    width: '90%',
-    margin: 'auto',
+  overrides: {
+    MuiTableCell: {
+      root: {
+        maxWidth: '140px',
+      },
+      body: {
+        padding: '0',
+      },
+    },
+    MuiCheckbox: {
+      checked: {
+        color: `${deepOrange.A400} !important`,
+      },
+    },
+    MUIDataTableToolbar: {
+      icon: {
+        '&:hover': {
+          color: teal['500'],
+        },
+      },
+    },
   },
 });
 
 export const FabStyles = () => ({
   fab: {
-    position: 'absolute',
+    position: 'fixed',
     bottom: '3%',
     right: '5%',
   },
@@ -39,73 +51,52 @@ export const SnackbarStyles = theme => ({
 
 export const FooterStyles = theme => ({
   root: {
-    marginTop: '2%',
+    width: '90%',
+    margin: 'auto',
+    padding: theme.spacing.unit * 1,
   },
   button: {
-    margin: theme.spacing.unit,
+    margin: theme.spacing.unit * 1,
   },
 });
 
 export const UserListStyles = theme => ({
   root: {
-    width: '100%',
-    marginTop: theme.spacing.unit * 3,
-    overflowX: 'auto',
+    marginTop: theme.spacing.unit * 2,
+    padding: theme.spacing.unit * 1,
+    width: '90%',
+    margin: 'auto',
   },
-  tableHead: {
-    padding: '2px',
-  },
-  tableHeadIcon: {
-    textAlign: 'center',
-  },
-  phoneRoot: {
-    width: '100%',
+  iconButton: {
+    width: '48px',
+    height: '48px',
+    top: '50%',
+    display: 'block',
+    position: 'relative',
+    transform: 'translateY(-50%)',
+    marginRight: '24px',
+    '&:hover': {
+      color: teal['500'],
+    },
   },
 });
 
-export const UserListItemStyles = theme => ({
-  tableCell: {
-    padding: '0px 2px',
-    maxWidth: '90px',
-    height: '73px',
-  },
-  pointerButton: {
-    cursor: 'pointer',
-    textAlign: 'center',
-    fontSize: '1.3rem',
-  },
+export const MyIconButtonStyles = () => ({
   hide: {
     visibility: 'hidden',
   },
   show: {
     visibility: 'visible',
   },
-  phoneRoot: {
-    width: '100%',
-    padding: '0px',
-  },
-  phoneCard: {
-    width: '100%',
-    margin: '6px 2px',
-  },
-  phoneButtonWrapper: {
-    width: '100%',
-    display: 'inline-block',
-  },
-  phoneButtons: {
-    float: 'right',
-  },
-  phoneContent: {
-    padding: theme.spacing.unit * 1,
-    paddingTop: '0px',
-  },
-  phoneForm: {
-    marginTop: theme.spacing.unit * 1,
-  },
-  phoneKeyWrapper: {
-    display: 'flex',
-  },
-  phoneKey: {
-    paddingRight: theme.spacing.unit * 1,
+});
+
+export const TableCellStyles = theme => ({
+  cell: {
+    height: 'auto',
+    lineHeight: theme.spacing.unit / 2,
+    verticalAlign: 'middle',
+    paddingTop: theme.spacing.unit / 2,
+    paddingBottom: theme.spacing.unit / 2,
+    paddingLeft: theme.spacing.unit * 3,
   },
 });

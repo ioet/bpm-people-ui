@@ -16,6 +16,16 @@ function Transition(props) {
 
 const DeleteDialog = (props) => {
   const { open, handleClose, user } = props;
+  let userToDelete;
+  if (user.constructor === Array) {
+    userToDelete = {
+      multiple: true,
+      users: user,
+      name: user.length + DeleteDialogConst.CONTENT_TEXT_MULTI_USER,
+    };
+  } else {
+    userToDelete = user;
+  }
 
   return (
     <Dialog
@@ -33,7 +43,7 @@ const DeleteDialog = (props) => {
         <DialogContentText id="alert-dialog-slide-description">
           {DeleteDialogConst.CONTENT_TEXT_1}
           <b>
-            {user.name}
+            {userToDelete.name}
           </b>
           {DeleteDialogConst.CONTENT_TEXT_2}
         </DialogContentText>
@@ -51,7 +61,7 @@ const DeleteDialog = (props) => {
         <Button
           onClick={(e) => {
             e.preventDefault();
-            handleClose(true, user);
+            handleClose(true, userToDelete);
           }}
           color="primary"
         >
@@ -65,7 +75,7 @@ const DeleteDialog = (props) => {
 DeleteDialog.propTypes = {
   open: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,
-  user: PropTypes.object.isRequired,
+  user: PropTypes.any.isRequired,
 };
 
 export default DeleteDialog;
