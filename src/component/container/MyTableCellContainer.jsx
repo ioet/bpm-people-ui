@@ -2,13 +2,9 @@ import { connect } from 'react-redux';
 import { hoverOut, hoverOver } from '../../actions';
 import MyTableCell from '../presentational/MyTableCell';
 
-const mapStateToProps = (state, ownProps) => ({
-  user: ownProps.user,
-});
-
-const mapDispatchToProps = dispatch => ({
-  onMouseOver: (id) => {
-    dispatch(hoverOver(id));
+const mapDispatchToProps = (dispatch, ownProps) => ({
+  onMouseOver: () => {
+    dispatch(hoverOver(ownProps.user.id));
   },
   onMouseOut: () => {
     dispatch(hoverOut());
@@ -16,7 +12,7 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const MyTableCellContainer = connect(
-  mapStateToProps,
+  null,
   mapDispatchToProps,
 )(MyTableCell);
 

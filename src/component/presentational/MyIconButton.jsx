@@ -12,19 +12,19 @@ import { MyIconButtonStyles } from '../../styles';
 
 const MyIconButton = (props) => {
   const {
-    classes, editId, user, onUserEdit, onUserRemoved, type, hover, hoverId,
+    classes, editId, userId, onUserEdit, onUserRemoved, type, hover, hoverId,
   } = props;
-  const showItem = (hover && hoverId === user.id) ? classes.show : classes.hide;
+  const showItem = (hover && hoverId === userId) ? classes.show : classes.hide;
 
   let icon;
   let tooltip;
 
   if (type === ButtonType.EDIT) {
-    icon = (editId === user.id) ? <Done/> : <Edit/>;
-    tooltip = (editId === user.id) ? UserListItemConst.TOOLTIP_SAVE : UserListItemConst.TOOLTIP_EDIT;
+    icon = (editId === userId) ? <Done/> : <Edit/>;
+    tooltip = (editId === userId) ? UserListItemConst.TOOLTIP_SAVE : UserListItemConst.TOOLTIP_EDIT;
   } else {
-    icon = (editId === user.id) ? <Clear/> : <Delete/>;
-    tooltip = (editId === user.id) ? UserListItemConst.TOOLTIP_DISCARD : UserListItemConst.TOOLTIP_DELETE;
+    icon = (editId === userId) ? <Clear/> : <Delete/>;
+    tooltip = (editId === userId) ? UserListItemConst.TOOLTIP_DISCARD : UserListItemConst.TOOLTIP_DELETE;
   }
 
   return (
@@ -40,9 +40,9 @@ const MyIconButton = (props) => {
           onClick={(e) => {
             e.preventDefault();
             if (type === ButtonType.EDIT) {
-              onUserEdit(user);
+              onUserEdit();
             } else {
-              onUserRemoved(user, editId);
+              onUserRemoved(editId);
             }
           }}
           className={showItem}
@@ -61,7 +61,7 @@ MyIconButton.defaultProps = {
 MyIconButton.propTypes = {
   classes: PropTypes.any.isRequired,
   editId: PropTypes.string.isRequired,
-  user: PropTypes.object.isRequired,
+  userId: PropTypes.string.isRequired,
   onUserEdit: PropTypes.func.isRequired,
   onUserRemoved: PropTypes.func.isRequired,
   type: PropTypes.string.isRequired,

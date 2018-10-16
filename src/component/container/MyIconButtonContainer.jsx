@@ -6,19 +6,19 @@ const mapStateToProps = (state, ownProps) => ({
   editId: (typeof state.userEdit.id === 'undefined') ? '' : state.userEdit.id,
   hover: state.hover.hover,
   hoverId: state.hover.id,
-  user: ownProps.user,
+  userId: ownProps.user.id,
   type: ownProps.type,
 });
 
-const mapDispatchToProps = dispatch => ({
-  onUserEdit: (user) => {
-    dispatch(editUpdateOrCreateUser(user));
+const mapDispatchToProps = (dispatch, ownProps) => ({
+  onUserEdit: () => {
+    dispatch(editUpdateOrCreateUser(ownProps.user));
   },
-  onUserRemoved: (user, editId) => {
-    if (user.id === editId) {
-      dispatch(clearUser(user));
+  onUserRemoved: (editId) => {
+    if (ownProps.user.id === editId) {
+      dispatch(clearUser(ownProps.user));
     } else {
-      dispatch(showDeleteDialog(user));
+      dispatch(showDeleteDialog(ownProps.user));
     }
   },
 });

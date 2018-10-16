@@ -5,15 +5,15 @@ import TextField from '@material-ui/core/TextField/TextField';
 
 const EditOrPlainText = (props) => {
   const {
-    value, editId, user, inputError, onUserEdit, onChange, name, label,
+    value, editId, userId, inputError, onUserEdit, onChange, name, label,
   } = props;
 
   return (
-    (editId === user.id)
+    (editId === userId)
       ? (
         <form onSubmit={(e) => {
           e.preventDefault();
-          onUserEdit(user);
+          onUserEdit();
         }}
         >
           <TextField
@@ -43,7 +43,7 @@ EditOrPlainText.defaultProps = {
 EditOrPlainText.propTypes = {
   value: PropTypes.string.isRequired,
   editId: PropTypes.string.isRequired,
-  user: PropTypes.object.isRequired,
+  userId: PropTypes.string.isRequired,
   inputError: PropTypes.bool,
   onUserEdit: PropTypes.func.isRequired,
   onChange: PropTypes.func.isRequired,

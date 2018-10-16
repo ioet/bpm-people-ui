@@ -6,7 +6,7 @@ import { TableCellStyles } from '../../styles';
 
 const MyTableCell = (props) => {
   const {
-    classes, onMouseOver, onMouseOut, user, children,
+    classes, onMouseOver, onMouseOut, children,
   } = props;
 
   return (
@@ -14,11 +14,11 @@ const MyTableCell = (props) => {
       className={classes.cell}
       onFocus={(e) => {
         e.preventDefault();
-        onMouseOver(user.id);
+        onMouseOver();
       }}
       onMouseOver={(e) => {
         e.preventDefault();
-        onMouseOver(user.id);
+        onMouseOver();
       }}
       onMouseOut={onMouseOut}
       onBlur={onMouseOut}
@@ -30,7 +30,6 @@ const MyTableCell = (props) => {
 
 MyTableCell.propTypes = {
   classes: PropTypes.object.isRequired,
-  user: PropTypes.object.isRequired,
   onMouseOver: PropTypes.func.isRequired,
   onMouseOut: PropTypes.func.isRequired,
   children: PropTypes.object.isRequired,

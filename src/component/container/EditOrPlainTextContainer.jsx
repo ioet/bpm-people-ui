@@ -5,15 +5,15 @@ import EditOrPlainText from '../presentational/EditOrPlainText';
 const mapStateToProps = (state, ownProps) => ({
   editId: (typeof state.userEdit.id === 'undefined') ? '' : state.userEdit.id,
   inputError: state.inputError[ownProps.name],
-  user: ownProps.user,
+  userId: ownProps.user.id,
   value: ownProps.value,
   name: ownProps.name,
   label: ownProps.label,
 });
 
-const mapDispatchToProps = dispatch => ({
-  onUserEdit: (user) => {
-    dispatch(editUpdateOrCreateUser(user));
+const mapDispatchToProps = (dispatch, ownProps) => ({
+  onUserEdit: () => {
+    dispatch(editUpdateOrCreateUser(ownProps.user));
   },
   onChange: (event) => {
     dispatch(setUserEditData(event.target.name, event.target.value));
