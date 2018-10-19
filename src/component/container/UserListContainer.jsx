@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-tag-spacing */
 import { connect } from 'react-redux';
 import UserList from '../presentational/UserList';
 import { showDeleteDialog } from '../../actions';

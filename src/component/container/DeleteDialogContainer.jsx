@@ -1,23 +1,16 @@
 import { connect } from 'react-redux';
 import DeleteDialog from '../presentational/DeleteDialog';
 import { hideDeleteDialog, removeUserAsync } from '../../actions';
-import { getUserObjectFromArray } from '../utils/Utils';
 
 const mapStateToProps = state => ({
   open: state.userDelete.open,
-  user: state.userDelete.user,
+  users: state.userDelete.users,
 });
 
 const mapDispatchToProps = dispatch => ({
-  handleClose: (accepted, user) => {
+  handleClose: (users = []) => {
     dispatch(hideDeleteDialog());
-    if (accepted === true) {
-      if (user.multiple) {
-        user.users.forEach(u => dispatch(removeUserAsync(getUserObjectFromArray(u))));
-      } else {
-        dispatch(removeUserAsync(user));
-      }
-    }
+    users.forEach(u => dispatch(removeUserAsync(u)));
   },
 });
 

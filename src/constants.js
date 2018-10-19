@@ -7,11 +7,6 @@ export const Variable = {
   AUTHENTICATION_IDENTITY: 'authentication_identity',
 };
 
-export const ButtonType = {
-  EDIT: 'edit',
-  DELETE: 'delete',
-};
-
 export const ErrorMessage = {
   FAILED_TO_LOAD_USERS: 'Failed to load all saved persons.',
   FAILED_TO_CREATE_USER: 'Failed to create a new person.',

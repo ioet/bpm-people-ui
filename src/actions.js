@@ -43,21 +43,22 @@ export const hideMessage = () => ({
   message: '',
 });
 
-export const showDeleteDialog = user => ({
+export const showDeleteDialog = users => ({
   type: DeleteAction.SHOW_DIALOG,
   open: true,
-  user,
+  users,
 });
 export const hideDeleteDialog = () => ({
   type: DeleteAction.HIDE_DIALOG,
   open: false,
 });
 
-export const startCreateUser = () => ({
-  type: UserAction.CREATION_START,
+export const addEmptyRow = () => ({
+  type: UserAction.ADD_EMPTY_ROW,
 });
-export const endCreateUser = () => ({
-  type: UserAction.CREATION_END,
+
+export const removeEmptyRow = () => ({
+  type: UserAction.REMOVE_EMPTY_ROW,
 });
 
 export const startEditUser = editUserId => ({
@@ -72,6 +73,20 @@ export const setUserEditData = (field, name) => ({
 export const endEditUser = () => ({
   type: UserAction.EDIT_END,
 });
+
+export const startCreateUser = () => (
+  (dispatch) => {
+    dispatch(addEmptyRow());
+    dispatch(startEditUser(getEmptyUser().id));
+  }
+);
+
+export const endCreateUser = () => (
+  (dispatch) => {
+    dispatch(removeEmptyRow());
+    dispatch(endEditUser());
+  }
+);
 
 export const setUpdateUser = userToUpdate => ({
   type: UserAction.UPDATE,
@@ -150,7 +165,10 @@ const updateUserAsync = userToUpdate => (
       authentication_identity = userToUpdate.authentication_identity;
     }
 
-    if (!validateInputWithErrorMessages(dispatch, { name, authentication_identity })) {
+    if (!validateInputWithErrorMessages(dispatch, {
+      name,
+      authentication_identity,
+    })) {
       return null;
     }
 
@@ -202,19 +220,36 @@ export const removeUserAsync = userToRemove => (
     })
 );
 
-export const clearUser = userToClear => (
-  (dispatch, getState) => {
-    const userEditId = getState().userEdit.id;
-
-    if (userEditId === getEmptyUser().id) {
+export const clearUser = creating => (
+  (dispatch) => {
+    if (creating) {
       dispatch(endCreateUser());
-    }
-    if (userEditId === userToClear.id) {
+    } else {
       dispatch(endEditUser());
     }
 
     dispatch(removeAllInputErrors());
-    return dispatch(showMessage(NotificationMessage.CHANGES_DISCARDED));
+    dispatch(showMessage(NotificationMessage.CHANGES_DISCARDED));
+  }
+);
+
+export const startOrEndCreateUser = () => (
+  (dispatch, getState) => {
+    if (!getState().userEdit.editing) {
+      dispatch(startCreateUser());
+    } else {
+      dispatch(clearUser(true));
+    }
+  }
+);
+
+export const clearOrShowDelete = users => (
+  (dispatch, getState) => {
+    if (users[0].id === getState().userEdit.id) {
+      dispatch(clearUser(users[0].id === getEmptyUser().id));
+    } else {
+      dispatch(showDeleteDialog(users));
+    }
   }
 );
 

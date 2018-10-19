@@ -1,18 +1,17 @@
-/* eslint-disable react/display-name,react/forbid-prop-types,react/jsx-tag-spacing */
+/* eslint-disable react/display-name */
 import React from 'react';
 import PropTypes from 'prop-types';
 import MUIDataTable from 'mui-datatables';
 import withStyles from '@material-ui/core/styles/withStyles';
 import IconButton from '@material-ui/core/IconButton';
 import { Delete } from '@material-ui/icons';
-import {
-  ButtonType, UserListConst, UserListItemConst, Variable,
-} from '../../constants';
+import { UserListConst, UserListItemConst, Variable } from '../../constants';
 import { UserListStyles } from '../../styles';
 import EditOrPlainTextContainer from '../container/EditOrPlainTextContainer';
 import { getUserObjectFromArray } from '../utils/Utils';
-import MyIconButtonContainer from '../container/MyIconButtonContainer';
 import MyTableCellContainer from '../container/MyTableCellContainer';
+import MyEditButtonContainer from '../container/MyEditButtonContainer';
+import MyDeleteButtonContainer from '../container/MyDeleteButtonContainer';
 
 const UserList = (props) => {
   const {
@@ -36,31 +35,37 @@ const UserList = (props) => {
     {
       name: UserListConst.COLUMN_1,
       options: {
-        customBodyRender: (value, tableMeta) => (
-          <MyTableCellContainer user={getUserObjectFromArray(tableMeta.rowData)}>
-            <EditOrPlainTextContainer
-              user={getUserObjectFromArray(tableMeta.rowData)}
-              value={value}
-              name={Variable.NAME}
-              label={UserListItemConst.EDIT_NAME}
-            />
-          </MyTableCellContainer>
-        ),
+        customBodyRender: (value, tableMeta) => {
+          const user = getUserObjectFromArray(tableMeta.rowData);
+          return (
+            <MyTableCellContainer userId={user.id}>
+              <EditOrPlainTextContainer
+                user={user}
+                value={value}
+                name={Variable.NAME}
+                label={UserListItemConst.EDIT_NAME}
+              />
+            </MyTableCellContainer>
+          );
+        },
       },
     },
     {
       name: UserListConst.COLUMN_2,
       options: {
-        customBodyRender: (value, tableMeta) => (
-          <MyTableCellContainer user={getUserObjectFromArray(tableMeta.rowData)}>
-            <EditOrPlainTextContainer
-              user={getUserObjectFromArray(tableMeta.rowData)}
-              value={value}
-              name={Variable.AUTHENTICATION_IDENTITY}
-              label={UserListItemConst.EDIT_EMAIL}
-            />
-          </MyTableCellContainer>
-        ),
+        customBodyRender: (value, tableMeta) => {
+          const user = getUserObjectFromArray(tableMeta.rowData);
+          return (
+            <MyTableCellContainer userId={user.id}>
+              <EditOrPlainTextContainer
+                user={user}
+                value={value}
+                name={Variable.AUTHENTICATION_IDENTITY}
+                label={UserListItemConst.EDIT_EMAIL}
+              />
+            </MyTableCellContainer>
+          );
+        },
       },
     },
     {
@@ -69,14 +74,16 @@ const UserList = (props) => {
         filter: false,
         sort: false,
         download: false,
-        customBodyRender: (value, tableMeta) => (
-          <MyTableCellContainer user={getUserObjectFromArray(tableMeta.rowData)}>
-            <MyIconButtonContainer
-              user={getUserObjectFromArray(tableMeta.rowData)}
-              type={ButtonType.EDIT}
-            />
-          </MyTableCellContainer>
-        ),
+        customBodyRender: (value, tableMeta) => {
+          const user = getUserObjectFromArray(tableMeta.rowData);
+          return (
+            <MyTableCellContainer userId={user.id}>
+              <MyEditButtonContainer
+                user={user}
+              />
+            </MyTableCellContainer>
+          );
+        },
       },
     },
     {
@@ -85,14 +92,16 @@ const UserList = (props) => {
         filter: false,
         sort: false,
         download: false,
-        customBodyRender: (value, tableMeta) => (
-          <MyTableCellContainer user={getUserObjectFromArray(tableMeta.rowData)}>
-            <MyIconButtonContainer
-              user={getUserObjectFromArray(tableMeta.rowData)}
-              type={ButtonType.DELETE}
-            />
-          </MyTableCellContainer>
-        ),
+        customBodyRender: (value, tableMeta) => {
+          const user = getUserObjectFromArray(tableMeta.rowData);
+          return (
+            <MyTableCellContainer userId={user.id}>
+              <MyDeleteButtonContainer
+                user={user}
+              />
+            </MyTableCellContainer>
+          );
+        },
       },
     },
   ];
@@ -107,12 +116,12 @@ const UserList = (props) => {
       <IconButton
         onClick={(e) => {
           e.preventDefault();
-          const selectedUsers = selected.data.map(u => data[u.dataIndex]);
+          const selectedUsers = selected.data.map(u => getUserObjectFromArray(data[u.dataIndex]));
           onRemoveUsers(selectedUsers);
         }}
         className={classes.iconButton}
       >
-        <Delete/>
+        <Delete />
       </IconButton>
     ),
   };
@@ -130,7 +139,11 @@ const UserList = (props) => {
 
 UserList.propTypes = {
   classes: PropTypes.object.isRequired,
-  userList: PropTypes.array.isRequired,
+  userList: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    authentication_identity: PropTypes.string.isRequired,
+  })).isRequired,
   onRemoveUsers: PropTypes.func.isRequired,
 };
 

@@ -1,4 +1,3 @@
-/* eslint-disable react/forbid-prop-types */
 import React from 'react';
 import Dialog from '@material-ui/core/Dialog/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle/DialogTitle';
@@ -9,30 +8,24 @@ import Button from '@material-ui/core/Button/Button';
 import Slide from '@material-ui/core/Slide/Slide';
 import PropTypes from 'prop-types';
 import { DeleteDialogConst } from '../../constants';
+import { getEmptyUser } from '../utils/Utils';
 
 function Transition(props) {
   return <Slide direction="up" {...props} />;
 }
 
 const DeleteDialog = (props) => {
-  const { open, handleClose, user } = props;
-  let userToDelete;
-  if (user.constructor === Array) {
-    userToDelete = {
-      multiple: true,
-      users: user,
-      name: user.length + DeleteDialogConst.CONTENT_TEXT_MULTI_USER,
-    };
-  } else {
-    userToDelete = user;
-  }
+  const { open, handleClose, users } = props;
 
   return (
     <Dialog
       open={open}
       TransitionComponent={Transition}
       keepMounted
-      onClose={handleClose}
+      onClose={(e) => {
+        e.preventDefault();
+        handleClose();
+      }}
       aria-labelledby="alert-dialog-slide-title"
       aria-describedby="alert-dialog-slide-description"
     >
@@ -43,7 +36,7 @@ const DeleteDialog = (props) => {
         <DialogContentText id="alert-dialog-slide-description">
           {DeleteDialogConst.CONTENT_TEXT_1}
           <b>
-            {userToDelete.name}
+            {(users.length > 1) ? users.length + DeleteDialogConst.CONTENT_TEXT_MULTI_USER : users[0].name}
           </b>
           {DeleteDialogConst.CONTENT_TEXT_2}
         </DialogContentText>
@@ -52,7 +45,7 @@ const DeleteDialog = (props) => {
         <Button
           onClick={(e) => {
             e.preventDefault();
-            handleClose(false);
+            handleClose();
           }}
           color="primary"
         >
@@ -61,7 +54,7 @@ const DeleteDialog = (props) => {
         <Button
           onClick={(e) => {
             e.preventDefault();
-            handleClose(true, userToDelete);
+            handleClose(users);
           }}
           color="primary"
         >
@@ -72,10 +65,18 @@ const DeleteDialog = (props) => {
   );
 };
 
+DeleteDialog.defaultProps = {
+  users: [getEmptyUser()],
+};
+
 DeleteDialog.propTypes = {
   open: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,
-  user: PropTypes.any.isRequired,
+  users: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    authentication_identity: PropTypes.string.isRequired,
+  })),
 };
 
 export default DeleteDialog;

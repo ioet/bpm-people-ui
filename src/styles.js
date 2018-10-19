@@ -68,13 +68,13 @@ export const UserListStyles = theme => ({
     margin: 'auto',
   },
   iconButton: {
-    width: '48px',
-    height: '48px',
+    width: theme.spacing.unit * 6,
+    height: theme.spacing.unit * 6,
     top: '50%',
     display: 'block',
     position: 'relative',
     transform: 'translateY(-50%)',
-    marginRight: '24px',
+    marginRight: theme.spacing.unit * 3,
     '&:hover': {
       color: teal['500'],
     },

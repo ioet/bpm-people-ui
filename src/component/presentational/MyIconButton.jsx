@@ -1,31 +1,16 @@
-/* eslint-disable react/jsx-tag-spacing,react/forbid-prop-types */
 import React from 'react';
 import PropTypes from 'prop-types';
 import IconButton from '@material-ui/core/IconButton/IconButton';
-import {
-  Clear, Delete, Done, Edit,
-} from '@material-ui/icons';
 import Tooltip from '@material-ui/core/Tooltip/Tooltip';
 import withStyles from '@material-ui/core/styles/withStyles';
-import { ButtonType, TooltipConst, UserListItemConst } from '../../constants';
+import { TooltipConst } from '../../constants';
 import { MyIconButtonStyles } from '../../styles';
 
 const MyIconButton = (props) => {
   const {
-    classes, editId, userId, onUserEdit, onUserRemoved, type, hover, hoverId,
+    classes, user, onClickCallback, icon, tooltip, hover, hoverId,
   } = props;
-  const showItem = (hover && hoverId === userId) ? classes.show : classes.hide;
-
-  let icon;
-  let tooltip;
-
-  if (type === ButtonType.EDIT) {
-    icon = (editId === userId) ? <Done/> : <Edit/>;
-    tooltip = (editId === userId) ? UserListItemConst.TOOLTIP_SAVE : UserListItemConst.TOOLTIP_EDIT;
-  } else {
-    icon = (editId === userId) ? <Clear/> : <Delete/>;
-    tooltip = (editId === userId) ? UserListItemConst.TOOLTIP_DISCARD : UserListItemConst.TOOLTIP_DELETE;
-  }
+  const showItem = (hover && hoverId === user.id) ? classes.show : classes.hide;
 
   return (
     <div>
@@ -39,11 +24,7 @@ const MyIconButton = (props) => {
           color="primary"
           onClick={(e) => {
             e.preventDefault();
-            if (type === ButtonType.EDIT) {
-              onUserEdit();
-            } else {
-              onUserRemoved(editId);
-            }
+            onClickCallback(user);
           }}
           className={showItem}
         >
@@ -59,12 +40,15 @@ MyIconButton.defaultProps = {
 };
 
 MyIconButton.propTypes = {
-  classes: PropTypes.any.isRequired,
-  editId: PropTypes.string.isRequired,
-  userId: PropTypes.string.isRequired,
-  onUserEdit: PropTypes.func.isRequired,
-  onUserRemoved: PropTypes.func.isRequired,
-  type: PropTypes.string.isRequired,
+  classes: PropTypes.object.isRequired,
+  user: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    authentication_identity: PropTypes.string.isRequired,
+  }).isRequired,
+  onClickCallback: PropTypes.func.isRequired,
+  icon: PropTypes.element.isRequired,
+  tooltip: PropTypes.string.isRequired,
   hover: PropTypes.bool.isRequired,
   hoverId: PropTypes.string,
 };

@@ -31,19 +31,12 @@ const inputError = (state = {}, action) => {
   }
 };
 
-const userEdit = (state = { create: false, update: false }, action) => {
+const userEdit = (state = { editing: false }, action) => {
   switch (action.type) {
-    case UserAction.CREATION_START:
-      return ({
-        id: getEmptyUser().id,
-        create: true,
-        update: false,
-      });
     case UserAction.EDIT_START:
       return ({
         id: action.id,
-        create: false,
-        update: true,
+        editing: true,
       });
     case UserAction.EDIT_DATA:
       return ({
@@ -52,15 +45,7 @@ const userEdit = (state = { create: false, update: false }, action) => {
       });
     case UserAction.EDIT_END:
       return ({
-        create: false,
-        update: false,
-        name: null,
-        authentication_identity: null,
-      });
-    case UserAction.CREATION_END:
-      return ({
-        create: false,
-        update: false,
+        editing: false,
         name: null,
         authentication_identity: null,
       });
@@ -69,17 +54,17 @@ const userEdit = (state = { create: false, update: false }, action) => {
   }
 };
 
-const userDelete = (state = { open: false, user: {} }, action) => {
+const userDelete = (state = { open: false }, action) => {
   switch (action.type) {
     case DeleteAction.SHOW_DIALOG:
       return {
-        open: action.open,
-        user: action.user,
+        open: true,
+        users: action.users,
       };
     case DeleteAction.HIDE_DIALOG:
       return {
+        ...state,
         open: false,
-        user: {},
       };
     default:
       return state;
@@ -88,7 +73,7 @@ const userDelete = (state = { open: false, user: {} }, action) => {
 
 const user = (state, action) => {
   switch (action.type) {
-    case UserAction.CREATION_START:
+    case UserAction.ADD_EMPTY_ROW:
       return getEmptyUser();
     case UserAction.ADD_USER:
       return {
@@ -105,12 +90,12 @@ const user = (state, action) => {
 const userList = (state = [], action) => {
   const copy = state.slice();
   switch (action.type) {
-    case UserAction.CREATION_START:
+    case UserAction.ADD_EMPTY_ROW:
       return [
         user(undefined, action),
         ...state,
       ];
-    case UserAction.CREATION_END:
+    case UserAction.REMOVE_EMPTY_ROW:
       copy.shift();
       return [...copy];
     case UserAction.ADD_USER:

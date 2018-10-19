@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types,react/jsx-tag-spacing */
 import React from 'react';
 import Typography from '@material-ui/core/Typography/Typography';
 import AppBar from '@material-ui/core/AppBar/AppBar';
@@ -20,11 +19,11 @@ function App() {
           </Typography>
         </Toolbar>
       </AppBar>
-      <UserListContainer/>
-      <Footer/>
-      <FloatingActionButtonContainer/>
-      <ErrorSnackbarContainer/>
-      <DeleteDialogContainer/>
+      <UserListContainer />
+      <Footer />
+      <FloatingActionButtonContainer />
+      <ErrorSnackbarContainer />
+      <DeleteDialogContainer />
     </div>
   );
 }
