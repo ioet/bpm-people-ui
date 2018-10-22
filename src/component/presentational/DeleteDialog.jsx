@@ -15,7 +15,9 @@ function Transition(props) {
 }
 
 const DeleteDialog = (props) => {
-  const { open, handleClose, users } = props;
+  const {
+    open, handleClose, userIds, username,
+  } = props;
 
   return (
     <Dialog
@@ -36,7 +38,7 @@ const DeleteDialog = (props) => {
         <DialogContentText id="alert-dialog-slide-description">
           {DeleteDialogConst.CONTENT_TEXT_1}
           <b>
-            {(users.length > 1) ? users.length + DeleteDialogConst.CONTENT_TEXT_MULTI_USER : users[0].name}
+            {username}
           </b>
           {DeleteDialogConst.CONTENT_TEXT_2}
         </DialogContentText>
@@ -54,7 +56,7 @@ const DeleteDialog = (props) => {
         <Button
           onClick={(e) => {
             e.preventDefault();
-            handleClose(users);
+            handleClose(userIds);
           }}
           color="primary"
         >
@@ -66,17 +68,15 @@ const DeleteDialog = (props) => {
 };
 
 DeleteDialog.defaultProps = {
-  users: [getEmptyUser()],
+  userIds: [getEmptyUser().tbd.id],
+  username: [getEmptyUser().tbd.name],
 };
 
 DeleteDialog.propTypes = {
   open: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,
-  users: PropTypes.arrayOf(PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
-    authentication_identity: PropTypes.string.isRequired,
-  })),
+  userIds: PropTypes.arrayOf(PropTypes.string),
+  username: PropTypes.string,
 };
 
 export default DeleteDialog;

@@ -7,8 +7,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  onRemoveUsers: (rowsDeleted) => {
-    dispatch(showDeleteDialog(rowsDeleted));
+  onRemoveUsers: (userIds) => {
+    dispatch(showDeleteDialog(userIds));
   },
 });
 

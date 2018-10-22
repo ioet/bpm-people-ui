@@ -8,9 +8,9 @@ import { MyIconButtonStyles } from '../../styles';
 
 const MyIconButton = (props) => {
   const {
-    classes, user, onClickCallback, icon, tooltip, hover, hoverId,
+    classes, userId, onClickCallback, icon, tooltip, hover, hoverId,
   } = props;
-  const showItem = (hover && hoverId === user.id) ? classes.show : classes.hide;
+  const showItem = (hover && hoverId === userId) ? classes.show : classes.hide;
 
   return (
     <div>
@@ -24,7 +24,7 @@ const MyIconButton = (props) => {
           color="primary"
           onClick={(e) => {
             e.preventDefault();
-            onClickCallback(user);
+            onClickCallback(userId);
           }}
           className={showItem}
         >
@@ -41,11 +41,7 @@ MyIconButton.defaultProps = {
 
 MyIconButton.propTypes = {
   classes: PropTypes.object.isRequired,
-  user: PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
-    authentication_identity: PropTypes.string.isRequired,
-  }).isRequired,
+  userId: PropTypes.string.isRequired,
   onClickCallback: PropTypes.func.isRequired,
   icon: PropTypes.element.isRequired,
   tooltip: PropTypes.string.isRequired,

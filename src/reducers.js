@@ -1,6 +1,6 @@
 /* eslint-disable no-plusplus */
 import { combineReducers } from 'redux';
-import { compareUsersByFirstName, getEmptyUser } from './component/utils/Utils';
+import { arrayToObject, getEmptyUser } from './component/utils/Utils';
 import {
   DeleteAction, HoverAction, InputErrorAction, MessageAction, UserAction,
 } from './action-types';
@@ -59,11 +59,10 @@ const userDelete = (state = { open: false }, action) => {
     case DeleteAction.SHOW_DIALOG:
       return {
         open: true,
-        users: action.users,
+        userIds: action.userIds,
       };
     case DeleteAction.HIDE_DIALOG:
       return {
-        ...state,
         open: false,
       };
     default:
@@ -77,53 +76,45 @@ const user = (state, action) => {
       return getEmptyUser();
     case UserAction.ADD_USER:
       return {
-        id: action.id,
-        name: action.name,
-        authentication_identity: action.authentication_identity,
+        [action.id]: {
+          id: action.id,
+          name: action.name,
+          authentication_identity: action.authentication_identity,
+        },
       };
     case UserAction.ADD_USERS:
-      return action.user.map(u => u);
+      return arrayToObject(action.user, 'id');
     default:
       return state;
   }
 };
-const userList = (state = [], action) => {
-  const copy = state.slice();
+const userList = (state = {}, action) => {
+  const copy = Object.assign({}, state);
   switch (action.type) {
     case UserAction.ADD_EMPTY_ROW:
-      return [
-        user(undefined, action),
+      return {
+        ...user(undefined, action),
         ...state,
-      ];
+      };
     case UserAction.REMOVE_EMPTY_ROW:
-      copy.shift();
-      return [...copy];
+      delete copy[getEmptyUser().tbd.id];
+      return { ...copy };
     case UserAction.ADD_USER:
-      return [
-        ...state,
-        user(undefined, action),
-      ].sort(compareUsersByFirstName);
-    case UserAction.ADD_USERS:
-      return [
+      return {
         ...state,
         ...user(undefined, action),
-      ].sort(compareUsersByFirstName);
+      };
+    case UserAction.ADD_USERS:
+      return {
+        ...state,
+        ...user(undefined, action),
+      };
     case UserAction.UPDATE:
-      for (let i = 0; i < copy.length; i++) {
-        if (copy[i].id === action.user.id) {
-          copy[i] = action.user;
-          break;
-        }
-      }
-      return [...copy].sort(compareUsersByFirstName);
+      copy[action.user.id] = action.user;
+      return { ...copy };
     case UserAction.REMOVE:
-      for (let i = 0; i < copy.length; i++) {
-        if (copy[i].id === action.user.id) {
-          copy.splice(i, 1);
-          break;
-        }
-      }
-      return [...copy];
+      delete copy[action.userId];
+      return { ...copy };
     default:
       return state;
   }

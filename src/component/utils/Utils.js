@@ -5,20 +5,29 @@ export function validateEmail(email) {
 }
 
 export function compareUsersByFirstName(a, b) {
-  if (a.name.toLowerCase() < b.name.toLowerCase()) {
+  if (a[1].toLowerCase() < b[1].toLowerCase()) {
     return -1;
   }
-  if (a.name.toLowerCase() > b.name.toLowerCase()) {
+  if (a[1].toLowerCase() > b[1].toLowerCase()) {
     return 1;
   }
   return 0;
 }
 
+export const arrayToObject = (array, keyField) => (
+  array.reduce((obj, item) => {
+    obj[item[keyField]] = item;
+    return obj;
+  }, {})
+);
+
 export const getEmptyUser = () => (
   {
-    id: 'tbd',
-    name: '',
-    authentication_identity: '',
+    tbd: {
+      id: 'tbd',
+      name: '',
+      authentication_identity: '',
+    },
   }
 );
 

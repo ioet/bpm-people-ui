@@ -8,7 +8,7 @@ import { Delete } from '@material-ui/icons';
 import { UserListConst, UserListItemConst, Variable } from '../../constants';
 import { UserListStyles } from '../../styles';
 import EditOrPlainTextContainer from '../container/EditOrPlainTextContainer';
-import { getUserObjectFromArray } from '../utils/Utils';
+import { compareUsersByFirstName, getUserObjectFromArray } from '../utils/Utils';
 import MyTableCellContainer from '../container/MyTableCellContainer';
 import MyEditButtonContainer from '../container/MyEditButtonContainer';
 import MyDeleteButtonContainer from '../container/MyDeleteButtonContainer';
@@ -18,9 +18,12 @@ const UserList = (props) => {
     classes, userList, onRemoveUsers,
   } = props;
 
-  const data = userList.map(user => (
-    [user.id, user.name, user.authentication_identity, false, false]
-  ));
+  const data = [];
+  Object.keys(userList).forEach((key) => {
+    const user = userList[key];
+    data.push([user.id, user.name, user.authentication_identity, false, false]);
+  });
+  data.sort(compareUsersByFirstName);
 
   const columns = [
     {
@@ -40,7 +43,7 @@ const UserList = (props) => {
           return (
             <MyTableCellContainer userId={user.id}>
               <EditOrPlainTextContainer
-                user={user}
+                userId={user.id}
                 value={value}
                 name={Variable.NAME}
                 label={UserListItemConst.EDIT_NAME}
@@ -58,7 +61,7 @@ const UserList = (props) => {
           return (
             <MyTableCellContainer userId={user.id}>
               <EditOrPlainTextContainer
-                user={user}
+                userId={user.id}
                 value={value}
                 name={Variable.AUTHENTICATION_IDENTITY}
                 label={UserListItemConst.EDIT_EMAIL}
@@ -79,7 +82,7 @@ const UserList = (props) => {
           return (
             <MyTableCellContainer userId={user.id}>
               <MyEditButtonContainer
-                user={user}
+                userId={user.id}
               />
             </MyTableCellContainer>
           );
@@ -97,7 +100,7 @@ const UserList = (props) => {
           return (
             <MyTableCellContainer userId={user.id}>
               <MyDeleteButtonContainer
-                user={user}
+                userId={user.id}
               />
             </MyTableCellContainer>
           );
@@ -116,8 +119,8 @@ const UserList = (props) => {
       <IconButton
         onClick={(e) => {
           e.preventDefault();
-          const selectedUsers = selected.data.map(u => getUserObjectFromArray(data[u.dataIndex]));
-          onRemoveUsers(selectedUsers);
+          const selectedUserIds = selected.data.map(u => data[u.dataIndex][0]);
+          onRemoveUsers(selectedUserIds);
         }}
         className={classes.iconButton}
       >
@@ -139,7 +142,7 @@ const UserList = (props) => {
 
 UserList.propTypes = {
   classes: PropTypes.object.isRequired,
-  userList: PropTypes.arrayOf(PropTypes.shape({
+  userList: PropTypes.objectOf(PropTypes.shape({
     id: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
     authentication_identity: PropTypes.string.isRequired,

@@ -43,10 +43,10 @@ export const hideMessage = () => ({
   message: '',
 });
 
-export const showDeleteDialog = users => ({
+export const showDeleteDialog = userIds => ({
   type: DeleteAction.SHOW_DIALOG,
   open: true,
-  users,
+  userIds,
 });
 export const hideDeleteDialog = () => ({
   type: DeleteAction.HIDE_DIALOG,
@@ -77,7 +77,7 @@ export const endEditUser = () => ({
 export const startCreateUser = () => (
   (dispatch) => {
     dispatch(addEmptyRow());
-    dispatch(startEditUser(getEmptyUser().id));
+    dispatch(startEditUser(getEmptyUser().tbd.id));
   }
 );
 
@@ -93,9 +93,9 @@ export const setUpdateUser = userToUpdate => ({
   user: userToUpdate,
 });
 
-const removeUser = userToRemove => ({
+const removeUser = userId => ({
   type: UserAction.REMOVE,
-  user: userToRemove,
+  userId,
 });
 
 export const getAllUsersAsync = () => (
@@ -148,9 +148,10 @@ const createUserAsync = () => (
   }
 );
 
-const updateUserAsync = userToUpdate => (
+const updateUserAsync = userId => (
   (dispatch, getState) => {
     const { id } = getState().userEdit;
+    const user = getState().userList[userId];
     let { name, authentication_identity } = getState().userEdit;
 
     if (typeof name === 'undefined' && typeof authentication_identity === 'undefined') {
@@ -159,10 +160,10 @@ const updateUserAsync = userToUpdate => (
     }
 
     if (typeof name === 'undefined') {
-      name = userToUpdate.name;
+      name = user.name;
     }
     if (typeof authentication_identity === 'undefined') {
-      authentication_identity = userToUpdate.authentication_identity;
+      authentication_identity = user.authentication_identity;
     }
 
     if (!validateInputWithErrorMessages(dispatch, {
@@ -188,32 +189,32 @@ const updateUserAsync = userToUpdate => (
   }
 );
 
-export const editUpdateOrCreateUser = userToUpdate => (
+export const editUpdateOrCreateUser = userId => (
   (dispatch, getState) => {
     const userEditId = getState().userEdit.id;
 
     if (typeof userEditId !== 'undefined') {
-      if (userEditId === userToUpdate.id) {
-        if (userEditId === getEmptyUser().id) {
+      if (userEditId === userId) {
+        if (userEditId === getEmptyUser().tbd.id) {
           return dispatch(createUserAsync());
         }
-        return dispatch(updateUserAsync(userToUpdate));
+        return dispatch(updateUserAsync(userId));
       }
-      if (userEditId === getEmptyUser().id) {
+      if (userEditId === getEmptyUser().tbd.id) {
         dispatch(showMessage(NotificationMessage.CHANGES_DISCARDED));
         dispatch(removeAllInputErrors());
         dispatch(endCreateUser());
       }
     }
-    return dispatch(startEditUser(userToUpdate.id));
+    return dispatch(startEditUser(userId));
   }
 );
 
-export const removeUserAsync = userToRemove => (
-  dispatch => axios.delete(`${PeopleApi.PATH}/${userToRemove.id}`)
+export const removeUserAsync = userId => (
+  (dispatch, getState) => axios.delete(`${PeopleApi.PATH}/${userId}`)
     .then(() => {
-      dispatch(removeUser(userToRemove));
-      dispatch(showMessage(userToRemove.name + NotificationMessage.USER_DELETED_SUCCESSFULLY));
+      dispatch(showMessage(getState().userList[userId].name + NotificationMessage.USER_DELETED_SUCCESSFULLY));
+      dispatch(removeUser(userId));
     })
     .catch((error) => {
       dispatch(showMessage(`${ErrorMessage.FAILED_TO_REMOVE_USER}: ${error}`));
@@ -243,12 +244,12 @@ export const startOrEndCreateUser = () => (
   }
 );
 
-export const clearOrShowDelete = users => (
+export const clearOrShowDelete = userIds => (
   (dispatch, getState) => {
-    if (users[0].id === getState().userEdit.id) {
-      dispatch(clearUser(users[0].id === getEmptyUser().id));
+    if (userIds[0] === getState().userEdit.id) {
+      dispatch(clearUser(userIds[0] === getEmptyUser().tbd.id));
     } else {
-      dispatch(showDeleteDialog(users));
+      dispatch(showDeleteDialog(userIds));
     }
   }
 );

@@ -8,15 +8,15 @@ import { UserListItemConst } from '../../constants';
 const mapStateToProps = (state, ownProps) => ({
   hover: state.hover.hover,
   hoverId: state.hover.id,
-  icon: (state.userEdit.id === ownProps.user.id) ? <Clear /> : <Delete />,
-  tooltip: (state.userEdit.id === ownProps.user.id)
+  icon: (state.userEdit.id === ownProps.userId) ? <Clear /> : <Delete />,
+  tooltip: (state.userEdit.id === ownProps.userId)
     ? UserListItemConst.TOOLTIP_DISCARD
     : UserListItemConst.TOOLTIP_DELETE,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   onClickCallback: () => {
-    dispatch(clearOrShowDelete([ownProps.user]));
+    dispatch(clearOrShowDelete([ownProps.userId]));
   },
 });
 
