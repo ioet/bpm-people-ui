@@ -21,6 +21,8 @@ const store = createStore(
 
 store.dispatch(getAllUsersAsync());
 
+console.log('env', process.env);
+
 document.addEventListener('DOMContentLoaded', () => {
   ReactDOM.render(
     <Provider store={store}>
