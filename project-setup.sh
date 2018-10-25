@@ -29,7 +29,7 @@ wget -O ${filename} ${link};
 echo ">>> unzipping generated swagger code";
 unzip ${filename};
 rm ${filename};
-if [ ! -d ${myDirName} ]; then rm -rf ${myDirName}; fi;
+if [ -d ${myDirName} ]; then rm -rf ${myDirName}; fi
 mv ${theirDirName} ${myDirName};
 
 # go into the generated code folder, install dependencies and link the project
