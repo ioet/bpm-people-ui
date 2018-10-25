@@ -6,7 +6,8 @@
   "scripts": {
     "start": "webpack-dev-server --mode development --open",
     "build": "webpack --mode production",
-    "test": "jest --coverage"
+    "test": "jest --coverage",
+    "setup": "./project-setup.sh"
   },
   "keywords": [],
   "author": "",
@@ -29,12 +30,11 @@
     "redux": "^4.0.1",
     "redux-thunk": "^2.3.0",
     "typeface-roboto": "0.0.54",
-    "webpack-dev-middleware": "^3.4.0",
-    "bpm_people_api": "latest"
+    "webpack-dev-middleware": "^3.4.0"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ioet/bpm-people.git"
+    "url": "git+https://github.com/ioet/bpm-people-ui.git"
   },
   "devDependencies": {
     "babel-core": "6.26.3",

@@ -8,7 +8,7 @@ const htmlWebpackPlugin = new HtmlWebPackPlugin({
 
 const environmentVariables = new webpack.DefinePlugin({
   'process.env': {
-    SWAGGER_JSON_URL: JSON.stringify(process.env.REACT_APP_SWAGGER_JSON_URL),
+    // SOME_ENVIRONMENT_VARIABLE: JSON.stringify(process.env.SOME_ENVIRONMENT_VARIABLE),
   },
 });
 

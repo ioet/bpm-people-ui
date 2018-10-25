@@ -1,5 +1,5 @@
 /* eslint-disable camelcase,prefer-destructuring */
-import BpmPeopleApi from 'bpm_people_api';
+import { PersonControllerApi, Person } from 'swagger_bpm_people_api';
 import { getEmptyUser, validateEmail } from './component/utils/Utils';
 import {
   DeleteAction, HoverAction, InputErrorAction, MessageAction, UserAction,
@@ -8,7 +8,7 @@ import {
   ErrorMessage, NotificationMessage, PromptMessage, Variable,
 } from './constants';
 
-const peopleApi = new BpmPeopleApi.PersonControllerApi();
+let peopleApi = new PersonControllerApi();
 
 const addUsers = allUsers => ({
   type: UserAction.ADD_USERS,
@@ -96,13 +96,13 @@ const removeUser = userId => ({
 });
 
 export const getAllUsersAsync = () => (
-  dispatch => peopleApi.getAllPersonsUsingGET((error, data) => {
-    if (error) {
-      dispatch(showMessage(`${ErrorMessage.FAILED_TO_LOAD_USERS}: ${error}`));
-    } else {
+  dispatch => peopleApi.getAllPersonsUsingGET()
+    .then((data) => {
       dispatch(addUsers(data));
-    }
-  })
+    })
+    .catch((error) => {
+      dispatch(showMessage(`${ErrorMessage.FAILED_TO_LOAD_USERS}: ${error}`));
+    })
 );
 
 const validateField = input => !(typeof input === 'undefined' || input === '');
@@ -128,20 +128,20 @@ const createUserAsync = () => (
 
     if (!validateInputWithErrorMessages(dispatch, getState().userEdit)) return null;
 
-    return peopleApi.createPersonUsingPOST({
-      name,
-      authentication_identity,
-      password: '',
-    }, (error, data) => {
-      if (error) {
-        dispatch(showMessage(`${ErrorMessage.FAILED_TO_CREATE_USER}: ${error}`));
-      } else {
+    const personToCreate = new Person();
+    personToCreate.name = name;
+    personToCreate.authentication_identity = authentication_identity;
+    personToCreate.password = '';
+    return peopleApi.createPersonUsingPOST(personToCreate)
+      .then((data) => {
         dispatch(removeAllInputErrors());
         dispatch(endCreateUser());
         dispatch(addUser(data));
         dispatch(showMessage(data.name + NotificationMessage.USER_CREATED_SUCCESSFULLY));
-      }
-    });
+      })
+      .catch((error) => {
+        dispatch(showMessage(`${ErrorMessage.FAILED_TO_CREATE_USER}: ${error}`));
+      });
   }
 );
 
@@ -170,19 +170,19 @@ const updateUserAsync = userId => (
       return null;
     }
 
-    return peopleApi.updatePersonUsingPUT(id, {
-      name,
-      authentication_identity,
-    }, (error, data) => {
-      if (error) {
-        dispatch(showMessage(`${ErrorMessage.FAILED_TO_UPDATE_USER}: ${error}`));
-      } else {
+    const personToUpdate = new Person();
+    personToUpdate.name = name;
+    personToUpdate.authentication_identity = authentication_identity;
+    return peopleApi.updatePersonUsingPUT(id, personToUpdate)
+      .then((data) => {
         dispatch(removeAllInputErrors());
         dispatch(endEditUser());
         dispatch(setUpdateUser(data));
         dispatch(showMessage(NotificationMessage.CHANGES_UPDATED_SUCCESSFULLY));
-      }
-    });
+      })
+      .catch((error) => {
+        dispatch(showMessage(`${ErrorMessage.FAILED_TO_UPDATE_USER}: ${error}`));
+      });
   }
 );
 
@@ -208,14 +208,14 @@ export const editUpdateOrCreateUser = userId => (
 );
 
 export const removeUserAsync = userId => (
-  (dispatch, getState) => peopleApi.deletePersonUsingDELETE(userId, (error) => {
-    if (error) {
-      dispatch(showMessage(`${ErrorMessage.FAILED_TO_REMOVE_USER}: ${error}`));
-    } else {
+  (dispatch, getState) => peopleApi.deletePersonUsingDELETE(userId)
+    .then(() => {
       dispatch(showMessage(getState().userList[userId].name + NotificationMessage.USER_DELETED_SUCCESSFULLY));
       dispatch(removeUser(userId));
-    }
-  })
+    })
+    .catch((error) => {
+      dispatch(showMessage(`${ErrorMessage.FAILED_TO_REMOVE_USER}: ${error}`));
+    })
 );
 
 export const clearUser = creating => (
