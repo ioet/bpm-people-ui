@@ -8,7 +8,7 @@ import {
   ErrorMessage, NotificationMessage, PromptMessage, Variable,
 } from './constants';
 
-let peopleApi = new PersonControllerApi();
+const peopleApi = new PersonControllerApi();
 
 const addUsers = allUsers => ({
   type: UserAction.ADD_USERS,
