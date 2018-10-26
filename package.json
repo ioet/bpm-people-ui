@@ -7,7 +7,8 @@
     "start": "webpack-dev-server --mode development --open",
     "build": "webpack --mode production",
     "test": "jest --coverage",
-    "setup": "./project-setup.sh"
+    "generate-swagger-client": "./swagger-codegen/generate-client.sh",
+    "setup": "npm install && npm run generate-swagger-client"
   },
   "keywords": [],
   "author": "",

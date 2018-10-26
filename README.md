@@ -7,15 +7,17 @@ run this command and everything should be setup
 ```
 npm run setup
 ```
-You will be asked for a url to the swagger.json file. For now you can use this link:
+
+## Swagger Codegen for API client
+The swagger client will be generated with the setup command.  
+However to build the client independently run this command:
 ```
-https://www.oemel09.de/downloads/Swagger/swagger.json
+npm run generate-swagger-client
 ```
-Later on this link should point to the swagger file in production.
-Something like:
-`
-HOST:PORT/people-service/v2/api-docs
-`
+You can also specify a URL to a swagger.json, run this command to get help
+```
+npm run generate-swagger-client -- -h
+```
 
 ## To run the app locally with docker-compose
 You will need a file called `aws.env` inside your root directory containing these environment variables.

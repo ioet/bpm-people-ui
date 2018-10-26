@@ -1,0 +1,5 @@
+{
+  "useES6": true,
+  "usePromises": true,
+  "projectName": "swagger_bpm_people_api"
+}

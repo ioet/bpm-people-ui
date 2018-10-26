@@ -115,3 +115,5 @@ aws.env
 build/
 react
 react-dom
+
+generated_swagger_client/
