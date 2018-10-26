@@ -61,6 +61,11 @@ if [ ! -f ${swaggerGenerator} ]; then
     wget http://central.maven.org/maven2/io/swagger/swagger-codegen-cli/2.3.1/swagger-codegen-cli-2.3.1.jar -O ${swaggerGenerator};
 fi;
 
+if ! type -p java; then
+  echo ">>> java not found -> exiting";
+  exit 1;
+fi;
+
 echo ">>> generating swagger client code";
 if [ -d ${generatedCodeDir} ]; then rm -rf ${generatedCodeDir}; fi
 java -jar ${swaggerGenerator} generate -i ${swaggerJson} -l javascript -o ../${generatedCodeDir} -c ${swaggerConfig};

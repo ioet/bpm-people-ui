@@ -2,6 +2,9 @@
 
 In order to set up and run the project, follow these steps:
 
+## Java needs to be installed on your machine!
+You know how do to it... Don't forget to set the JAVA_HOME variable
+
 ## Installing the dependencies
 run this command and everything should be setup
 ```
