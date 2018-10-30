@@ -21,10 +21,10 @@ export const arrayToObject = (array, keyField) => (
   }, {})
 );
 
-export const getEmptyUser = () => (
+export const getUserToBeCreated = () => (
   {
-    tbd: {
-      id: 'tbd',
+    userToBeCreated: {
+      id: 'userToBeCreated',
       name: '',
       authentication_identity: '',
     },

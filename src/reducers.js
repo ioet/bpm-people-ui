@@ -1,6 +1,6 @@
 /* eslint-disable no-plusplus */
 import { combineReducers } from 'redux';
-import { arrayToObject, getEmptyUser } from './component/utils/Utils';
+import { arrayToObject, getUserToBeCreated } from './component/utils/Utils';
 import {
   DeleteAction, HoverAction, InputErrorAction, MessageAction, UserAction,
 } from './action-types';
@@ -73,7 +73,7 @@ const userDelete = (state = { open: false }, action) => {
 const user = (state, action) => {
   switch (action.type) {
     case UserAction.ADD_EMPTY_ROW:
-      return getEmptyUser();
+      return getUserToBeCreated();
     case UserAction.ADD_USER:
       return {
         [action.id]: {
@@ -97,7 +97,7 @@ const userList = (state = {}, action) => {
         ...state,
       };
     case UserAction.REMOVE_EMPTY_ROW:
-      delete copy[getEmptyUser().tbd.id];
+      delete copy[getUserToBeCreated().userToBeCreated.id];
       return { ...copy };
     case UserAction.ADD_USER:
       return {

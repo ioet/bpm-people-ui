@@ -8,7 +8,7 @@ import Button from '@material-ui/core/Button/Button';
 import Slide from '@material-ui/core/Slide/Slide';
 import PropTypes from 'prop-types';
 import { DeleteDialogConst } from '../../constants';
-import { getEmptyUser } from '../utils/Utils';
+import { getUserToBeCreated } from '../utils/Utils';
 
 function Transition(props) {
   return <Slide direction="up" {...props} />;
@@ -68,8 +68,8 @@ const DeleteDialog = (props) => {
 };
 
 DeleteDialog.defaultProps = {
-  userIds: [getEmptyUser().tbd.id],
-  username: [getEmptyUser().tbd.name],
+  userIds: [getUserToBeCreated().userToBeCreated.id],
+  username: [getUserToBeCreated().userToBeCreated.name],
 };
 
 DeleteDialog.propTypes = {

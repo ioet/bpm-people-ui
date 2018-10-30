@@ -1,6 +1,6 @@
 /* eslint-disable camelcase,prefer-destructuring */
 import axios from 'axios';
-import { getEmptyUser, validateEmail } from './component/utils/Utils';
+import { getUserToBeCreated, validateEmail } from './component/utils/Utils';
 import {
   DeleteAction, HoverAction, InputErrorAction, MessageAction, UserAction,
 } from './action-types';
@@ -77,7 +77,7 @@ export const endEditUser = () => ({
 export const startCreateUser = () => (
   (dispatch) => {
     dispatch(addEmptyRow());
-    dispatch(startEditUser(getEmptyUser().tbd.id));
+    dispatch(startEditUser(getUserToBeCreated().userToBeCreated.id));
   }
 );
 
@@ -195,12 +195,12 @@ export const editUpdateOrCreateUser = userId => (
 
     if (typeof userEditId !== 'undefined') {
       if (userEditId === userId) {
-        if (userEditId === getEmptyUser().tbd.id) {
+        if (userEditId === getUserToBeCreated().userToBeCreated.id) {
           return dispatch(createUserAsync());
         }
         return dispatch(updateUserAsync(userId));
       }
-      if (userEditId === getEmptyUser().tbd.id) {
+      if (userEditId === getUserToBeCreated().userToBeCreated.id) {
         dispatch(showMessage(NotificationMessage.CHANGES_DISCARDED));
         dispatch(removeAllInputErrors());
         dispatch(endCreateUser());
@@ -247,7 +247,7 @@ export const startOrEndCreateUser = () => (
 export const clearOrShowDelete = userIds => (
   (dispatch, getState) => {
     if (userIds[0] === getState().userEdit.id) {
-      dispatch(clearUser(userIds[0] === getEmptyUser().tbd.id));
+      dispatch(clearUser(userIds[0] === getUserToBeCreated().userToBeCreated.id));
     } else {
       dispatch(showDeleteDialog(userIds));
     }
