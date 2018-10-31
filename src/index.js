@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import thunkMiddleware from 'redux-thunk';
 import { applyMiddleware, createStore } from 'redux';
+import { composeWithDevTools } from 'redux-devtools-extension';
 import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
 import 'typeface-roboto';
 import App from './App';
@@ -13,8 +14,8 @@ import { RootTheme } from './styles';
 
 const store = createStore(
   rootReducer,
-  applyMiddleware(
-    thunkMiddleware, // lets us dispatch() functions
+  composeWithDevTools(
+    applyMiddleware(thunkMiddleware),
   ),
 );
 

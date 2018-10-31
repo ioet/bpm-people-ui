@@ -1,14 +1,20 @@
 import { connect } from 'react-redux';
-import { endCreateUser, startCreateUser } from '../../actions';
+import { Add, Clear } from '@material-ui/icons';
+import React from 'react';
+import { startOrEndCreateUser } from '../../actions';
 import FloatingActionButton from '../presentational/FloatingActionButton';
+import { FloatingActionButtonConst } from '../../constants';
 
 const mapStateToProps = state => ({
-  create: state.userEdit.create,
+  tooltip: (state.userEdit.editing)
+    ? FloatingActionButtonConst.TOOLTIP_DISCARD
+    : FloatingActionButtonConst.TOOLTIP_ADD,
+  icon: (state.userEdit.editing) ? <Clear /> : <Add />,
 });
 
 const mapDispatchToProps = dispatch => ({
-  createUser: (create) => {
-    dispatch((!create) ? startCreateUser() : endCreateUser());
+  createUser: () => {
+    dispatch(startOrEndCreateUser());
   },
 });
 

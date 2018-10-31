@@ -1,6 +1,6 @@
 /* eslint-disable camelcase,prefer-destructuring */
 import axios from 'axios';
-import { getEmptyUser, validateEmail } from './component/utils/Utils';
+import { getUserToBeCreated, validateEmail } from './component/utils/Utils';
 import {
   DeleteAction, HoverAction, InputErrorAction, MessageAction, UserAction,
 } from './action-types';
@@ -8,7 +8,9 @@ import {
   ErrorMessage, NotificationMessage, PeopleApi, PromptMessage, Variable,
 } from './constants';
 
-axios.defaults.baseURL = process.env.REACT_APP_BPM_PEOPLE_API_URL;
+axios.defaults.baseURL = Object.is(process.env.REACT_APP_BPM_PEOPLE_API_URL, undefined)
+  ? 'http://localhost:9081/people-service'
+  : process.env.REACT_APP_BPM_PEOPLE_API_URL;
 axios.defaults.headers.common['Content-Type'] = 'application/json';
 
 const addUsers = allUsers => ({
@@ -41,21 +43,22 @@ export const hideMessage = () => ({
   message: '',
 });
 
-export const showDeleteDialog = user => ({
+export const showDeleteDialog = userIds => ({
   type: DeleteAction.SHOW_DIALOG,
   open: true,
-  user,
+  userIds,
 });
 export const hideDeleteDialog = () => ({
   type: DeleteAction.HIDE_DIALOG,
   open: false,
 });
 
-export const startCreateUser = () => ({
-  type: UserAction.CREATION_START,
+export const addEmptyRow = () => ({
+  type: UserAction.ADD_EMPTY_ROW,
 });
-export const endCreateUser = () => ({
-  type: UserAction.CREATION_END,
+
+export const removeEmptyRow = () => ({
+  type: UserAction.REMOVE_EMPTY_ROW,
 });
 
 export const startEditUser = editUserId => ({
@@ -71,14 +74,28 @@ export const endEditUser = () => ({
   type: UserAction.EDIT_END,
 });
 
+export const startCreateUser = () => (
+  (dispatch) => {
+    dispatch(addEmptyRow());
+    dispatch(startEditUser(getUserToBeCreated().userToBeCreated.id));
+  }
+);
+
+export const endCreateUser = () => (
+  (dispatch) => {
+    dispatch(removeEmptyRow());
+    dispatch(endEditUser());
+  }
+);
+
 export const setUpdateUser = userToUpdate => ({
   type: UserAction.UPDATE,
   user: userToUpdate,
 });
 
-const removeUser = userToRemove => ({
+const removeUser = userId => ({
   type: UserAction.REMOVE,
-  user: userToRemove,
+  userId,
 });
 
 export const getAllUsersAsync = () => (
@@ -117,6 +134,7 @@ const createUserAsync = () => (
     return axios.post(PeopleApi.PATH, {
       name,
       authentication_identity,
+      password: '',
     })
       .then((response) => {
         dispatch(removeAllInputErrors());
@@ -130,9 +148,10 @@ const createUserAsync = () => (
   }
 );
 
-const updateUserAsync = userToUpdate => (
+const updateUserAsync = userId => (
   (dispatch, getState) => {
     const { id } = getState().userEdit;
+    const user = getState().userList[userId];
     let { name, authentication_identity } = getState().userEdit;
 
     if (typeof name === 'undefined' && typeof authentication_identity === 'undefined') {
@@ -141,13 +160,16 @@ const updateUserAsync = userToUpdate => (
     }
 
     if (typeof name === 'undefined') {
-      name = userToUpdate.name;
+      name = user.name;
     }
     if (typeof authentication_identity === 'undefined') {
-      authentication_identity = userToUpdate.authentication_identity;
+      authentication_identity = user.authentication_identity;
     }
 
-    if (!validateInputWithErrorMessages(dispatch, { name, authentication_identity })) {
+    if (!validateInputWithErrorMessages(dispatch, {
+      name,
+      authentication_identity,
+    })) {
       return null;
     }
 
@@ -167,51 +189,68 @@ const updateUserAsync = userToUpdate => (
   }
 );
 
-export const editUpdateOrCreateUser = userToUpdate => (
+export const editUpdateOrCreateUser = userId => (
   (dispatch, getState) => {
     const userEditId = getState().userEdit.id;
 
     if (typeof userEditId !== 'undefined') {
-      if (userEditId === userToUpdate.id) {
-        if (userEditId === getEmptyUser().id) {
+      if (userEditId === userId) {
+        if (userEditId === getUserToBeCreated().userToBeCreated.id) {
           return dispatch(createUserAsync());
         }
-        return dispatch(updateUserAsync(userToUpdate));
+        return dispatch(updateUserAsync(userId));
       }
-      if (userEditId === getEmptyUser().id) {
+      if (userEditId === getUserToBeCreated().userToBeCreated.id) {
         dispatch(showMessage(NotificationMessage.CHANGES_DISCARDED));
         dispatch(removeAllInputErrors());
         dispatch(endCreateUser());
       }
     }
-    return dispatch(startEditUser(userToUpdate.id));
+    return dispatch(startEditUser(userId));
   }
 );
 
-export const removeUserAsync = userToRemove => (
-  dispatch => axios.delete(`${PeopleApi.PATH}/${userToRemove.id}`)
+export const removeUserAsync = userId => (
+  (dispatch, getState) => axios.delete(`${PeopleApi.PATH}/${userId}`)
     .then(() => {
-      dispatch(removeUser(userToRemove));
-      dispatch(showMessage(userToRemove.name + NotificationMessage.USER_DELETED_SUCCESSFULLY));
+      dispatch(showMessage(getState().userList[userId].name + NotificationMessage.USER_DELETED_SUCCESSFULLY));
+      dispatch(removeUser(userId));
     })
     .catch((error) => {
       dispatch(showMessage(`${ErrorMessage.FAILED_TO_REMOVE_USER}: ${error}`));
     })
 );
 
-export const clearUser = userToClear => (
-  (dispatch, getState) => {
-    const userEditId = getState().userEdit.id;
-
-    if (userEditId === getEmptyUser().id) {
+export const clearUser = creating => (
+  (dispatch) => {
+    if (creating) {
       dispatch(endCreateUser());
-    }
-    if (userEditId === userToClear.id) {
+    } else {
       dispatch(endEditUser());
     }
 
     dispatch(removeAllInputErrors());
-    return dispatch(showMessage(NotificationMessage.CHANGES_DISCARDED));
+    dispatch(showMessage(NotificationMessage.CHANGES_DISCARDED));
+  }
+);
+
+export const startOrEndCreateUser = () => (
+  (dispatch, getState) => {
+    if (!getState().userEdit.editing) {
+      dispatch(startCreateUser());
+    } else {
+      dispatch(clearUser(true));
+    }
+  }
+);
+
+export const clearOrShowDelete = userIds => (
+  (dispatch, getState) => {
+    if (userIds[0] === getState().userEdit.id) {
+      dispatch(clearUser(userIds[0] === getUserToBeCreated().userToBeCreated.id));
+    } else {
+      dispatch(showDeleteDialog(userIds));
+    }
   }
 );
 

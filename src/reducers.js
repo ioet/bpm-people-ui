@@ -1,6 +1,6 @@
 /* eslint-disable no-plusplus */
 import { combineReducers } from 'redux';
-import { compareUsersByFirstName, getEmptyUser } from './component/utils/Utils';
+import { arrayToObject, getUserToBeCreated } from './component/utils/Utils';
 import {
   DeleteAction, HoverAction, InputErrorAction, MessageAction, UserAction,
 } from './action-types';
@@ -31,19 +31,12 @@ const inputError = (state = {}, action) => {
   }
 };
 
-const userEdit = (state = { create: false, update: false }, action) => {
+const userEdit = (state = { editing: false }, action) => {
   switch (action.type) {
-    case UserAction.CREATION_START:
-      return ({
-        id: getEmptyUser().id,
-        create: true,
-        update: false,
-      });
     case UserAction.EDIT_START:
       return ({
         id: action.id,
-        create: false,
-        update: true,
+        editing: true,
       });
     case UserAction.EDIT_DATA:
       return ({
@@ -52,15 +45,7 @@ const userEdit = (state = { create: false, update: false }, action) => {
       });
     case UserAction.EDIT_END:
       return ({
-        create: false,
-        update: false,
-        name: null,
-        authentication_identity: null,
-      });
-    case UserAction.CREATION_END:
-      return ({
-        create: false,
-        update: false,
+        editing: false,
         name: null,
         authentication_identity: null,
       });
@@ -69,17 +54,16 @@ const userEdit = (state = { create: false, update: false }, action) => {
   }
 };
 
-const userDelete = (state = { open: false, user: {} }, action) => {
+const userDelete = (state = { open: false }, action) => {
   switch (action.type) {
     case DeleteAction.SHOW_DIALOG:
       return {
-        open: action.open,
-        user: action.user,
+        open: true,
+        userIds: action.userIds,
       };
     case DeleteAction.HIDE_DIALOG:
       return {
         open: false,
-        user: {},
       };
     default:
       return state;
@@ -88,57 +72,49 @@ const userDelete = (state = { open: false, user: {} }, action) => {
 
 const user = (state, action) => {
   switch (action.type) {
-    case UserAction.CREATION_START:
-      return getEmptyUser();
+    case UserAction.ADD_EMPTY_ROW:
+      return getUserToBeCreated();
     case UserAction.ADD_USER:
       return {
-        id: action.id,
-        name: action.name,
-        authentication_identity: action.authentication_identity,
+        [action.id]: {
+          id: action.id,
+          name: action.name,
+          authentication_identity: action.authentication_identity,
+        },
       };
     case UserAction.ADD_USERS:
-      return action.user.map(u => u);
+      return arrayToObject(action.user, 'id');
     default:
       return state;
   }
 };
-const userList = (state = [], action) => {
-  const copy = state.slice();
+const userList = (state = {}, action) => {
+  const copy = Object.assign({}, state);
   switch (action.type) {
-    case UserAction.CREATION_START:
-      return [
-        user(undefined, action),
+    case UserAction.ADD_EMPTY_ROW:
+      return {
+        ...user(undefined, action),
         ...state,
-      ];
-    case UserAction.CREATION_END:
-      copy.shift();
-      return [...copy];
+      };
+    case UserAction.REMOVE_EMPTY_ROW:
+      delete copy[getUserToBeCreated().userToBeCreated.id];
+      return { ...copy };
     case UserAction.ADD_USER:
-      return [
-        ...state,
-        user(undefined, action),
-      ].sort(compareUsersByFirstName);
-    case UserAction.ADD_USERS:
-      return [
+      return {
         ...state,
         ...user(undefined, action),
-      ].sort(compareUsersByFirstName);
+      };
+    case UserAction.ADD_USERS:
+      return {
+        ...state,
+        ...user(undefined, action),
+      };
     case UserAction.UPDATE:
-      for (let i = 0; i < copy.length; i++) {
-        if (copy[i].id === action.user.id) {
-          copy[i] = action.user;
-          break;
-        }
-      }
-      return [...copy].sort(compareUsersByFirstName);
+      copy[action.user.id] = action.user;
+      return { ...copy };
     case UserAction.REMOVE:
-      for (let i = 0; i < copy.length; i++) {
-        if (copy[i].id === action.user.id) {
-          copy.splice(i, 1);
-          break;
-        }
-      }
-      return [...copy];
+      delete copy[action.userId];
+      return { ...copy };
     default:
       return state;
   }

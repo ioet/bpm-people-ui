@@ -1,4 +1,3 @@
-/* eslint-disable react/forbid-prop-types */
 import React from 'react';
 import Dialog from '@material-ui/core/Dialog/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle/DialogTitle';
@@ -9,20 +8,26 @@ import Button from '@material-ui/core/Button/Button';
 import Slide from '@material-ui/core/Slide/Slide';
 import PropTypes from 'prop-types';
 import { DeleteDialogConst } from '../../constants';
+import { getUserToBeCreated } from '../utils/Utils';
 
 function Transition(props) {
   return <Slide direction="up" {...props} />;
 }
 
 const DeleteDialog = (props) => {
-  const { open, handleClose, user } = props;
+  const {
+    open, handleClose, userIds, username,
+  } = props;
 
   return (
     <Dialog
       open={open}
       TransitionComponent={Transition}
       keepMounted
-      onClose={handleClose}
+      onClose={(e) => {
+        e.preventDefault();
+        handleClose();
+      }}
       aria-labelledby="alert-dialog-slide-title"
       aria-describedby="alert-dialog-slide-description"
     >
@@ -33,7 +38,7 @@ const DeleteDialog = (props) => {
         <DialogContentText id="alert-dialog-slide-description">
           {DeleteDialogConst.CONTENT_TEXT_1}
           <b>
-            {user.name}
+            {username}
           </b>
           {DeleteDialogConst.CONTENT_TEXT_2}
         </DialogContentText>
@@ -42,7 +47,7 @@ const DeleteDialog = (props) => {
         <Button
           onClick={(e) => {
             e.preventDefault();
-            handleClose(false);
+            handleClose();
           }}
           color="primary"
         >
@@ -51,7 +56,7 @@ const DeleteDialog = (props) => {
         <Button
           onClick={(e) => {
             e.preventDefault();
-            handleClose(true, user);
+            handleClose(userIds);
           }}
           color="primary"
         >
@@ -62,10 +67,16 @@ const DeleteDialog = (props) => {
   );
 };
 
+DeleteDialog.defaultProps = {
+  userIds: [getUserToBeCreated().userToBeCreated.id],
+  username: [getUserToBeCreated().userToBeCreated.name],
+};
+
 DeleteDialog.propTypes = {
   open: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,
-  user: PropTypes.object.isRequired,
+  userIds: PropTypes.arrayOf(PropTypes.string),
+  username: PropTypes.string,
 };
 
 export default DeleteDialog;

@@ -1,84 +1,153 @@
-/* eslint-disable react/jsx-tag-spacing,react/forbid-prop-types */
+/* eslint-disable react/display-name */
 import React from 'react';
 import PropTypes from 'prop-types';
-import { compose } from 'redux';
-import { withWidth } from '@material-ui/core';
-import { isWidthUp } from '@material-ui/core/withWidth';
+import MUIDataTable from 'mui-datatables';
 import withStyles from '@material-ui/core/styles/withStyles';
-import Typography from '@material-ui/core/Typography/Typography';
-import Table from '@material-ui/core/Table/Table';
-import TableHead from '@material-ui/core/TableHead/TableHead';
-import TableRow from '@material-ui/core/TableRow/TableRow';
-import TableCell from '@material-ui/core/TableCell/TableCell';
-import TableBody from '@material-ui/core/TableBody/TableBody';
-import List from '@material-ui/core/List/List';
+import IconButton from '@material-ui/core/IconButton';
+import { Delete } from '@material-ui/icons';
+import { UserListConst, UserListItemConst, Variable } from '../../constants';
 import { UserListStyles } from '../../styles';
-import { UserListConst } from '../../constants';
-import UserListItemContainer from '../container/UserListItemContainer';
+import EditOrPlainTextContainer from '../container/EditOrPlainTextContainer';
+import { compareUsersByFirstName, getUserObjectFromArray } from '../utils/Utils';
+import MyTableCellContainer from '../container/MyTableCellContainer';
+import MyEditButtonContainer from '../container/MyEditButtonContainer';
+import MyDeleteButtonContainer from '../container/MyDeleteButtonContainer';
 
 const UserList = (props) => {
-  const { classes, width, userList } = props;
+  const {
+    classes, userList, onRemoveUsers,
+  } = props;
 
-  const users = userList.map(user => (
-    <UserListItemContainer key={user.id} user={user}/>
-  ));
+  const data = [];
+  Object.keys(userList).forEach((key) => {
+    const user = userList[key];
+    data.push([user.id, user.name, user.authentication_identity, false, false]);
+  });
+  data.sort(compareUsersByFirstName);
 
-  if (isWidthUp('sm', width)) {
-    return (
-      <div className={classes.root}>
-        {users.length > 0 ? (
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell className={classes.tableHead}>
-                  {UserListConst.COLUMN_1}
-                </TableCell>
-                <TableCell className={classes.tableHead}>
-                  {UserListConst.COLUMN_2}
-                </TableCell>
-                <TableCell className={[classes.tableHead, classes.tableHeadIcon].join(' ')} numeric>
-                  {UserListConst.COLUMN_3}
-                </TableCell>
-                <TableCell className={[classes.tableHead, classes.tableHeadIcon].join(' ')} numeric>
-                  {UserListConst.COLUMN_4}
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {users}
-            </TableBody>
-          </Table>
-        ) : (
-          <Typography variant="subtitle1">
-            {UserListConst.LOADING}
-          </Typography>
-        )}
-      </div>
-    );
-  }
+  const columns = [
+    {
+      name: UserListConst.COLUMN_0,
+      options: {
+        display: 'excluded',
+        filter: false,
+        sort: false,
+        download: false,
+      },
+    },
+    {
+      name: UserListConst.COLUMN_1,
+      options: {
+        customBodyRender: (value, tableMeta) => {
+          const user = getUserObjectFromArray(tableMeta.rowData);
+          return (
+            <MyTableCellContainer userId={user.id}>
+              <EditOrPlainTextContainer
+                userId={user.id}
+                value={value}
+                name={Variable.NAME}
+                label={UserListItemConst.EDIT_NAME}
+              />
+            </MyTableCellContainer>
+          );
+        },
+      },
+    },
+    {
+      name: UserListConst.COLUMN_2,
+      options: {
+        customBodyRender: (value, tableMeta) => {
+          const user = getUserObjectFromArray(tableMeta.rowData);
+          return (
+            <MyTableCellContainer userId={user.id}>
+              <EditOrPlainTextContainer
+                userId={user.id}
+                value={value}
+                name={Variable.AUTHENTICATION_IDENTITY}
+                label={UserListItemConst.EDIT_EMAIL}
+              />
+            </MyTableCellContainer>
+          );
+        },
+      },
+    },
+    {
+      name: UserListConst.COLUMN_3,
+      options: {
+        filter: false,
+        sort: false,
+        download: false,
+        customBodyRender: (value, tableMeta) => {
+          const user = getUserObjectFromArray(tableMeta.rowData);
+          return (
+            <MyTableCellContainer userId={user.id}>
+              <MyEditButtonContainer
+                userId={user.id}
+              />
+            </MyTableCellContainer>
+          );
+        },
+      },
+    },
+    {
+      name: UserListConst.COLUMN_4,
+      options: {
+        filter: false,
+        sort: false,
+        download: false,
+        customBodyRender: (value, tableMeta) => {
+          const user = getUserObjectFromArray(tableMeta.rowData);
+          return (
+            <MyTableCellContainer userId={user.id}>
+              <MyDeleteButtonContainer
+                userId={user.id}
+              />
+            </MyTableCellContainer>
+          );
+        },
+      },
+    },
+  ];
+  const options = {
+    filterType: 'dropdown',
+    responsive: 'scroll',
+    resizableColumns: true,
+    selectableRows: true,
+    print: false,
+    rowsPerPageOptions: [10, 15, 25],
+    customToolbarSelect: selected => (
+      <IconButton
+        onClick={(e) => {
+          e.preventDefault();
+          const selectedUserIds = selected.data.map(u => data[u.dataIndex][0]);
+          onRemoveUsers(selectedUserIds);
+        }}
+        className={classes.iconButton}
+      >
+        <Delete />
+      </IconButton>
+    ),
+  };
 
   return (
-    <div className={classes.phoneRoot}>
-      {users.length > 0 ? (
-        <List>
-          {users}
-        </List>
-      ) : (
-        <Typography variant="subtitle1">
-          {UserListConst.LOADING}
-        </Typography>
-      )}
+    <div className={classes.root}>
+      <MUIDataTable
+        data={data}
+        columns={columns}
+        options={options}
+      />
     </div>
   );
 };
 
 UserList.propTypes = {
   classes: PropTypes.object.isRequired,
-  width: PropTypes.string.isRequired,
-  userList: PropTypes.array.isRequired,
+  userList: PropTypes.objectOf(PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    authentication_identity: PropTypes.string.isRequired,
+  })).isRequired,
+  onRemoveUsers: PropTypes.func.isRequired,
 };
 
-export default compose(
-  withStyles(UserListStyles),
-  withWidth(),
-)(UserList);
+export default withStyles(UserListStyles)(UserList);
