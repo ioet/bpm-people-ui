@@ -1,17 +1,14 @@
 /* eslint-disable camelcase,prefer-destructuring */
-import axios from 'axios';
+import { PersonControllerApi, Person } from 'swagger_bpm_people_api';
 import { getUserToBeCreated, validateEmail } from './component/utils/Utils';
 import {
   DeleteAction, HoverAction, InputErrorAction, MessageAction, UserAction,
 } from './action-types';
 import {
-  ErrorMessage, NotificationMessage, PeopleApi, PromptMessage, Variable,
+  ErrorMessage, NotificationMessage, PromptMessage, Variable,
 } from './constants';
 
-axios.defaults.baseURL = Object.is(process.env.REACT_APP_BPM_PEOPLE_API_URL, undefined)
-  ? 'http://localhost:9081/people-service'
-  : process.env.REACT_APP_BPM_PEOPLE_API_URL;
-axios.defaults.headers.common['Content-Type'] = 'application/json';
+const peopleApi = new PersonControllerApi();
 
 const addUsers = allUsers => ({
   type: UserAction.ADD_USERS,
@@ -99,9 +96,9 @@ const removeUser = userId => ({
 });
 
 export const getAllUsersAsync = () => (
-  dispatch => axios.get(PeopleApi.PATH)
-    .then((response) => {
-      dispatch(addUsers(response.data));
+  dispatch => peopleApi.getAllPersonsUsingGET()
+    .then((data) => {
+      dispatch(addUsers(data));
     })
     .catch((error) => {
       dispatch(showMessage(`${ErrorMessage.FAILED_TO_LOAD_USERS}: ${error}`));
@@ -131,16 +128,16 @@ const createUserAsync = () => (
 
     if (!validateInputWithErrorMessages(dispatch, getState().userEdit)) return null;
 
-    return axios.post(PeopleApi.PATH, {
-      name,
-      authentication_identity,
-      password: '',
-    })
-      .then((response) => {
+    const personToCreate = new Person();
+    personToCreate.name = name;
+    personToCreate.authentication_identity = authentication_identity;
+    personToCreate.password = '';
+    return peopleApi.createPersonUsingPOST(personToCreate)
+      .then((data) => {
         dispatch(removeAllInputErrors());
         dispatch(endCreateUser());
-        dispatch(addUser(response.data));
-        dispatch(showMessage(response.data.name + NotificationMessage.USER_CREATED_SUCCESSFULLY));
+        dispatch(addUser(data));
+        dispatch(showMessage(data.name + NotificationMessage.USER_CREATED_SUCCESSFULLY));
       })
       .catch((error) => {
         dispatch(showMessage(`${ErrorMessage.FAILED_TO_CREATE_USER}: ${error}`));
@@ -173,14 +170,14 @@ const updateUserAsync = userId => (
       return null;
     }
 
-    return axios.put(`${PeopleApi.PATH}/${id}`, {
-      name,
-      authentication_identity,
-    })
-      .then((response) => {
+    const personToUpdate = new Person();
+    personToUpdate.name = name;
+    personToUpdate.authentication_identity = authentication_identity;
+    return peopleApi.updatePersonUsingPUT(id, personToUpdate)
+      .then((data) => {
         dispatch(removeAllInputErrors());
         dispatch(endEditUser());
-        dispatch(setUpdateUser(response.data));
+        dispatch(setUpdateUser(data));
         dispatch(showMessage(NotificationMessage.CHANGES_UPDATED_SUCCESSFULLY));
       })
       .catch((error) => {
@@ -211,7 +208,7 @@ export const editUpdateOrCreateUser = userId => (
 );
 
 export const removeUserAsync = userId => (
-  (dispatch, getState) => axios.delete(`${PeopleApi.PATH}/${userId}`)
+  (dispatch, getState) => peopleApi.deletePersonUsingDELETE(userId)
     .then(() => {
       dispatch(showMessage(getState().userList[userId].name + NotificationMessage.USER_DELETED_SUCCESSFULLY));
       dispatch(removeUser(userId));

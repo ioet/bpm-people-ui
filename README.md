@@ -2,10 +2,24 @@
 
 In order to set up and run the project, follow these steps:
 
-## Installing the dependencies
+## Java needs to be installed on your machine!
+You know how do to it... Don't forget to set the JAVA_HOME variable
 
+## Installing the dependencies
+run this command and everything should be setup
 ```
-npm install
+npm run setup
+```
+
+## Swagger Codegen for API client
+The swagger client will be generated with the setup command.  
+However to build the client independently run this command:
+```
+npm run generate-swagger-client
+```
+You can also specify a URL to a swagger.json, run this command to get help
+```
+npm run generate-swagger-client -- -h
 ```
 
 ## To run the app locally with docker-compose
@@ -19,17 +33,6 @@ AWS_SECRET_ACCESS_KEY=YOUR_SECRET_ACCESS_KEY
 Then run this command to start the edge-server, the eureka-server and the bpm-people-api
 ```
 docker-compose up
-```
-
-## Configure environment variables
-So that the app can connect to the bpm-people-api
-```
-export REACT_APP_BPM_PEOPLE_API_URL=http://yourURL.example/api
-```
-
-When using docker-compose the URL is the following
-```
-export REACT_APP_BPM_PEOPLE_API_URL=http://localhost:9081/people-service
 ```
 
 ## Running the app
