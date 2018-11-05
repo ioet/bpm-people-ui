@@ -22,6 +22,9 @@ You can also specify a URL to a swagger.json, run this command to get help
 npm run generate-swagger-client -- -h
 ```
 
+In order to always have the latest api client
+we should version the swagger.json created by the bpm-people-api here!
+
 ## To run the app locally with docker-compose
 You will need a file called `aws.env` inside your root directory containing these environment variables.
 ```
