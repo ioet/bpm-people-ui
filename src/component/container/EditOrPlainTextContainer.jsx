@@ -1,10 +1,11 @@
 import { connect } from 'react-redux';
 import { editUpdateOrCreateUser, setUserEditData } from '../../actions';
 import EditOrPlainText from '../presentational/EditOrPlainText';
+import { getEditId, getInputError } from '../../selectors';
 
 const mapStateToProps = (state, ownProps) => ({
-  editId: (typeof state.userEdit.id === 'undefined') ? '' : state.userEdit.id,
-  inputError: state.inputError[ownProps.name],
+  editId: getEditId(state),
+  inputError: getInputError(state, ownProps),
   userId: ownProps.userId,
   value: ownProps.value,
   name: ownProps.name,
