@@ -119,4 +119,4 @@ react-dom
 generated_swagger_client/
 swagger-codegen/swagger-codegen-cli.jar
 
-.package-lock.json
+package-lock.json
