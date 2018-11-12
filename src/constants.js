@@ -1,7 +1,3 @@
-export const PeopleApi = {
-  PATH: '/people',
-};
-
 export const Variable = {
   NAME: 'name',
   AUTHENTICATION_IDENTITY: 'authentication_identity',
