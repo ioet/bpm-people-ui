@@ -1,0 +1,12 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<Footer /> Component Renders correctly 1`] = `
+<Footer
+  classes={
+    Object {
+      "button": "Footer-button-2",
+      "root": "Footer-root-1",
+    }
+  }
+/>
+`;
