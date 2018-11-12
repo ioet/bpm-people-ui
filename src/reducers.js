@@ -1,28 +1,23 @@
 /* eslint-disable no-plusplus */
 import { combineReducers } from 'redux';
-import { arrayToUserObject, getUserToBeCreated } from './component/utils/Utils';
+import { arrayToObject, getUserToBeCreated } from './component/utils/Utils';
 import {
   DeleteAction, HoverAction, InputErrorAction, MessageAction, UserAction,
 } from './action-types';
 
-export const message = (state = { open: false }, action) => {
+const message = (state = { open: false }, action) => {
   switch (action.type) {
-    case MessageAction.SHOW_MESSAGE:
-      return {
-        open: true,
+    case MessageAction.MESSAGE:
+      return ({
+        open: action.open,
         message: action.message,
-      };
-    case MessageAction.HIDE_MESSAGE:
-      return {
-        open: false,
-        message: '',
-      };
+      });
     default:
       return state;
   }
 };
 
-export const inputError = (state = {}, action) => {
+const inputError = (state = {}, action) => {
   switch (action.type) {
     case InputErrorAction.ADD:
       return ({
@@ -36,7 +31,7 @@ export const inputError = (state = {}, action) => {
   }
 };
 
-export const userEdit = (state = { editing: false }, action) => {
+const userEdit = (state = { editing: false }, action) => {
   switch (action.type) {
     case UserAction.EDIT_START:
       return ({
@@ -46,7 +41,7 @@ export const userEdit = (state = { editing: false }, action) => {
     case UserAction.EDIT_DATA:
       return ({
         ...state,
-        [action.field]: action.value,
+        [action.field]: action.name,
       });
     case UserAction.EDIT_END:
       return ({
@@ -59,7 +54,7 @@ export const userEdit = (state = { editing: false }, action) => {
   }
 };
 
-export const userDelete = (state = { open: false }, action) => {
+const userDelete = (state = { open: false }, action) => {
   switch (action.type) {
     case DeleteAction.SHOW_DIALOG:
       return {
@@ -75,23 +70,25 @@ export const userDelete = (state = { open: false }, action) => {
   }
 };
 
-export const user = (state = {}, action) => {
+const user = (state, action) => {
   switch (action.type) {
     case UserAction.ADD_EMPTY_ROW:
-      return {
-        [getUserToBeCreated().id]: getUserToBeCreated(),
-      };
+      return getUserToBeCreated();
     case UserAction.ADD_USER:
       return {
-        [action.user.id]: action.user,
+        [action.id]: {
+          id: action.id,
+          name: action.name,
+          authentication_identity: action.authentication_identity,
+        },
       };
     case UserAction.ADD_USERS:
-      return arrayToUserObject(action.user, 'id');
+      return arrayToObject(action.user, 'id');
     default:
       return state;
   }
 };
-export const userList = (state = {}, action) => {
+const userList = (state = {}, action) => {
   const copy = Object.assign({}, state);
   switch (action.type) {
     case UserAction.ADD_EMPTY_ROW:
@@ -100,7 +97,7 @@ export const userList = (state = {}, action) => {
         ...state,
       };
     case UserAction.REMOVE_EMPTY_ROW:
-      delete copy[getUserToBeCreated().id];
+      delete copy[getUserToBeCreated().userToBeCreated.id];
       return { ...copy };
     case UserAction.ADD_USER:
       return {
@@ -123,7 +120,7 @@ export const userList = (state = {}, action) => {
   }
 };
 
-export const hover = (state = { hover: false }, action) => {
+const hover = (state = { hover: false }, action) => {
   switch (action.type) {
     case HoverAction.OVER:
       return {

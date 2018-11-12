@@ -10,29 +10,34 @@ import {
 
 const peopleApi = new PersonControllerApi();
 
-export const addUsers = allUsers => ({
+const addUsers = allUsers => ({
   type: UserAction.ADD_USERS,
   user: allUsers,
 });
 export const addUser = oneUser => ({
   type: UserAction.ADD_USER,
-  user: oneUser,
+  id: oneUser.id,
+  name: oneUser.name,
+  authentication_identity: oneUser.authentication_identity,
 });
 
-export const setInputError = field => ({
+const setInputError = field => ({
   type: InputErrorAction.ADD,
   field,
 });
-export const removeAllInputErrors = () => ({
+const removeAllInputErrors = () => ({
   type: InputErrorAction.REMOVE_ALL,
 });
 
 export const showMessage = errorMessage => ({
-  type: MessageAction.SHOW_MESSAGE,
+  type: MessageAction.MESSAGE,
+  open: true,
   message: errorMessage,
 });
 export const hideMessage = () => ({
-  type: MessageAction.HIDE_MESSAGE,
+  type: MessageAction.MESSAGE,
+  open: false,
+  message: '',
 });
 
 export const showDeleteDialog = userIds => ({
@@ -57,10 +62,10 @@ export const startEditUser = editUserId => ({
   type: UserAction.EDIT_START,
   id: editUserId,
 });
-export const setUserEditData = (field, value) => ({
+export const setUserEditData = (field, name) => ({
   type: UserAction.EDIT_DATA,
   field,
-  value,
+  name,
 });
 export const endEditUser = () => ({
   type: UserAction.EDIT_END,
@@ -69,7 +74,7 @@ export const endEditUser = () => ({
 export const startCreateUser = () => (
   (dispatch) => {
     dispatch(addEmptyRow());
-    dispatch(startEditUser(getUserToBeCreated().id));
+    dispatch(startEditUser(getUserToBeCreated().userToBeCreated.id));
   }
 );
 
@@ -85,7 +90,7 @@ export const setUpdateUser = userToUpdate => ({
   user: userToUpdate,
 });
 
-export const removeUser = userId => ({
+const removeUser = userId => ({
   type: UserAction.REMOVE,
   userId,
 });
@@ -96,14 +101,13 @@ export const getAllUsersAsync = () => (
       dispatch(addUsers(data));
     })
     .catch((error) => {
-      // console.log(error); find a way to log this error
-      dispatch(showMessage(ErrorMessage.FAILED_TO_LOAD_USERS));
+      dispatch(showMessage(`${ErrorMessage.FAILED_TO_LOAD_USERS}: ${error}`));
     })
 );
 
-export const validateField = input => !(typeof input === 'undefined' || input === '');
+const validateField = input => !(typeof input === 'undefined' || input === '');
 
-export const validateInputWithErrorMessages = (dispatch, user) => {
+const validateInputWithErrorMessages = (dispatch, user) => {
   if (!validateField(user.name)) {
     dispatch(showMessage(PromptMessage.ENTER_VALID_NAME));
     dispatch(setInputError(Variable.NAME));
@@ -118,7 +122,7 @@ export const validateInputWithErrorMessages = (dispatch, user) => {
   return true;
 };
 
-export const createUserAsync = () => (
+const createUserAsync = () => (
   (dispatch, getState) => {
     const { name, authentication_identity } = getState().userEdit;
 
@@ -136,13 +140,12 @@ export const createUserAsync = () => (
         dispatch(showMessage(data.name + NotificationMessage.USER_CREATED_SUCCESSFULLY));
       })
       .catch((error) => {
-        // console.log(error); find a way to log this error
-        dispatch(showMessage(ErrorMessage.FAILED_TO_CREATE_USER));
+        dispatch(showMessage(`${ErrorMessage.FAILED_TO_CREATE_USER}: ${error}`));
       });
   }
 );
 
-export const updateUserAsync = userId => (
+const updateUserAsync = userId => (
   (dispatch, getState) => {
     const { id } = getState().userEdit;
     const user = getState().userList[userId];
@@ -178,8 +181,7 @@ export const updateUserAsync = userId => (
         dispatch(showMessage(NotificationMessage.CHANGES_UPDATED_SUCCESSFULLY));
       })
       .catch((error) => {
-        // console.log(error); find a way to log this error
-        dispatch(showMessage(ErrorMessage.FAILED_TO_UPDATE_USER));
+        dispatch(showMessage(`${ErrorMessage.FAILED_TO_UPDATE_USER}: ${error}`));
       });
   }
 );
@@ -190,12 +192,12 @@ export const editUpdateOrCreateUser = userId => (
 
     if (typeof userEditId !== 'undefined') {
       if (userEditId === userId) {
-        if (userEditId === getUserToBeCreated().id) {
+        if (userEditId === getUserToBeCreated().userToBeCreated.id) {
           return dispatch(createUserAsync());
         }
         return dispatch(updateUserAsync(userId));
       }
-      if (userEditId === getUserToBeCreated().id) {
+      if (userEditId === getUserToBeCreated().userToBeCreated.id) {
         dispatch(showMessage(NotificationMessage.CHANGES_DISCARDED));
         dispatch(removeAllInputErrors());
         dispatch(endCreateUser());
@@ -212,8 +214,7 @@ export const removeUserAsync = userId => (
       dispatch(removeUser(userId));
     })
     .catch((error) => {
-      // console.log(error); find a way to log this error
-      dispatch(showMessage(ErrorMessage.FAILED_TO_REMOVE_USER));
+      dispatch(showMessage(`${ErrorMessage.FAILED_TO_REMOVE_USER}: ${error}`));
     })
 );
 
@@ -243,7 +244,7 @@ export const startOrEndCreateUser = () => (
 export const clearOrShowDelete = userIds => (
   (dispatch, getState) => {
     if (userIds[0] === getState().userEdit.id) {
-      dispatch(clearUser(userIds[0] === getUserToBeCreated().id));
+      dispatch(clearUser(userIds[0] === getUserToBeCreated().userToBeCreated.id));
     } else {
       dispatch(showDeleteDialog(userIds));
     }

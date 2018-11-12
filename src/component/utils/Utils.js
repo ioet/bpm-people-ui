@@ -14,18 +14,20 @@ export function compareUsersByFirstName(a, b) {
   return 0;
 }
 
-export const arrayToUserObject = (array, keyField) => (
-  array.reduce((obj, user) => {
-    obj[user[keyField]] = user;
+export const arrayToObject = (array, keyField) => (
+  array.reduce((obj, item) => {
+    obj[item[keyField]] = item;
     return obj;
   }, {})
 );
 
 export const getUserToBeCreated = () => (
   {
-    id: 'userToBeCreated',
-    name: '',
-    authentication_identity: '',
+    userToBeCreated: {
+      id: 'userToBeCreated',
+      name: '',
+      authentication_identity: '',
+    },
   }
 );
 

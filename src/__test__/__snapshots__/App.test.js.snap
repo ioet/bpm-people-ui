@@ -1,23 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`<App/> Component Renders correctly 1`] = `
-<div>
-  <WithStyles(AppBar)
-    position="sticky"
-  >
-    <WithStyles(Toolbar)>
-      <WithStyles(Typography)
-        color="inherit"
-        variant="h6"
-      >
-        Here are all users currently saved in our system
-      </WithStyles(Typography)>
-    </WithStyles(Toolbar)>
-  </WithStyles(AppBar)>
-  <Connect(WithStyles(UserList)) />
-  <WithStyles(Footer) />
-  <Connect(WithStyles(FloatingActionButton)) />
-  <Connect(WithStyles(ErrorSnackbar)) />
-  <Connect(DeleteDialog) />
-</div>
+<React.Fragment>
+  <PageContainer />
+</React.Fragment>
 `;

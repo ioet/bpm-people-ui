@@ -4,15 +4,14 @@ export const UserAction = {
   ADD_EMPTY_ROW: 'ADD_EMPTY_ROW',
   REMOVE_EMPTY_ROW: 'REMOVE_EMPTY_ROW',
   EDIT_START: 'USER_EDIT_START',
-  EDIT_END: 'USER_EDIT_END',
+  EDIT_END: 'EDIT_END',
   EDIT_DATA: 'USER_EDIT_DATA',
   UPDATE: 'USER_UPDATE',
   REMOVE: 'USER_REMOVE',
 };
 
 export const MessageAction = {
-  SHOW_MESSAGE: 'SHOW_INFO_MESSAGE',
-  HIDE_MESSAGE: 'HIDE_INFO_MESSAGE',
+  MESSAGE: 'INFO_MESSAGE',
 };
 
 export const InputErrorAction = {
@@ -28,8 +27,4 @@ export const DeleteAction = {
 export const HoverAction = {
   OVER: 'HOVER_OVER',
   OUT: 'HOVER_OUT',
-};
-
-export const InitialAction = {
-  INITIAL_STATE: '@@INIT',
 };
