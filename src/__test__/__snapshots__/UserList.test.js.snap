@@ -1,0 +1,12 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<UserList /> Component Renders correctly 1`] = `
+<UserList
+  classes={
+    Object {
+      "iconButton": "UserList-iconButton-2",
+      "root": "UserList-root-1",
+    }
+  }
+/>
+`;

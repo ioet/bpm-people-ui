@@ -1,0 +1,40 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<DeleteDialog /> Component Renders correctly 1`] = `
+<WithStyles(Dialog)
+  TransitionComponent={[Function]}
+  aria-describedby="alert-dialog-slide-description"
+  aria-labelledby="alert-dialog-slide-title"
+  keepMounted={true}
+  onClose={[Function]}
+>
+  <WithStyles(DialogTitle)
+    id="alert-dialog-slide-title"
+  >
+    Delete user
+  </WithStyles(DialogTitle)>
+  <WithStyles(DialogContent)>
+    <WithStyles(DialogContentText)
+      id="alert-dialog-slide-description"
+    >
+      Do you really want to delete 
+      <b />
+       permanently?
+    </WithStyles(DialogContentText)>
+  </WithStyles(DialogContent)>
+  <WithStyles(DialogActions)>
+    <WithStyles(Button)
+      color="primary"
+      onClick={[Function]}
+    >
+      No
+    </WithStyles(Button)>
+    <WithStyles(Button)
+      color="primary"
+      onClick={[Function]}
+    >
+      Yes
+    </WithStyles(Button)>
+  </WithStyles(DialogActions)>
+</WithStyles(Dialog)>
+`;

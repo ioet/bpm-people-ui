@@ -1,9 +1,9 @@
 import React from 'react';
-import App from '../App';
+import Footer from '../component/presentational/Footer';
 
-describe('<App/>', () => {
+describe('<Footer />', () => {
   test('Component Renders correctly', () => {
-    const appWrapper = shallow(<App />);
+    const appWrapper = shallow(<Footer />);
 
     expect(toJson(appWrapper))
       .toMatchSnapshot();

@@ -1,9 +1,9 @@
 import React from 'react';
-import App from '../App';
+import UserList from '../component/presentational/UserList';
 
-describe('<App/>', () => {
+describe('<UserList />', () => {
   test('Component Renders correctly', () => {
-    const appWrapper = shallow(<App />);
+    const appWrapper = shallow(<UserList />);
 
     expect(toJson(appWrapper))
       .toMatchSnapshot();

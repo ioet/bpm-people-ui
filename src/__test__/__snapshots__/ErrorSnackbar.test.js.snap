@@ -1,0 +1,12 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<ErrorSnackbar /> Component Renders correctly 1`] = `
+<ErrorSnackbar
+  classes={
+    Object {
+      "snackbar": "ErrorSnackbar-snackbar-1",
+    }
+  }
+  message=""
+/>
+`;

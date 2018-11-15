@@ -68,8 +68,8 @@ const DeleteDialog = (props) => {
 };
 
 DeleteDialog.defaultProps = {
-  userIds: [getUserToBeCreated().userToBeCreated.id],
-  username: [getUserToBeCreated().userToBeCreated.name],
+  userIds: [getUserToBeCreated().id],
+  username: [getUserToBeCreated().name],
 };
 
 DeleteDialog.propTypes = {
