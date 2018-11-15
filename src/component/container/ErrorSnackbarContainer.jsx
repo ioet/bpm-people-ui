@@ -1,10 +1,11 @@
 import { connect } from 'react-redux';
 import ErrorSnackbar from '../presentational/ErrorSnackbar';
 import { hideMessage } from '../../actions';
+import { getMessage, isMessageOpen } from '../../selectors';
 
 const mapStateToProps = state => ({
-  open: state.message.open,
-  message: state.message.message,
+  open: isMessageOpen(state),
+  message: getMessage(state),
 });
 
 const mapDispatchToProps = dispatch => ({

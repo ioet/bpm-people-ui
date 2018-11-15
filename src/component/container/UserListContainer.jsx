@@ -1,9 +1,10 @@
 import { connect } from 'react-redux';
 import UserList from '../presentational/UserList';
 import { showDeleteDialog } from '../../actions';
+import { getUserList } from '../../selectors';
 
 const mapStateToProps = state => ({
-  userList: state.userList,
+  userList: getUserList(state),
 });
 
 const mapDispatchToProps = dispatch => ({
