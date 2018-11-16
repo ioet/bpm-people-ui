@@ -1,12 +1,12 @@
 import { connect } from 'react-redux';
 import DeleteDialog from '../presentational/DeleteDialog';
 import { hideDeleteDialog, removeUserAsync } from '../../actions';
-import { getUserIds, getUserName, isDeleteDialogOpen } from '../../selectors';
+import { getUserIds, getUserNameForDelete, isDeleteDialogOpen } from '../../selectors';
 
 const mapStateToProps = state => ({
   open: isDeleteDialogOpen(state),
   userIds: getUserIds(state),
-  username: getUserName(state),
+  username: getUserNameForDelete(state),
 });
 
 const mapDispatchToProps = dispatch => ({

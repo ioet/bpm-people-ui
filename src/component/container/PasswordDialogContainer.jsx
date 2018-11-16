@@ -2,12 +2,18 @@ import { connect } from 'react-redux';
 import { handleCloseEnterPasswordDialog, setUserEditData } from '../../actions';
 import PasswordDialog from '../presentational/PasswordDialog';
 import { Variable } from '../../constants';
+import {
+  getInputError,
+  getUserEditPassword,
+  getUserPasswordConfirm,
+  isPasswordDialogOpen,
+} from '../../selectors';
 
 const mapStateToProps = state => ({
-  open: state.userEdit.passwordDialogOpen,
-  inputError: state.inputError[Variable.PASSWORD_CONFIRM],
-  password: state.userEdit[Variable.PASSWORD],
-  passwordConfirm: state.userEdit[Variable.PASSWORD_CONFIRM],
+  open: isPasswordDialogOpen(state),
+  inputError: getInputError(state, Variable.PASSWORD_CONFIRM),
+  password: getUserEditPassword(state),
+  passwordConfirm: getUserPasswordConfirm(state),
 });
 
 const mapDispatchToProps = dispatch => ({

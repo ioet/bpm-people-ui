@@ -1,5 +1,5 @@
 /* eslint-disable camelcase,prefer-destructuring */
-import { PersonControllerApi, Person } from 'swagger_bpm_people_api';
+import { Person, PersonControllerApi } from 'swagger_bpm_people_api';
 import { getUserToBeCreated, validateEmail } from './component/utils/Utils';
 import {
   DeleteAction, HoverAction, InputErrorAction, MessageAction, UserAction,
@@ -7,6 +7,16 @@ import {
 import {
   ErrorMessage, NotificationMessage, PromptMessage, Variable,
 } from './constants';
+import {
+  getUserEdit,
+  getUserEditAuthenticationIdentity,
+  getUserEditId,
+  getUserEditName,
+  getUserEditPassword,
+  getUserForId,
+  getUserNameForId,
+  isUserEditActive,
+} from './selectors';
 
 const peopleApi = new PersonControllerApi();
 
@@ -125,7 +135,10 @@ export const validateInputWithErrorMessages = (dispatch, user) => {
 
 export const createUserAsync = () => (
   (dispatch, getState) => {
-    const { name, authentication_identity, password } = getState().userEdit;
+    const state = getState();
+    const name = getUserEditName(state);
+    const authentication_identity = getUserEditAuthenticationIdentity(state);
+    const password = getUserEditPassword(state);
 
     const personToCreate = new Person();
     personToCreate.name = name;
@@ -147,9 +160,11 @@ export const createUserAsync = () => (
 
 export const updateUserAsync = userId => (
   (dispatch, getState) => {
-    const { id } = getState().userEdit;
-    const user = getState().userList[userId];
-    let { name, authentication_identity } = getState().userEdit;
+    const state = getState();
+    const id = getUserEditId(state);
+    const user = getUserForId(state, userId);
+    let name = getUserEditName(state);
+    let authentication_identity = getUserEditAuthenticationIdentity(state);
 
     if (typeof name === 'undefined' && typeof authentication_identity === 'undefined') {
       dispatch(removeAllInputErrors());
@@ -226,7 +241,7 @@ export const validatePasswordInputWithErrorMessages = (dispatch, userEdit) => {
 
 export const checkPasswordInputAndCreateUser = () => (
   (dispatch, getState) => {
-    if (!validatePasswordInputWithErrorMessages(dispatch, getState().userEdit)) return null;
+    if (!validatePasswordInputWithErrorMessages(dispatch, getUserEdit(getState()))) return null;
     dispatch(closeEnterPasswordDialog());
     return dispatch(createUserAsync());
   }
@@ -234,7 +249,7 @@ export const checkPasswordInputAndCreateUser = () => (
 
 export const handleOpenEnterPasswordDialog = () => (
   (dispatch, getState) => {
-    if (!validateInputWithErrorMessages(dispatch, getState().userEdit)) return null;
+    if (!validateInputWithErrorMessages(dispatch, getUserEdit(getState()))) return null;
     return dispatch(openEnterPasswordDialog());
   }
 );
@@ -252,7 +267,7 @@ export const handleCloseEnterPasswordDialog = confirmed => (
 
 export const editUpdateOrCreateUser = userId => (
   (dispatch, getState) => {
-    const userEditId = getState().userEdit.id;
+    const userEditId = getUserEditId(getState());
 
     if (typeof userEditId !== 'undefined') {
       if (userEditId === userId) {
@@ -272,7 +287,7 @@ export const editUpdateOrCreateUser = userId => (
 export const removeUserAsync = userId => (
   (dispatch, getState) => peopleApi.deletePersonUsingDELETE(userId)
     .then(() => {
-      dispatch(showMessage(getState().userList[userId].name + NotificationMessage.USER_DELETED_SUCCESSFULLY));
+      dispatch(showMessage(getUserNameForId(getState(), userId) + NotificationMessage.USER_DELETED_SUCCESSFULLY));
       dispatch(removeUser(userId));
     })
     .catch((error) => {
@@ -283,7 +298,7 @@ export const removeUserAsync = userId => (
 
 export const startOrEndCreateUser = () => (
   (dispatch, getState) => {
-    if (!getState().userEdit.editing) {
+    if (!isUserEditActive(getState())) {
       dispatch(startCreateUser());
     } else {
       dispatch(clearUser(true));
@@ -293,7 +308,7 @@ export const startOrEndCreateUser = () => (
 
 export const clearOrShowDelete = userIds => (
   (dispatch, getState) => {
-    if (userIds[0] === getState().userEdit.id) {
+    if (userIds[0] === getUserEditId(getState())) {
       dispatch(clearUser(userIds[0] === getUserToBeCreated().id));
     } else {
       dispatch(showDeleteDialog(userIds));
