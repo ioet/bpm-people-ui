@@ -1,17 +1,15 @@
 import { connect } from 'react-redux';
-import { Done, Edit } from '@material-ui/icons';
-import React from 'react';
 import MyIconButton from '../presentational/MyIconButton';
 import { editUpdateOrCreateUser } from '../../actions';
-import { UserListItemConst } from '../../constants';
+import {
+  getEditButtonIcon, getEditButtonTooltip, getHoverId, isHoverActive,
+} from '../../selectors';
 
 const mapStateToProps = (state, ownProps) => ({
-  hover: state.hover.hover,
-  hoverId: state.hover.id,
-  icon: (state.userEdit.id === ownProps.userId) ? <Done /> : <Edit />,
-  tooltip: (state.userEdit.id === ownProps.userId)
-    ? UserListItemConst.TOOLTIP_SAVE
-    : UserListItemConst.TOOLTIP_EDIT,
+  hover: isHoverActive(state),
+  hoverId: getHoverId(state),
+  icon: getEditButtonIcon(state, ownProps),
+  tooltip: getEditButtonTooltip(state, ownProps),
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
