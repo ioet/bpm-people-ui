@@ -19,5 +19,6 @@ exports[`<App/> Component Renders correctly 1`] = `
   <Connect(WithStyles(FloatingActionButton)) />
   <Connect(WithStyles(ErrorSnackbar)) />
   <Connect(DeleteDialog) />
+  <Connect(PasswordDialog) />
 </div>
 `;

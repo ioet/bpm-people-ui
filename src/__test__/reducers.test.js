@@ -77,6 +77,7 @@ describe('userEdit reducer', () => {
     }))
       .toEqual({
         editing: false,
+        passwordDialogOpen: false,
       });
   });
 
@@ -133,11 +134,45 @@ describe('userEdit reducer', () => {
     const endEditUserAction = {
       type: types.UserAction.EDIT_END,
     };
-    expect(userEdit({}, endEditUserAction))
+    expect(userEdit({
+      id: 'some id',
+    }, endEditUserAction))
       .toEqual({
         editing: false,
-        name: null,
-        authentication_identity: null,
+      });
+  });
+
+  it('should handle OPEN_PASSWORD_DIALOG', () => {
+    const openPasswordDialog = {
+      type: types.UserAction.OPEN_PASSWORD_DIALOG,
+    };
+    expect(userEdit({}, openPasswordDialog))
+      .toEqual({
+        passwordDialogOpen: true,
+      });
+  });
+
+  it('should handle CLOSE_PASSWORD_DIALOG', () => {
+    const closePasswordDialogAction = {
+      type: types.UserAction.CLOSE_PASSWORD_DIALOG,
+    };
+    expect(userEdit({}, closePasswordDialogAction))
+      .toEqual({
+        passwordDialogOpen: false,
+      });
+  });
+
+  it('should handle RESET_PASSWORD_FIELDS', () => {
+    const closePasswordDialogAction = {
+      type: types.UserAction.RESET_PASSWORD_FIELDS,
+    };
+    expect(userEdit({
+      name: 'some name',
+      password: 'somePW',
+      password_confirm: 'somePW',
+    }, closePasswordDialogAction))
+      .toEqual({
+        name: 'some name',
       });
   });
 });

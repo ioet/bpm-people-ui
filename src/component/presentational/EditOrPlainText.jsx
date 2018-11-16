@@ -24,7 +24,7 @@ const EditOrPlainText = (props) => {
             onChange={
               (e) => {
                 e.preventDefault();
-                onChange(e, editId);
+                onChange(e);
               }
             }
           />

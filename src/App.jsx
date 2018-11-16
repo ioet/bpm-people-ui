@@ -8,6 +8,7 @@ import Footer from './component/presentational/Footer';
 import { AppConst } from './constants';
 import FloatingActionButtonContainer from './component/container/FloatingActionButtonContainer';
 import DeleteDialogContainer from './component/container/DeleteDialogContainer';
+import PasswordDialogContainer from './component/container/PasswordDialogContainer';
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
       <FloatingActionButtonContainer />
       <ErrorSnackbarContainer />
       <DeleteDialogContainer />
+      <PasswordDialogContainer />
     </div>
   );
 }

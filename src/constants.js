@@ -1,6 +1,8 @@
 export const Variable = {
   NAME: 'name',
   AUTHENTICATION_IDENTITY: 'authentication_identity',
+  PASSWORD: 'password',
+  PASSWORD_CONFIRM: 'password_confirm',
 };
 
 export const ErrorMessage = {
@@ -8,6 +10,8 @@ export const ErrorMessage = {
   FAILED_TO_CREATE_USER: 'Failed to create a new person.',
   FAILED_TO_UPDATE_USER: 'Failed to update the person.',
   FAILED_TO_REMOVE_USER: 'Failed to delete the person.',
+  PASSWORDS_DO_NOT_MATCH: 'The passwords you entered do not match.',
+  NO_PASSWORD_ENTERED: 'Please enter a password.',
 };
 
 export const NotificationMessage = {
@@ -69,4 +73,13 @@ export const FloatingActionButtonConst = {
 export const TooltipConst = {
   ENTER_DELAY: 400,
   LEAVE_DELAY: 200,
+};
+
+export const PasswordDialogConst = {
+  TITLE: 'Create a new password for your account',
+  EXPLANATION: 'Please choose a strong password with some special characters!',
+  PASSWORD: 'Enter a new password',
+  CONFIRM_PASSWORD: 'Please confirm your password',
+  CANCEL: 'Cancel',
+  CREATE: 'Create',
 };
