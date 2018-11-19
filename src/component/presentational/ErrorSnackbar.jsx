@@ -24,7 +24,7 @@ const ErrorSnackbar = (props) => {
         'aria-describedby': 'message-id',
       }}
       message={(
-        <span id="message-id">
+        <span>
           {message}
         </span>
       )}

@@ -12,6 +12,7 @@ export const ErrorMessage = {
   FAILED_TO_REMOVE_USER: 'Failed to delete the person.',
   PASSWORDS_DO_NOT_MATCH: 'The passwords you entered do not match.',
   NO_PASSWORD_ENTERED: 'Please enter a password.',
+  PASSWORD_NOT_STRONG_ENOUGH: 'Please use a stronger password',
 };
 
 export const NotificationMessage = {

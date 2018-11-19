@@ -1,6 +1,6 @@
 /* eslint-disable camelcase,prefer-destructuring */
 import { Person, PersonControllerApi } from 'swagger_bpm_people_api';
-import { getUserToBeCreated, validateEmail } from './component/utils/Utils';
+import { getUserToBeCreated, validateEmail, validatePassword } from './component/utils/Utils';
 import {
   DeleteAction, HoverAction, InputErrorAction, MessageAction, UserAction,
 } from './action-types';
@@ -15,6 +15,7 @@ import {
   getUserEditPassword,
   getUserForId,
   getUserNameForId,
+  isUserCreationActive,
   isUserEditActive,
 } from './selectors';
 
@@ -201,9 +202,9 @@ export const updateUserAsync = userId => (
   }
 );
 
-export const clearUser = creating => (
-  (dispatch) => {
-    if (creating) {
+export const clearUser = () => (
+  (dispatch, getState) => {
+    if (isUserCreationActive(getState())) {
       dispatch(endCreateUser());
     } else {
       dispatch(endEditUser());
@@ -233,6 +234,11 @@ export const validatePasswordInputWithErrorMessages = (dispatch, userEdit) => {
   if (password !== password_confirm) {
     dispatch(setInputError(Variable.PASSWORD_CONFIRM));
     dispatch(showMessage(ErrorMessage.PASSWORDS_DO_NOT_MATCH));
+    return false;
+  }
+  if (!validatePassword(password)) {
+    dispatch(setInputError(Variable.PASSWORD));
+    dispatch(showMessage(ErrorMessage.PASSWORD_NOT_STRONG_ENOUGH));
     return false;
   }
   dispatch(removeAllInputErrors());
@@ -324,3 +330,11 @@ export const hoverOver = id => ({
 export const hoverOut = () => ({
   type: HoverAction.OUT,
 });
+
+export const addOnEscapeKeyListener = (document, store) => {
+  document.body.addEventListener('keypress', (e) => {
+    if (e.key === 'Escape') {
+      store.dispatch(clearUser());
+    }
+  });
+};

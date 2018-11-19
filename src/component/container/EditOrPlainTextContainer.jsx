@@ -10,6 +10,7 @@ const mapStateToProps = (state, ownProps) => ({
   value: ownProps.value,
   name: ownProps.name,
   label: ownProps.label,
+  autoFocus: ownProps.autoFocus,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({

@@ -5,6 +5,7 @@ import {
 import {
   DeleteDialogConst, FloatingActionButtonConst, UserListItemConst, Variable,
 } from './constants';
+import { getUserToBeCreated } from './component/utils/Utils';
 
 export const isDeleteDialogOpen = state => state.userDelete.open;
 
@@ -43,6 +44,10 @@ export const isMessageOpen = state => state.message.open;
 export const getMessage = state => state.message.message;
 
 export const isUserEditActive = state => state.userEdit.editing;
+
+export const isUserCreationActive = state => (
+  Object.prototype.hasOwnProperty.call(state.userList, getUserToBeCreated().id)
+);
 
 export const getFabTooltip = state => ((isUserEditActive(state))
   ? FloatingActionButtonConst.TOOLTIP_DISCARD

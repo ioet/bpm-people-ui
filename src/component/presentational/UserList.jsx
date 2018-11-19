@@ -47,6 +47,7 @@ const UserList = (props) => {
                 value={value}
                 name={Variable.NAME}
                 label={UserListItemConst.EDIT_NAME}
+                autoFocus
               />
             </MyTableCellContainer>
           );

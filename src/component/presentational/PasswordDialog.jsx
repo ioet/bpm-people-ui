@@ -28,10 +28,8 @@ const PasswordDialog = (props) => {
         e.preventDefault();
         handleClose(false);
       }}
-      aria-labelledby="alert-dialog-slide-title"
-      aria-describedby="alert-dialog-slide-description"
     >
-      <DialogTitle id="alert-dialog-slide-title">
+      <DialogTitle>
         {PasswordDialogConst.TITLE}
       </DialogTitle>
       <DialogContent>
