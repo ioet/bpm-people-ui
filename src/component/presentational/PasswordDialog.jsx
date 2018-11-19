@@ -51,21 +51,27 @@ const PasswordDialog = (props) => {
           }
           fullWidth
         />
-        <TextField
-          error={inputError}
-          margin="dense"
-          name={Variable.PASSWORD_CONFIRM}
-          label={PasswordDialogConst.CONFIRM_PASSWORD}
-          value={passwordConfirm}
-          type="password"
-          onChange={
-            (e) => {
-              e.preventDefault();
-              onChange(e);
+        <form onSubmit={(e) => {
+          e.preventDefault();
+          handleClose(true);
+        }}
+        >
+          <TextField
+            error={inputError}
+            margin="dense"
+            name={Variable.PASSWORD_CONFIRM}
+            label={PasswordDialogConst.CONFIRM_PASSWORD}
+            value={passwordConfirm}
+            type="password"
+            onChange={
+              (e) => {
+                e.preventDefault();
+                onChange(e);
+              }
             }
-          }
-          fullWidth
-        />
+            fullWidth
+          />
+        </form>
       </DialogContent>
       <DialogActions>
         <Button
