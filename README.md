@@ -6,6 +6,14 @@ In order to set up and run the project, follow these steps:
 You know how do to it... Don't forget to set the JAVA_HOME variable
 
 ## Installing the dependencies
+
+Make sure you have installed wget, otherwise install it using the following command:
+
+```
+$ brew install wget --with-libressl
+```
+
+
 run this command and everything should be setup
 ```
 npm run setup
