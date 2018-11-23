@@ -1,12 +1,23 @@
 /* eslint-disable camelcase,prefer-destructuring */
-import { PersonControllerApi, Person } from 'swagger_bpm_people_api';
-import { getUserToBeCreated, validateEmail } from './component/utils/Utils';
+import { Person, PersonControllerApi } from 'swagger_bpm_people_api';
+import { getUserToBeCreated, validateEmail, validatePassword } from './component/utils/Utils';
 import {
   DeleteAction, HoverAction, InputErrorAction, MessageAction, UserAction,
 } from './action-types';
 import {
   ErrorMessage, NotificationMessage, PromptMessage, Variable,
 } from './constants';
+import {
+  getUserEdit,
+  getUserEditAuthenticationIdentity,
+  getUserEditId,
+  getUserEditName,
+  getUserEditPassword,
+  getUserForId,
+  getUserNameForId,
+  isUserCreationActive,
+  isUserEditActive,
+} from './selectors';
 
 const peopleApi = new PersonControllerApi();
 
@@ -66,6 +77,10 @@ export const endEditUser = () => ({
   type: UserAction.EDIT_END,
 });
 
+export const resetPasswordFields = () => ({
+  type: UserAction.RESET_PASSWORD_FIELDS,
+});
+
 export const startCreateUser = () => (
   (dispatch) => {
     dispatch(addEmptyRow());
@@ -104,6 +119,7 @@ export const getAllUsersAsync = () => (
 export const validateField = input => !(typeof input === 'undefined' || input === '');
 
 export const validateInputWithErrorMessages = (dispatch, user) => {
+  dispatch(removeAllInputErrors());
   if (!validateField(user.name)) {
     dispatch(showMessage(PromptMessage.ENTER_VALID_NAME));
     dispatch(setInputError(Variable.NAME));
@@ -120,17 +136,18 @@ export const validateInputWithErrorMessages = (dispatch, user) => {
 
 export const createUserAsync = () => (
   (dispatch, getState) => {
-    const { name, authentication_identity } = getState().userEdit;
-
-    if (!validateInputWithErrorMessages(dispatch, getState().userEdit)) return null;
+    const state = getState();
+    const name = getUserEditName(state);
+    const authentication_identity = getUserEditAuthenticationIdentity(state);
+    const password = getUserEditPassword(state);
 
     const personToCreate = new Person();
     personToCreate.name = name;
     personToCreate.authentication_identity = authentication_identity;
-    personToCreate.password = '';
+    personToCreate.password = password;
+    dispatch(resetPasswordFields());
     return peopleApi.createPersonUsingPOST(personToCreate)
       .then((data) => {
-        dispatch(removeAllInputErrors());
         dispatch(endCreateUser());
         dispatch(addUser(data));
         dispatch(showMessage(data.name + NotificationMessage.USER_CREATED_SUCCESSFULLY));
@@ -144,9 +161,11 @@ export const createUserAsync = () => (
 
 export const updateUserAsync = userId => (
   (dispatch, getState) => {
-    const { id } = getState().userEdit;
-    const user = getState().userList[userId];
-    let { name, authentication_identity } = getState().userEdit;
+    const state = getState();
+    const id = getUserEditId(state);
+    const user = getUserForId(state, userId);
+    let name = getUserEditName(state);
+    let authentication_identity = getUserEditAuthenticationIdentity(state);
 
     if (typeof name === 'undefined' && typeof authentication_identity === 'undefined') {
       dispatch(removeAllInputErrors());
@@ -172,7 +191,6 @@ export const updateUserAsync = userId => (
     personToUpdate.authentication_identity = authentication_identity;
     return peopleApi.updatePersonUsingPUT(id, personToUpdate)
       .then((data) => {
-        dispatch(removeAllInputErrors());
         dispatch(endEditUser());
         dispatch(setUpdateUser(data));
         dispatch(showMessage(NotificationMessage.CHANGES_UPDATED_SUCCESSFULLY));
@@ -184,42 +202,9 @@ export const updateUserAsync = userId => (
   }
 );
 
-export const editUpdateOrCreateUser = userId => (
+export const clearUser = () => (
   (dispatch, getState) => {
-    const userEditId = getState().userEdit.id;
-
-    if (typeof userEditId !== 'undefined') {
-      if (userEditId === userId) {
-        if (userEditId === getUserToBeCreated().id) {
-          return dispatch(createUserAsync());
-        }
-        return dispatch(updateUserAsync(userId));
-      }
-      if (userEditId === getUserToBeCreated().id) {
-        dispatch(showMessage(NotificationMessage.CHANGES_DISCARDED));
-        dispatch(removeAllInputErrors());
-        dispatch(endCreateUser());
-      }
-    }
-    return dispatch(startEditUser(userId));
-  }
-);
-
-export const removeUserAsync = userId => (
-  (dispatch, getState) => peopleApi.deletePersonUsingDELETE(userId)
-    .then(() => {
-      dispatch(showMessage(getState().userList[userId].name + NotificationMessage.USER_DELETED_SUCCESSFULLY));
-      dispatch(removeUser(userId));
-    })
-    .catch((error) => {
-      // console.log(error); find a way to log this error
-      dispatch(showMessage(ErrorMessage.FAILED_TO_REMOVE_USER));
-    })
-);
-
-export const clearUser = creating => (
-  (dispatch) => {
-    if (creating) {
+    if (isUserCreationActive(getState())) {
       dispatch(endCreateUser());
     } else {
       dispatch(endEditUser());
@@ -230,9 +215,96 @@ export const clearUser = creating => (
   }
 );
 
+export const openEnterPasswordDialog = () => ({
+  type: UserAction.OPEN_PASSWORD_DIALOG,
+});
+
+export const closeEnterPasswordDialog = () => ({
+  type: UserAction.CLOSE_PASSWORD_DIALOG,
+});
+
+export const validatePasswordInputWithErrorMessages = (dispatch, userEdit) => {
+  dispatch(removeAllInputErrors());
+  const { password, password_confirm } = userEdit;
+  if (typeof password === 'undefined' || password === '') {
+    dispatch(setInputError(Variable.PASSWORD));
+    dispatch(showMessage(ErrorMessage.NO_PASSWORD_ENTERED));
+    return false;
+  }
+  if (password !== password_confirm) {
+    dispatch(setInputError(Variable.PASSWORD_CONFIRM));
+    dispatch(showMessage(ErrorMessage.PASSWORDS_DO_NOT_MATCH));
+    return false;
+  }
+  if (!validatePassword(password)) {
+    dispatch(setInputError(Variable.PASSWORD));
+    dispatch(showMessage(ErrorMessage.PASSWORD_NOT_STRONG_ENOUGH));
+    return false;
+  }
+  dispatch(removeAllInputErrors());
+  return true;
+};
+
+export const checkPasswordInputAndCreateUser = () => (
+  (dispatch, getState) => {
+    if (!validatePasswordInputWithErrorMessages(dispatch, getUserEdit(getState()))) return null;
+    dispatch(closeEnterPasswordDialog());
+    return dispatch(createUserAsync());
+  }
+);
+
+export const handleOpenEnterPasswordDialog = () => (
+  (dispatch, getState) => {
+    if (!validateInputWithErrorMessages(dispatch, getUserEdit(getState()))) return null;
+    return dispatch(openEnterPasswordDialog());
+  }
+);
+
+export const resetPasswordAndCloseDialog = () => (
+  (dispatch) => {
+    dispatch(resetPasswordFields());
+    dispatch(closeEnterPasswordDialog());
+  }
+);
+
+export const handleCloseEnterPasswordDialog = confirmed => (
+  dispatch => ((confirmed) ? dispatch(checkPasswordInputAndCreateUser()) : dispatch(resetPasswordAndCloseDialog()))
+);
+
+export const editUpdateOrCreateUser = userId => (
+  (dispatch, getState) => {
+    const userEditId = getUserEditId(getState());
+
+    if (typeof userEditId !== 'undefined') {
+      if (userEditId === userId) {
+        if (userEditId === getUserToBeCreated().id) {
+          return dispatch(handleOpenEnterPasswordDialog());
+        }
+        return dispatch(updateUserAsync(userId));
+      }
+      if (userEditId === getUserToBeCreated().id) {
+        dispatch(clearUser(true));
+      }
+    }
+    return dispatch(startEditUser(userId));
+  }
+);
+
+export const removeUserAsync = userId => (
+  (dispatch, getState) => peopleApi.deletePersonUsingDELETE(userId)
+    .then(() => {
+      dispatch(showMessage(getUserNameForId(getState(), userId) + NotificationMessage.USER_DELETED_SUCCESSFULLY));
+      dispatch(removeUser(userId));
+    })
+    .catch((error) => {
+      // console.log(error); find a way to log this error
+      dispatch(showMessage(ErrorMessage.FAILED_TO_REMOVE_USER));
+    })
+);
+
 export const startOrEndCreateUser = () => (
   (dispatch, getState) => {
-    if (!getState().userEdit.editing) {
+    if (!isUserEditActive(getState())) {
       dispatch(startCreateUser());
     } else {
       dispatch(clearUser(true));
@@ -242,7 +314,7 @@ export const startOrEndCreateUser = () => (
 
 export const clearOrShowDelete = userIds => (
   (dispatch, getState) => {
-    if (userIds[0] === getState().userEdit.id) {
+    if (userIds[0] === getUserEditId(getState())) {
       dispatch(clearUser(userIds[0] === getUserToBeCreated().id));
     } else {
       dispatch(showDeleteDialog(userIds));
@@ -258,3 +330,11 @@ export const hoverOver = id => ({
 export const hoverOut = () => ({
   type: HoverAction.OUT,
 });
+
+export const addOnEscapeKeyListener = (document, store) => {
+  document.body.addEventListener('keypress', (e) => {
+    if (e.key === 'Escape') {
+      store.dispatch(clearUser());
+    }
+  });
+};

@@ -36,10 +36,11 @@ export const inputError = (state = {}, action) => {
   }
 };
 
-export const userEdit = (state = { editing: false }, action) => {
+export const userEdit = (state = { editing: false, passwordDialogOpen: false }, action) => {
   switch (action.type) {
     case UserAction.EDIT_START:
       return ({
+        ...state,
         id: action.id,
         editing: true,
       });
@@ -50,10 +51,26 @@ export const userEdit = (state = { editing: false }, action) => {
       });
     case UserAction.EDIT_END:
       return ({
+        ...state,
+        id: undefined,
         editing: false,
-        name: null,
-        authentication_identity: null,
       });
+    case UserAction.OPEN_PASSWORD_DIALOG:
+      return {
+        ...state,
+        passwordDialogOpen: true,
+      };
+    case UserAction.CLOSE_PASSWORD_DIALOG:
+      return {
+        ...state,
+        passwordDialogOpen: false,
+      };
+    case UserAction.RESET_PASSWORD_FIELDS:
+      return {
+        ...state,
+        password: undefined,
+        password_confirm: undefined,
+      };
     default:
       return state;
   }

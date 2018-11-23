@@ -17,6 +17,9 @@ export const RootTheme = createMuiTheme({
       body: {
         padding: '0',
       },
+      paddingCheckbox: {
+        width: '0',
+      },
     },
     MuiCheckbox: {
       checked: {

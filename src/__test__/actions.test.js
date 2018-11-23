@@ -178,10 +178,33 @@ describe('actions', () => {
     expect(actions.hoverOut())
       .toEqual(expectedAction);
   });
+
+  it('should create an action to open the password dialog', () => {
+    const expectedAction = {
+      type: types.UserAction.OPEN_PASSWORD_DIALOG,
+    };
+    expect(actions.openEnterPasswordDialog())
+      .toEqual(expectedAction);
+  });
+
+  it('should create an action to close the password dialog', () => {
+    const expectedAction = {
+      type: types.UserAction.CLOSE_PASSWORD_DIALOG,
+    };
+    expect(actions.closeEnterPasswordDialog())
+      .toEqual(expectedAction);
+  });
+
+  it('should create an action to reset the password fields', () => {
+    const expectedAction = {
+      type: types.UserAction.RESET_PASSWORD_FIELDS,
+    };
+    expect(actions.resetPasswordFields())
+      .toEqual(expectedAction);
+  });
 });
 
 describe('async actions', () => {
-
   it('creates ADD_USERS when getting all users was successful', () => {
     const getPeopleMock = [
       {
@@ -250,6 +273,9 @@ describe('async actions', () => {
 
     const expectedActions = [
       {
+        type: types.UserAction.RESET_PASSWORD_FIELDS,
+      },
+      {
         type: types.MessageAction.SHOW_MESSAGE,
         message: ErrorMessage.FAILED_TO_CREATE_USER,
       },
@@ -262,6 +288,89 @@ describe('async actions', () => {
         expect(store.getActions())
           .toEqual(expectedActions);
       });
+  });
+
+  it('creates some actions when creating a user was successful', () => {
+    const createUserMock = {
+      id: getUserToBeCreated().id,
+      name: 'someName',
+      authentication_identity: 'someValid@email.com',
+      password: 'asdf',
+    };
+
+    nock(peopleApiClient.basePath)
+      .post('/people')
+      .reply(201, createUserMock);
+
+    const expectedActions = [
+      {
+        type: types.InputErrorAction.REMOVE_ALL,
+      },
+      {
+        type: types.InputErrorAction.REMOVE_ALL,
+      },
+      {
+        type: types.UserAction.CLOSE_PASSWORD_DIALOG,
+      },
+      {
+        type: types.UserAction.RESET_PASSWORD_FIELDS,
+      },
+      {
+        type: types.UserAction.REMOVE_EMPTY_ROW,
+      },
+      {
+        type: types.UserAction.EDIT_END,
+      },
+      {
+        type: types.UserAction.ADD_USER,
+        user: createUserMock,
+      },
+      {
+        type: types.MessageAction.SHOW_MESSAGE,
+        message: createUserMock.name + NotificationMessage.USER_CREATED_SUCCESSFULLY,
+      },
+    ];
+
+    const store = mockStore({
+      userEdit: {
+        ...createUserMock,
+        password_confirm: 'asdf',
+      },
+    });
+
+    return store.dispatch(actions.handleCloseEnterPasswordDialog(true))
+      .then(() => {
+        expect(store.getActions())
+          .toEqual(expectedActions);
+      });
+  });
+
+  it('creates open password dialog when valid user data was supplied', () => {
+    const createUserMock = {
+      id: getUserToBeCreated().id,
+      name: 'someName',
+      authentication_identity: 'some@ValidEmail.com',
+    };
+
+    const expectedActions = [
+      {
+        type: types.InputErrorAction.REMOVE_ALL,
+      },
+      {
+        type: types.UserAction.OPEN_PASSWORD_DIALOG,
+      },
+    ];
+
+    const store = mockStore({
+      userEdit: {
+        ...createUserMock,
+        password_confirm: 'asdf',
+      },
+    });
+
+    store.dispatch(actions.editUpdateOrCreateUser(createUserMock.id));
+    expect(store.getActions())
+      .toEqual(expectedActions);
   });
 
   it('creates some actions when removing a user was successful', () => {
@@ -433,6 +542,9 @@ describe('async actions', () => {
 
     const expectedActions = [
       {
+        type: types.InputErrorAction.REMOVE_ALL,
+      },
+      {
         type: types.MessageAction.SHOW_MESSAGE,
         message: PromptMessage.ENTER_VALID_EMAIL,
       },
@@ -468,6 +580,9 @@ describe('async actions', () => {
       .reply(404);
 
     const expectedActions = [
+      {
+        type: types.InputErrorAction.REMOVE_ALL,
+      },
       {
         type: types.MessageAction.SHOW_MESSAGE,
         message: ErrorMessage.FAILED_TO_UPDATE_USER,
@@ -588,17 +703,17 @@ describe('async actions', () => {
 
     const expectedActions = [
       {
-        type: types.MessageAction.SHOW_MESSAGE,
-        message: NotificationMessage.CHANGES_DISCARDED,
+        type: types.UserAction.REMOVE_EMPTY_ROW,
+      },
+      {
+        type: types.UserAction.EDIT_END,
       },
       {
         type: types.InputErrorAction.REMOVE_ALL,
       },
       {
-        type: types.UserAction.REMOVE_EMPTY_ROW,
-      },
-      {
-        type: types.UserAction.EDIT_END,
+        type: types.MessageAction.SHOW_MESSAGE,
+        message: NotificationMessage.CHANGES_DISCARDED,
       },
       {
         type: types.UserAction.EDIT_START,
@@ -611,6 +726,25 @@ describe('async actions', () => {
     });
 
     store.dispatch(actions.editUpdateOrCreateUser(anotherUserId));
+    expect(store.getActions())
+      .toEqual(expectedActions);
+  });
+
+  it('creates some actions when creating a user is aborted by not entering a password', () => {
+    const expectedActions = [
+      {
+        type: types.UserAction.RESET_PASSWORD_FIELDS,
+      },
+      {
+        type: types.UserAction.CLOSE_PASSWORD_DIALOG,
+      },
+    ];
+
+    const store = mockStore({
+      userEdit: getUserToBeCreated(),
+    });
+
+    store.dispatch(actions.handleCloseEnterPasswordDialog(false));
     expect(store.getActions())
       .toEqual(expectedActions);
   });
@@ -657,46 +791,6 @@ describe('async actions', () => {
 
 
     return store.dispatch(actions.editUpdateOrCreateUser(userToUpdate.id))
-      .then(() => {
-        expect(store.getActions())
-          .toEqual(expectedActions);
-      });
-  });
-
-  it('creates some actions when creating a user was successful', () => {
-    const createUserMock = {
-      id: getUserToBeCreated().id,
-      name: 'someName',
-      authentication_identity: 'someValid@email.com',
-    };
-
-    nock(peopleApiClient.basePath)
-      .post('/people')
-      .reply(200, createUserMock);
-
-    const expectedActions = [
-      {
-        type: types.InputErrorAction.REMOVE_ALL,
-      },
-      {
-        type: types.UserAction.REMOVE_EMPTY_ROW,
-      },
-      {
-        type: types.UserAction.EDIT_END,
-      },
-      {
-        type: types.UserAction.ADD_USER,
-        user: createUserMock,
-      },
-      {
-        type: types.MessageAction.SHOW_MESSAGE,
-        message: createUserMock.name + NotificationMessage.USER_CREATED_SUCCESSFULLY,
-      },
-    ];
-
-    const store = mockStore({ userEdit: createUserMock });
-
-    return store.dispatch(actions.editUpdateOrCreateUser(createUserMock.id))
       .then(() => {
         expect(store.getActions())
           .toEqual(expectedActions);

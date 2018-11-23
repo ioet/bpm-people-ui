@@ -28,14 +28,12 @@ const DeleteDialog = (props) => {
         e.preventDefault();
         handleClose();
       }}
-      aria-labelledby="alert-dialog-slide-title"
-      aria-describedby="alert-dialog-slide-description"
     >
-      <DialogTitle id="alert-dialog-slide-title">
+      <DialogTitle>
         {DeleteDialogConst.TITLE}
       </DialogTitle>
       <DialogContent>
-        <DialogContentText id="alert-dialog-slide-description">
+        <DialogContentText>
           {DeleteDialogConst.CONTENT_TEXT_1}
           <b>
             {username}
@@ -69,7 +67,7 @@ const DeleteDialog = (props) => {
 
 DeleteDialog.defaultProps = {
   userIds: [getUserToBeCreated().id],
-  username: [getUserToBeCreated().name],
+  username: getUserToBeCreated().name,
 };
 
 DeleteDialog.propTypes = {

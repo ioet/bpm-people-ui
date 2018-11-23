@@ -1,15 +1,16 @@
 import { connect } from 'react-redux';
 import { editUpdateOrCreateUser, setUserEditData } from '../../actions';
 import EditOrPlainText from '../presentational/EditOrPlainText';
-import { getEditId, getInputError } from '../../selectors';
+import { getUserEditId, getInputError } from '../../selectors';
 
 const mapStateToProps = (state, ownProps) => ({
-  editId: getEditId(state),
-  inputError: getInputError(state, ownProps),
+  editId: getUserEditId(state),
+  inputError: getInputError(state, ownProps.name),
   userId: ownProps.userId,
   value: ownProps.value,
   name: ownProps.name,
   label: ownProps.label,
+  autoFocus: ownProps.autoFocus,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
