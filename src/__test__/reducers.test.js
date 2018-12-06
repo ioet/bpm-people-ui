@@ -77,7 +77,6 @@ describe('userEdit reducer', () => {
     }))
       .toEqual({
         editing: false,
-        passwordDialogOpen: false,
       });
   });
 
@@ -139,26 +138,6 @@ describe('userEdit reducer', () => {
     }, endEditUserAction))
       .toEqual({
         editing: false,
-      });
-  });
-
-  it('should handle OPEN_PASSWORD_DIALOG', () => {
-    const openPasswordDialog = {
-      type: types.UserAction.OPEN_PASSWORD_DIALOG,
-    };
-    expect(userEdit({}, openPasswordDialog))
-      .toEqual({
-        passwordDialogOpen: true,
-      });
-  });
-
-  it('should handle CLOSE_PASSWORD_DIALOG', () => {
-    const closePasswordDialogAction = {
-      type: types.UserAction.CLOSE_PASSWORD_DIALOG,
-    };
-    expect(userEdit({}, closePasswordDialogAction))
-      .toEqual({
-        passwordDialogOpen: false,
       });
   });
 
@@ -225,28 +204,6 @@ describe('userList reducer', () => {
     expect(userList(undefined, {
       type: types.InitialAction.INITIAL_STATE,
     }))
-      .toEqual({});
-  });
-
-  it('should handle ADD_EMPTY_ROW', () => {
-    const someUser = getUserToBeCreated();
-    const addEmptyRowAction = {
-      type: types.UserAction.ADD_EMPTY_ROW,
-    };
-    expect(userList({}, addEmptyRowAction))
-      .toEqual({
-        [someUser.id]: someUser,
-      });
-  });
-
-  it('should handle REMOVE_EMPTY_ROW', () => {
-    const someUser = getUserToBeCreated();
-    const removeEmptyRowAction = {
-      type: types.UserAction.REMOVE_EMPTY_ROW,
-    };
-    expect(userList({
-      [someUser.id]: someUser,
-    }, removeEmptyRowAction))
       .toEqual({});
   });
 

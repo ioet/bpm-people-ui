@@ -1,0 +1,24 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<MyDialog /> Component Renders correctly 1`] = `
+<WithStyles(Dialog)
+  TransitionComponent={[Function]}
+  keepMounted={true}
+  onClose={[Function]}
+>
+  <WithStyles(DialogTitle) />
+  <WithStyles(DialogContent) />
+  <WithStyles(DialogActions)>
+    <WithStyles(Button)
+      color="primary"
+      onClick={[Function]}
+    >
+      Cancel
+    </WithStyles(Button)>
+    <WithStyles(Button)
+      color="primary"
+      onClick={[Function]}
+    />
+  </WithStyles(DialogActions)>
+</WithStyles(Dialog)>
+`;

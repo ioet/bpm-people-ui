@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<NewPersonButton /> Component Renders correctly 1`] = `
+<NewPersonButton
+  classes={
+    Object {
+      "button": "NewPersonButton-button-1",
+    }
+  }
+/>
+`;
