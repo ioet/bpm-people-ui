@@ -41,6 +41,7 @@ export const NewPersonButtonStyles = theme => ({
     position: 'fixed',
     top: theme.spacing.unit * 13,
     left: theme.spacing.unit * 22,
+    zIndex: 100,
   },
 });
 
