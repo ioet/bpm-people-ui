@@ -1,6 +1,6 @@
 /* eslint-disable camelcase,prefer-destructuring */
 import { Person, PersonControllerApi } from 'swagger_bpm_people_api';
-import { getUserToBeCreated, validateEmail, validatePassword } from './component/utils/Utils';
+import { validateEmail, validatePassword } from './component/utils/Utils';
 import {
   DeleteAction, HoverAction, InputErrorAction, MessageAction, UserAction,
 } from './action-types';
@@ -15,8 +15,6 @@ import {
   getUserEditPassword,
   getUserForId,
   getUserNameForId,
-  isUserCreationActive,
-  isUserEditActive,
 } from './selectors';
 
 const peopleApi = new PersonControllerApi();
@@ -56,18 +54,20 @@ export const hideDeleteDialog = () => ({
   open: false,
 });
 
-export const addEmptyRow = () => ({
-  type: UserAction.ADD_EMPTY_ROW,
-});
-
-export const removeEmptyRow = () => ({
-  type: UserAction.REMOVE_EMPTY_ROW,
-});
-
-export const startEditUser = editUserId => ({
+export const startCreateUser = () => ({
   type: UserAction.EDIT_START,
-  id: editUserId,
 });
+
+export const startEditUser = editUser => ({
+  type: UserAction.EDIT_START,
+  id: editUser.id,
+  name: editUser.name,
+  authentication_identity: editUser.authentication_identity,
+});
+export const prepareEditUser = editUserId => (dispatch, getState) => {
+  dispatch(startEditUser(getUserForId(getState(), editUserId)));
+};
+
 export const setUserEditData = (field, value) => ({
   type: UserAction.EDIT_DATA,
   field,
@@ -80,20 +80,6 @@ export const endEditUser = () => ({
 export const resetPasswordFields = () => ({
   type: UserAction.RESET_PASSWORD_FIELDS,
 });
-
-export const startCreateUser = () => (
-  (dispatch) => {
-    dispatch(addEmptyRow());
-    dispatch(startEditUser(getUserToBeCreated().id));
-  }
-);
-
-export const endCreateUser = () => (
-  (dispatch) => {
-    dispatch(removeEmptyRow());
-    dispatch(endEditUser());
-  }
-);
 
 export const setUpdateUser = userToUpdate => ({
   type: UserAction.UPDATE,
@@ -148,7 +134,7 @@ export const createUserAsync = () => (
     dispatch(resetPasswordFields());
     return peopleApi.createPersonUsingPOST(personToCreate)
       .then((data) => {
-        dispatch(endCreateUser());
+        dispatch(endEditUser());
         dispatch(addUser(data));
         dispatch(showMessage(data.name + NotificationMessage.USER_CREATED_SUCCESSFULLY));
       })
@@ -159,10 +145,10 @@ export const createUserAsync = () => (
   }
 );
 
-export const updateUserAsync = userId => (
+export const updateUserAsync = () => (
   (dispatch, getState) => {
     const state = getState();
-    const id = getUserEditId(state);
+    const userId = getUserEditId(state);
     const user = getUserForId(state, userId);
     let name = getUserEditName(state);
     let authentication_identity = getUserEditAuthenticationIdentity(state);
@@ -189,7 +175,7 @@ export const updateUserAsync = userId => (
     const personToUpdate = new Person();
     personToUpdate.name = name;
     personToUpdate.authentication_identity = authentication_identity;
-    return peopleApi.updatePersonUsingPUT(id, personToUpdate)
+    return peopleApi.updatePersonUsingPUT(userId, personToUpdate)
       .then((data) => {
         dispatch(endEditUser());
         dispatch(setUpdateUser(data));
@@ -203,25 +189,12 @@ export const updateUserAsync = userId => (
 );
 
 export const clearUser = () => (
-  (dispatch, getState) => {
-    if (isUserCreationActive(getState())) {
-      dispatch(endCreateUser());
-    } else {
-      dispatch(endEditUser());
-    }
-
+  (dispatch) => {
+    dispatch(endEditUser());
     dispatch(removeAllInputErrors());
     dispatch(showMessage(NotificationMessage.CHANGES_DISCARDED));
   }
 );
-
-export const openEnterPasswordDialog = () => ({
-  type: UserAction.OPEN_PASSWORD_DIALOG,
-});
-
-export const closeEnterPasswordDialog = () => ({
-  type: UserAction.CLOSE_PASSWORD_DIALOG,
-});
 
 export const validatePasswordInputWithErrorMessages = (dispatch, userEdit) => {
   dispatch(removeAllInputErrors());
@@ -248,46 +221,25 @@ export const validatePasswordInputWithErrorMessages = (dispatch, userEdit) => {
 export const checkPasswordInputAndCreateUser = () => (
   (dispatch, getState) => {
     if (!validatePasswordInputWithErrorMessages(dispatch, getUserEdit(getState()))) return null;
-    dispatch(closeEnterPasswordDialog());
     return dispatch(createUserAsync());
   }
 );
 
-export const handleOpenEnterPasswordDialog = () => (
+export const checkInput = next => (
   (dispatch, getState) => {
-    if (!validateInputWithErrorMessages(dispatch, getUserEdit(getState()))) return null;
-    return dispatch(openEnterPasswordDialog());
-  }
-);
-
-export const resetPasswordAndCloseDialog = () => (
-  (dispatch) => {
-    dispatch(resetPasswordFields());
-    dispatch(closeEnterPasswordDialog());
-  }
-);
-
-export const handleCloseEnterPasswordDialog = confirmed => (
-  dispatch => ((confirmed) ? dispatch(checkPasswordInputAndCreateUser()) : dispatch(resetPasswordAndCloseDialog()))
-);
-
-export const editUpdateOrCreateUser = userId => (
-  (dispatch, getState) => {
-    const userEditId = getUserEditId(getState());
-
-    if (typeof userEditId !== 'undefined') {
-      if (userEditId === userId) {
-        if (userEditId === getUserToBeCreated().id) {
-          return dispatch(handleOpenEnterPasswordDialog());
-        }
-        return dispatch(updateUserAsync(userId));
-      }
-      if (userEditId === getUserToBeCreated().id) {
-        dispatch(clearUser(true));
-      }
+    if (!validateInputWithErrorMessages(dispatch, getUserEdit(getState()))) {
+      return null;
     }
-    return dispatch(startEditUser(userId));
+    return dispatch(next());
   }
+);
+
+export const handleCloseCreateUserDialog = confirmed => (
+  dispatch => ((confirmed) ? dispatch(checkInput(checkPasswordInputAndCreateUser)) : dispatch(clearUser()))
+);
+
+export const handleCloseEditUserDialog = confirmed => (
+  dispatch => ((confirmed) ? dispatch(checkInput(updateUserAsync)) : dispatch(clearUser()))
 );
 
 export const removeUserAsync = userId => (
@@ -302,26 +254,6 @@ export const removeUserAsync = userId => (
     })
 );
 
-export const startOrEndCreateUser = () => (
-  (dispatch, getState) => {
-    if (!isUserEditActive(getState())) {
-      dispatch(startCreateUser());
-    } else {
-      dispatch(clearUser(true));
-    }
-  }
-);
-
-export const clearOrShowDelete = userIds => (
-  (dispatch, getState) => {
-    if (userIds[0] === getUserEditId(getState())) {
-      dispatch(clearUser(userIds[0] === getUserToBeCreated().id));
-    } else {
-      dispatch(showDeleteDialog(userIds));
-    }
-  }
-);
-
 export const hoverOver = id => ({
   type: HoverAction.OVER,
   id,
@@ -330,11 +262,3 @@ export const hoverOver = id => ({
 export const hoverOut = () => ({
   type: HoverAction.OUT,
 });
-
-export const addOnEscapeKeyListener = (document, store) => {
-  document.body.addEventListener('keypress', (e) => {
-    if (e.key === 'Escape') {
-      store.dispatch(clearUser());
-    }
-  });
-};

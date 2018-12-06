@@ -45,8 +45,6 @@ export const UserListItemConst = {
   TOOLTIP_SAVE: 'Save',
   TOOLTIP_DISCARD: 'Discard',
   TOOLTIP_DELETE: 'Delete',
-  EDIT_NAME: 'Edit your name',
-  EDIT_EMAIL: 'Edit your email',
 };
 
 export const UserListConst = {
@@ -66,9 +64,8 @@ export const DeleteDialogConst = {
   AGREE: 'Yes',
 };
 
-export const FloatingActionButtonConst = {
-  TOOLTIP_ADD: 'Add new people',
-  TOOLTIP_DISCARD: 'Discard',
+export const NewPersonButtonConst = {
+  ADD_NEW_PERSON: 'Add a new person',
 };
 
 export const TooltipConst = {
@@ -76,11 +73,23 @@ export const TooltipConst = {
   LEAVE_DELAY: 200,
 };
 
-export const PasswordDialogConst = {
-  TITLE: 'Create a new password for your account',
-  EXPLANATION: 'Please choose a strong password with some special characters!',
+export const DialogConst = {
+  CANCEL: 'Cancel',
+};
+
+export const CreateUserDialogConst = {
+  TITLE: 'Create a new user',
+  NAME_LABEL: 'Enter your name',
+  AUTHENTICATION_IDENTITY_LABEL: 'Enter your email',
+  PASSWORD_HELP: 'Password should contain lower-, uppercase-letters, numbers and special characters.',
   PASSWORD: 'Enter a new password',
   CONFIRM_PASSWORD: 'Please confirm your password',
-  CANCEL: 'Cancel',
   CREATE: 'Create',
+};
+
+export const EditUserDialogConst = {
+  TITLE: 'Update a user',
+  NAME_LABEL: 'Edit your name',
+  AUTHENTICATION_IDENTITY_LABEL: 'Edit your email',
+  UPDATE: 'Update',
 };

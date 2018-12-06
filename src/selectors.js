@@ -1,11 +1,4 @@
-import React from 'react';
-import {
-  Add, Clear, Delete, Done, Edit,
-} from '@material-ui/icons';
-import {
-  DeleteDialogConst, FloatingActionButtonConst, UserListItemConst, Variable,
-} from './constants';
-import { getUserToBeCreated } from './component/utils/Utils';
+import { DeleteDialogConst, Variable } from './constants';
 
 export const isDeleteDialogOpen = state => state.userDelete.open;
 
@@ -35,49 +28,20 @@ export const getUserEditPassword = state => state.userEdit.password;
 
 export const getUserPasswordConfirm = state => state.userEdit[Variable.PASSWORD_CONFIRM];
 
-export const isPasswordDialogOpen = state => state.userEdit.passwordDialogOpen;
-
 export const getInputError = (state, key) => state.inputError[key];
 
 export const isMessageOpen = state => state.message.open;
 
 export const getMessage = state => state.message.message;
 
-export const isUserEditActive = state => state.userEdit.editing;
+export const isEditIdDefined = state => typeof state.userEdit.id !== 'undefined';
 
-export const isUserCreationActive = state => (
-  Object.prototype.hasOwnProperty.call(state.userList, getUserToBeCreated().id)
-);
+export const isUserCreateActive = state => state.userEdit.editing && !isEditIdDefined(state);
 
-export const getFabTooltip = state => ((isUserEditActive(state))
-  ? FloatingActionButtonConst.TOOLTIP_DISCARD
-  : FloatingActionButtonConst.TOOLTIP_ADD
-);
-
-export const getFabIcon = state => ((isUserEditActive(state)) ? <Clear /> : <Add />);
+export const isUserEditActive = state => state.userEdit.editing && isEditIdDefined(state);
 
 export const isHoverActive = state => state.hover.hover;
 
 export const getHoverId = state => state.hover.id;
-
-export const getDeleteButtonIcon = (state, ownProps) => (
-  (state.userEdit.id === ownProps.userId) ? <Clear /> : <Delete />
-);
-
-export const getDeleteButtonTooltip = (state, ownProps) => (
-  (state.userEdit.id === ownProps.userId)
-    ? UserListItemConst.TOOLTIP_DISCARD
-    : UserListItemConst.TOOLTIP_DELETE
-);
-
-export const getEditButtonIcon = (state, ownProps) => (
-  (state.userEdit.id === ownProps.userId) ? <Done /> : <Edit />
-);
-
-export const getEditButtonTooltip = (state, ownProps) => (
-  (state.userEdit.id === ownProps.userId)
-    ? UserListItemConst.TOOLTIP_SAVE
-    : UserListItemConst.TOOLTIP_EDIT
-);
 
 export const getUserList = state => state.userList;

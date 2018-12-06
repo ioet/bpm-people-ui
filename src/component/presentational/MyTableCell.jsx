@@ -31,7 +31,10 @@ MyTableCell.propTypes = {
   classes: PropTypes.object.isRequired,
   onMouseOver: PropTypes.func.isRequired,
   onMouseOut: PropTypes.func.isRequired,
-  children: PropTypes.element.isRequired,
+  children: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.element,
+  ]).isRequired,
 };
 
 export default withStyles(TableCellStyles)(MyTableCell);

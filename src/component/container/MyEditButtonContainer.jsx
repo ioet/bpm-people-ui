@@ -1,20 +1,21 @@
+import React from 'react';
 import { connect } from 'react-redux';
+import { Edit } from '@material-ui/icons';
 import MyIconButton from '../presentational/MyIconButton';
-import { editUpdateOrCreateUser } from '../../actions';
-import {
-  getEditButtonIcon, getEditButtonTooltip, getHoverId, isHoverActive,
-} from '../../selectors';
+import { prepareEditUser } from '../../actions';
+import { getHoverId, isHoverActive } from '../../selectors';
+import { UserListItemConst } from '../../constants';
 
-const mapStateToProps = (state, ownProps) => ({
+const mapStateToProps = state => ({
   hover: isHoverActive(state),
   hoverId: getHoverId(state),
-  icon: getEditButtonIcon(state, ownProps),
-  tooltip: getEditButtonTooltip(state, ownProps),
+  icon: <Edit />,
+  tooltip: UserListItemConst.TOOLTIP_EDIT,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   onClickCallback: () => {
-    dispatch(editUpdateOrCreateUser(ownProps.userId));
+    dispatch(prepareEditUser(ownProps.userId));
   },
 });
 

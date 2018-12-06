@@ -34,14 +34,6 @@ export const arrayToUserObject = (array, keyField) => (
   }, {})
 );
 
-export const getUserToBeCreated = () => (
-  {
-    id: 'userToBeCreated',
-    name: '',
-    authentication_identity: '',
-  }
-);
-
 export const getUserObjectFromArray = user => ({
   id: user[0],
   name: user[1],

@@ -3,20 +3,14 @@
 exports[`<DeleteDialog /> Component Renders correctly 1`] = `
 <WithStyles(Dialog)
   TransitionComponent={[Function]}
-  aria-describedby="alert-dialog-slide-description"
-  aria-labelledby="alert-dialog-slide-title"
   keepMounted={true}
   onClose={[Function]}
 >
-  <WithStyles(DialogTitle)
-    id="alert-dialog-slide-title"
-  >
+  <WithStyles(DialogTitle)>
     Delete user
   </WithStyles(DialogTitle)>
   <WithStyles(DialogContent)>
-    <WithStyles(DialogContentText)
-      id="alert-dialog-slide-description"
-    >
+    <WithStyles(DialogContentText)>
       Do you really want to delete 
       <b />
        permanently?

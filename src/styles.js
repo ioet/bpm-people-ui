@@ -36,11 +36,11 @@ export const RootTheme = createMuiTheme({
   },
 });
 
-export const FabStyles = () => ({
-  fab: {
+export const NewPersonButtonStyles = theme => ({
+  button: {
     position: 'fixed',
-    bottom: '3%',
-    right: '5%',
+    top: theme.spacing.unit * 13,
+    left: theme.spacing.unit * 22,
   },
 });
 

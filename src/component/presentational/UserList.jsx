@@ -5,9 +5,8 @@ import MUIDataTable from 'mui-datatables';
 import withStyles from '@material-ui/core/styles/withStyles';
 import IconButton from '@material-ui/core/IconButton';
 import { Delete } from '@material-ui/icons';
-import { UserListConst, UserListItemConst, Variable } from '../../constants';
+import { UserListConst } from '../../constants';
 import { UserListStyles } from '../../styles';
-import EditOrPlainTextContainer from '../container/EditOrPlainTextContainer';
 import { compareUsersByFirstName, getUserObjectFromArray } from '../utils/Utils';
 import MyTableCellContainer from '../container/MyTableCellContainer';
 import MyEditButtonContainer from '../container/MyEditButtonContainer';
@@ -42,13 +41,7 @@ const UserList = (props) => {
           const user = getUserObjectFromArray(tableMeta.rowData);
           return (
             <MyTableCellContainer userId={user.id}>
-              <EditOrPlainTextContainer
-                userId={user.id}
-                value={value}
-                name={Variable.NAME}
-                label={UserListItemConst.EDIT_NAME}
-                autoFocus
-              />
+              {value}
             </MyTableCellContainer>
           );
         },
@@ -61,12 +54,7 @@ const UserList = (props) => {
           const user = getUserObjectFromArray(tableMeta.rowData);
           return (
             <MyTableCellContainer userId={user.id}>
-              <EditOrPlainTextContainer
-                userId={user.id}
-                value={value}
-                name={Variable.AUTHENTICATION_IDENTITY}
-                label={UserListItemConst.EDIT_EMAIL}
-              />
+              {value}
             </MyTableCellContainer>
           );
         },

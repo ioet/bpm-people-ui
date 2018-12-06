@@ -9,7 +9,7 @@ import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
 import 'typeface-roboto';
 import App from './App';
 import rootReducer from './reducers';
-import { addOnEscapeKeyListener, getAllUsersAsync } from './actions';
+import { getAllUsersAsync } from './actions';
 import { RootTheme } from './styles';
 
 const store = createStore(
@@ -20,7 +20,6 @@ const store = createStore(
 );
 
 store.dispatch(getAllUsersAsync());
-addOnEscapeKeyListener(document, store);
 
 document.addEventListener('DOMContentLoaded', () => {
   ReactDOM.render(

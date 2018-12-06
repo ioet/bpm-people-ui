@@ -1,20 +1,21 @@
+import React from 'react';
 import { connect } from 'react-redux';
+import { Delete } from '@material-ui/icons';
 import MyIconButton from '../presentational/MyIconButton';
-import { clearOrShowDelete } from '../../actions';
-import {
-  getDeleteButtonIcon, getDeleteButtonTooltip, getHoverId, isHoverActive,
-} from '../../selectors';
+import { showDeleteDialog } from '../../actions';
+import { getHoverId, isHoverActive } from '../../selectors';
+import { UserListItemConst } from '../../constants';
 
-const mapStateToProps = (state, ownProps) => ({
+const mapStateToProps = state => ({
   hover: isHoverActive(state),
   hoverId: getHoverId(state),
-  icon: getDeleteButtonIcon(state, ownProps),
-  tooltip: getDeleteButtonTooltip(state, ownProps),
+  icon: <Delete />,
+  tooltip: UserListItemConst.TOOLTIP_DELETE,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   onClickCallback: () => {
-    dispatch(clearOrShowDelete([ownProps.userId]));
+    dispatch(showDeleteDialog([ownProps.userId]));
   },
 });
 
