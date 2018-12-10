@@ -8,9 +8,9 @@ import { Delete } from '@material-ui/icons';
 import { UserListConst } from '../../constants';
 import { UserListStyles } from '../../styles';
 import { compareUsersByFirstName, getUserObjectFromArray } from '../utils/Utils';
-import MyTableCellContainer from '../container/MyTableCellContainer';
-import MyEditButtonContainer from '../container/MyEditButtonContainer';
-import MyDeleteButtonContainer from '../container/MyDeleteButtonContainer';
+import BpmTableCellContainer from '../container/BpmTableCellContainer';
+import BpmEditButtonContainer from '../container/BpmEditButtonContainer';
+import BpmDeleteButtonContainer from '../container/BpmDeleteButtonContainer';
 
 const UserList = (props) => {
   const {
@@ -40,9 +40,9 @@ const UserList = (props) => {
         customBodyRender: (value, tableMeta) => {
           const user = getUserObjectFromArray(tableMeta.rowData);
           return (
-            <MyTableCellContainer userId={user.id}>
+            <BpmTableCellContainer userId={user.id}>
               {value}
-            </MyTableCellContainer>
+            </BpmTableCellContainer>
           );
         },
       },
@@ -53,9 +53,9 @@ const UserList = (props) => {
         customBodyRender: (value, tableMeta) => {
           const user = getUserObjectFromArray(tableMeta.rowData);
           return (
-            <MyTableCellContainer userId={user.id}>
+            <BpmTableCellContainer userId={user.id}>
               {value}
-            </MyTableCellContainer>
+            </BpmTableCellContainer>
           );
         },
       },
@@ -69,11 +69,11 @@ const UserList = (props) => {
         customBodyRender: (value, tableMeta) => {
           const user = getUserObjectFromArray(tableMeta.rowData);
           return (
-            <MyTableCellContainer userId={user.id}>
-              <MyEditButtonContainer
+            <BpmTableCellContainer userId={user.id}>
+              <BpmEditButtonContainer
                 userId={user.id}
               />
-            </MyTableCellContainer>
+            </BpmTableCellContainer>
           );
         },
       },
@@ -87,11 +87,11 @@ const UserList = (props) => {
         customBodyRender: (value, tableMeta) => {
           const user = getUserObjectFromArray(tableMeta.rowData);
           return (
-            <MyTableCellContainer userId={user.id}>
-              <MyDeleteButtonContainer
+            <BpmTableCellContainer userId={user.id}>
+              <BpmDeleteButtonContainer
                 userId={user.id}
               />
-            </MyTableCellContainer>
+            </BpmTableCellContainer>
           );
         },
       },

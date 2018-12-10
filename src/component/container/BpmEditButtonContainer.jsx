@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Edit } from '@material-ui/icons';
-import MyIconButton from '../presentational/MyIconButton';
+import BpmIconButton from '../presentational/BpmIconButton';
 import { prepareEditUser } from '../../actions';
 import { getHoverId, isHoverActive } from '../../selectors';
 import { UserListItemConst } from '../../constants';
@@ -19,9 +19,9 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   },
 });
 
-const MyEditButtonContainer = connect(
+const BpmEditButtonContainer = connect(
   mapStateToProps,
   mapDispatchToProps,
-)(MyIconButton);
+)(BpmIconButton);
 
-export default MyEditButtonContainer;
+export default BpmEditButtonContainer;

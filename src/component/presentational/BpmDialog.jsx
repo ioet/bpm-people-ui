@@ -12,7 +12,7 @@ function Transition(props) {
   return <Slide direction="up" {...props} />;
 }
 
-const MyDialog = (props) => {
+const BpmDialog = (props) => {
   const {
     open, handleClose, children, dialogTitle, positiveButtonLabel,
   } = props;
@@ -58,7 +58,7 @@ const MyDialog = (props) => {
   );
 };
 
-MyDialog.propTypes = {
+BpmDialog.propTypes = {
   open: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,
   children: PropTypes.element.isRequired,
@@ -66,4 +66,4 @@ MyDialog.propTypes = {
   positiveButtonLabel: PropTypes.string.isRequired,
 };
 
-export default MyDialog;
+export default BpmDialog;

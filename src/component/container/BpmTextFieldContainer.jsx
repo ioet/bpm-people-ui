@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import { setUserEditData } from '../../actions';
-import MyTextField from '../presentational/MyTextField';
+import BpmTextField from '../presentational/BpmTextField';
 import { getInputError } from '../../selectors';
 
 const mapStateToProps = (state, ownProps) => ({
@@ -18,9 +18,9 @@ const mapDispatchToProps = dispatch => ({
   },
 });
 
-const MyTextFieldContainer = connect(
+const BpmTextFieldContainer = connect(
   mapStateToProps,
   mapDispatchToProps,
-)(MyTextField);
+)(BpmTextField);
 
-export default MyTextFieldContainer;
+export default BpmTextFieldContainer;

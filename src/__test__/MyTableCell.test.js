@@ -1,9 +1,9 @@
 import React from 'react';
-import MyTableCell from '../component/presentational/MyTableCell';
+import BpmTableCell from '../component/presentational/BpmTableCell';
 
-describe('<MyTableCell />', () => {
+describe('<BpmTableCell />', () => {
   test('Component Renders correctly', () => {
-    const appWrapper = shallow(<MyTableCell />);
+    const appWrapper = shallow(<BpmTableCell />);
 
     expect(toJson(appWrapper))
       .toMatchSnapshot();

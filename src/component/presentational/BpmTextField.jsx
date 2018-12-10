@@ -2,7 +2,7 @@ import React from 'react';
 import TextField from '@material-ui/core/TextField';
 import PropTypes from 'prop-types';
 
-const MyTextField = (props) => {
+const BpmTextField = (props) => {
   const {
     autoFocus, name, label, value, error, helperText, type, onChange,
   } = props;
@@ -28,14 +28,14 @@ const MyTextField = (props) => {
   );
 };
 
-MyTextField.defaultProps = {
+BpmTextField.defaultProps = {
   autoFocus: false,
   error: false,
   helperText: '',
   type: undefined,
 };
 
-MyTextField.propTypes = {
+BpmTextField.propTypes = {
   autoFocus: PropTypes.bool,
   name: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
@@ -46,4 +46,4 @@ MyTextField.propTypes = {
   onChange: PropTypes.func.isRequired,
 };
 
-export default MyTextField;
+export default BpmTextField;

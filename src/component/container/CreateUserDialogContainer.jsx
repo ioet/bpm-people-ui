@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { handleCloseCreateUserDialog } from '../../actions';
-import MyDialog from '../presentational/MyDialog';
+import BpmDialog from '../presentational/BpmDialog';
 import { CreateUserDialogConst } from '../../constants';
 import EditableFieldsContainer from './EditableFieldsContainer';
 import PasswordFieldsContainer from './PasswordFieldsContainer';
@@ -33,6 +33,6 @@ const mapDispatchToProps = dispatch => ({
 const CreateUserDialogContainer = connect(
   mapStateToProps,
   mapDispatchToProps,
-)(MyDialog);
+)(BpmDialog);
 
 export default CreateUserDialogContainer;

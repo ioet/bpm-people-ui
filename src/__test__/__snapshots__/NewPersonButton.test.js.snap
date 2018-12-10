@@ -1,10 +1,10 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`<NewPersonButton /> Component Renders correctly 1`] = `
-<NewPersonButton
+exports[`<BpmButton /> Component Renders correctly 1`] = `
+<BpmButton
   classes={
     Object {
-      "button": "NewPersonButton-button-1",
+      "button": "BpmButton-button-1",
     }
   }
 />

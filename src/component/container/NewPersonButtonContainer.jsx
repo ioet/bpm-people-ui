@@ -1,16 +1,21 @@
 import { connect } from 'react-redux';
 import { startCreateUser } from '../../actions';
-import NewPersonButton from '../presentational/NewPersonButton';
+import BpmButton from '../presentational/BpmButton';
+import { NewPersonButtonConst } from '../../constants';
+
+const mapStateToProps = () => ({
+  buttonLabel: NewPersonButtonConst.ADD_NEW_PERSON,
+});
 
 const mapDispatchToProps = dispatch => ({
-  createUser: () => {
+  buttonAction: () => {
     dispatch(startCreateUser());
   },
 });
 
 const NewPersonButtonContainer = connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps,
-)(NewPersonButton);
+)(BpmButton);
 
 export default NewPersonButtonContainer;

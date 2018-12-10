@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`<MyDialog /> Component Renders correctly 1`] = `
+exports[`<BpmDialog /> Component Renders correctly 1`] = `
 <WithStyles(Dialog)
   TransitionComponent={[Function]}
   keepMounted={true}

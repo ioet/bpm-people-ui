@@ -1,10 +1,10 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`<MyTableCell /> Component Renders correctly 1`] = `
-<MyTableCell
+exports[`<BpmTableCell /> Component Renders correctly 1`] = `
+<BpmTableCell
   classes={
     Object {
-      "cell": "MyTableCell-cell-1",
+      "cell": "BpmTableCell-cell-1",
     }
   }
 />

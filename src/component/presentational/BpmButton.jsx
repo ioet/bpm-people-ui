@@ -2,12 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button/Button';
 import { withStyles } from '@material-ui/core';
-import { NewPersonButtonStyles } from '../../styles';
-import { NewPersonButtonConst } from '../../constants';
+import { BpmButtonStyles } from '../../styles';
 
-const NewPersonButton = (props) => {
+const BpmButton = (props) => {
   const {
-    classes, createUser,
+    classes, buttonLabel, buttonAction,
   } = props;
 
   return (
@@ -17,17 +16,18 @@ const NewPersonButton = (props) => {
       color="secondary"
       onClick={(e) => {
         e.preventDefault();
-        createUser();
+        buttonAction();
       }}
     >
-      {NewPersonButtonConst.ADD_NEW_PERSON}
+      {buttonLabel}
     </Button>
   );
 };
 
-NewPersonButton.propTypes = {
+BpmButton.propTypes = {
   classes: PropTypes.object.isRequired,
-  createUser: PropTypes.func.isRequired,
+  buttonLabel: PropTypes.string.isRequired,
+  buttonAction: PropTypes.func.isRequired,
 };
 
-export default withStyles(NewPersonButtonStyles)(NewPersonButton);
+export default withStyles(BpmButtonStyles)(BpmButton);

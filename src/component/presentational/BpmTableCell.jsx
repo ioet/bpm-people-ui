@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import withStyles from '@material-ui/core/styles/withStyles';
 import { TableCellStyles } from '../../styles';
 
-const MyTableCell = (props) => {
+const BpmTableCell = (props) => {
   const {
     classes, onMouseOver, onMouseOut, children,
   } = props;
@@ -27,7 +27,7 @@ const MyTableCell = (props) => {
   );
 };
 
-MyTableCell.propTypes = {
+BpmTableCell.propTypes = {
   classes: PropTypes.object.isRequired,
   onMouseOver: PropTypes.func.isRequired,
   onMouseOut: PropTypes.func.isRequired,
@@ -37,4 +37,4 @@ MyTableCell.propTypes = {
   ]).isRequired,
 };
 
-export default withStyles(TableCellStyles)(MyTableCell);
+export default withStyles(TableCellStyles)(BpmTableCell);

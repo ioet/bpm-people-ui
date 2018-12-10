@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Variable } from '../../constants';
-import MyTextFieldContainer from '../container/MyTextFieldContainer';
+import BpmTextFieldContainer from '../container/BpmTextFieldContainer';
 
 const EditableFields = (props) => {
   const {
@@ -10,13 +10,13 @@ const EditableFields = (props) => {
 
   return (
     <div>
-      <MyTextFieldContainer
+      <BpmTextFieldContainer
         autoFocus
         name={Variable.NAME}
         label={nameLabel}
         value={name}
       />
-      <MyTextFieldContainer
+      <BpmTextFieldContainer
         name={Variable.AUTHENTICATION_IDENTITY}
         label={authenticationIdentityLabel}
         value={authentication_identity}

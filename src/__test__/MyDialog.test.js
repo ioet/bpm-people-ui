@@ -1,9 +1,9 @@
 import React from 'react';
-import MyDialog from '../component/presentational/MyDialog';
+import BpmDialog from '../component/presentational/BpmDialog';
 
-describe('<MyDialog />', () => {
+describe('<BpmDialog />', () => {
   test('Component Renders correctly', () => {
-    const appWrapper = shallow(<MyDialog />);
+    const appWrapper = shallow(<BpmDialog />);
 
     expect(toJson(appWrapper))
       .toMatchSnapshot();

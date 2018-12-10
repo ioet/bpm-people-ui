@@ -1,7 +1,7 @@
 import React from 'react';
-import NewPersonButton from '../component/presentational/NewPersonButton';
+import NewPersonButton from '../component/presentational/BpmButton';
 
-describe('<NewPersonButton />', () => {
+describe('<BpmButton />', () => {
   test('Component Renders correctly', () => {
     const appWrapper = shallow(<NewPersonButton />);
 

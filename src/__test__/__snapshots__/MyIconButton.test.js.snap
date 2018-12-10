@@ -1,11 +1,11 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`<MyIconButton /> Component Renders correctly 1`] = `
-<MyIconButton
+exports[`<BpmIconButton /> Component Renders correctly 1`] = `
+<BpmIconButton
   classes={
     Object {
-      "hide": "MyIconButton-hide-1",
-      "show": "MyIconButton-show-2",
+      "hide": "BpmIconButton-hide-1",
+      "show": "BpmIconButton-show-2",
     }
   }
   hoverId=""

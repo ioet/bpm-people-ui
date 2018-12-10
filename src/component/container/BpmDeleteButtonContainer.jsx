@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Delete } from '@material-ui/icons';
-import MyIconButton from '../presentational/MyIconButton';
+import BpmIconButton from '../presentational/BpmIconButton';
 import { showDeleteDialog } from '../../actions';
 import { getHoverId, isHoverActive } from '../../selectors';
 import { UserListItemConst } from '../../constants';
@@ -19,9 +19,9 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   },
 });
 
-const MyDeleteButtonContainer = connect(
+const BpmDeleteButtonContainer = connect(
   mapStateToProps,
   mapDispatchToProps,
-)(MyIconButton);
+)(BpmIconButton);
 
-export default MyDeleteButtonContainer;
+export default BpmDeleteButtonContainer;

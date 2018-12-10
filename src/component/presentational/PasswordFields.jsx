@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import MyTextFieldContainer from '../container/MyTextFieldContainer';
+import BpmTextFieldContainer from '../container/BpmTextFieldContainer';
 import { CreateUserDialogConst, Variable } from '../../constants';
 
 const PasswordFields = (props) => {
@@ -10,7 +10,7 @@ const PasswordFields = (props) => {
 
   return (
     <div>
-      <MyTextFieldContainer
+      <BpmTextFieldContainer
         name={Variable.PASSWORD}
         label={CreateUserDialogConst.PASSWORD}
         value={password}
@@ -21,7 +21,7 @@ const PasswordFields = (props) => {
         handleClose(true);
       }}
       >
-        <MyTextFieldContainer
+        <BpmTextFieldContainer
           name={Variable.PASSWORD_CONFIRM}
           label={CreateUserDialogConst.CONFIRM_PASSWORD}
           value={passwordConfirm}

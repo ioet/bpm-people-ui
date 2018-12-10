@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import MyDialog from '../presentational/MyDialog';
+import BpmDialog from '../presentational/BpmDialog';
 import { isUserEditActive } from '../../selectors';
 import { EditUserDialogConst } from '../../constants';
 import { handleCloseEditUserDialog } from '../../actions';
@@ -31,6 +31,6 @@ const mapDispatchToProps = dispatch => ({
 const EditUserDialogContainer = connect(
   mapStateToProps,
   mapDispatchToProps,
-)(MyDialog);
+)(BpmDialog);
 
 export default EditUserDialogContainer;

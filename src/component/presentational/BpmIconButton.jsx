@@ -4,9 +4,9 @@ import IconButton from '@material-ui/core/IconButton/IconButton';
 import Tooltip from '@material-ui/core/Tooltip/Tooltip';
 import withStyles from '@material-ui/core/styles/withStyles';
 import { TooltipConst } from '../../constants';
-import { MyIconButtonStyles } from '../../styles';
+import { BpmIconButtonStyles } from '../../styles';
 
-const MyIconButton = (props) => {
+const BpmIconButton = (props) => {
   const {
     classes, userId, onClickCallback, icon, tooltip, hover, hoverId,
   } = props;
@@ -35,11 +35,11 @@ const MyIconButton = (props) => {
   );
 };
 
-MyIconButton.defaultProps = {
+BpmIconButton.defaultProps = {
   hoverId: '',
 };
 
-MyIconButton.propTypes = {
+BpmIconButton.propTypes = {
   classes: PropTypes.object.isRequired,
   userId: PropTypes.string.isRequired,
   onClickCallback: PropTypes.func.isRequired,
@@ -49,4 +49,4 @@ MyIconButton.propTypes = {
   hoverId: PropTypes.string,
 };
 
-export default withStyles(MyIconButtonStyles)(MyIconButton);
+export default withStyles(BpmIconButtonStyles)(BpmIconButton);
