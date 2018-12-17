@@ -1,9 +1,9 @@
 import React from 'react';
-import MyIconButton from '../component/presentational/MyIconButton';
+import BpmIconButton from '../component/presentational/BpmIconButton';
 
-describe('<MyIconButton />', () => {
+describe('<BpmIconButton />', () => {
   test('Component Renders correctly', () => {
-    const appWrapper = shallow(<MyIconButton />);
+    const appWrapper = shallow(<BpmIconButton />);
 
     expect(toJson(appWrapper))
       .toMatchSnapshot();

@@ -16,9 +16,10 @@ exports[`<App/> Component Renders correctly 1`] = `
   </WithStyles(AppBar)>
   <Connect(WithStyles(UserList)) />
   <WithStyles(Footer) />
-  <Connect(WithStyles(FloatingActionButton)) />
+  <Connect(WithStyles(BpmButton)) />
   <Connect(WithStyles(ErrorSnackbar)) />
   <Connect(DeleteDialog) />
-  <Connect(PasswordDialog) />
+  <Connect(BpmDialog) />
+  <Connect(BpmDialog) />
 </div>
 `;

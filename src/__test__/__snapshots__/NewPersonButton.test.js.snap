@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<BpmButton /> Component Renders correctly 1`] = `
+<BpmButton
+  classes={
+    Object {
+      "button": "BpmButton-button-1",
+    }
+  }
+/>
+`;

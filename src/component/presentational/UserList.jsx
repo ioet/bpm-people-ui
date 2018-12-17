@@ -5,13 +5,12 @@ import MUIDataTable from 'mui-datatables';
 import withStyles from '@material-ui/core/styles/withStyles';
 import IconButton from '@material-ui/core/IconButton';
 import { Delete } from '@material-ui/icons';
-import { UserListConst, UserListItemConst, Variable } from '../../constants';
+import { UserListConst } from '../../constants';
 import { UserListStyles } from '../../styles';
-import EditOrPlainTextContainer from '../container/EditOrPlainTextContainer';
 import { compareUsersByFirstName, getUserObjectFromArray } from '../utils/Utils';
-import MyTableCellContainer from '../container/MyTableCellContainer';
-import MyEditButtonContainer from '../container/MyEditButtonContainer';
-import MyDeleteButtonContainer from '../container/MyDeleteButtonContainer';
+import BpmTableCellContainer from '../container/BpmTableCellContainer';
+import BpmEditButtonContainer from '../container/BpmEditButtonContainer';
+import BpmDeleteButtonContainer from '../container/BpmDeleteButtonContainer';
 
 const UserList = (props) => {
   const {
@@ -41,15 +40,9 @@ const UserList = (props) => {
         customBodyRender: (value, tableMeta) => {
           const user = getUserObjectFromArray(tableMeta.rowData);
           return (
-            <MyTableCellContainer userId={user.id}>
-              <EditOrPlainTextContainer
-                userId={user.id}
-                value={value}
-                name={Variable.NAME}
-                label={UserListItemConst.EDIT_NAME}
-                autoFocus
-              />
-            </MyTableCellContainer>
+            <BpmTableCellContainer userId={user.id}>
+              {value}
+            </BpmTableCellContainer>
           );
         },
       },
@@ -60,14 +53,9 @@ const UserList = (props) => {
         customBodyRender: (value, tableMeta) => {
           const user = getUserObjectFromArray(tableMeta.rowData);
           return (
-            <MyTableCellContainer userId={user.id}>
-              <EditOrPlainTextContainer
-                userId={user.id}
-                value={value}
-                name={Variable.AUTHENTICATION_IDENTITY}
-                label={UserListItemConst.EDIT_EMAIL}
-              />
-            </MyTableCellContainer>
+            <BpmTableCellContainer userId={user.id}>
+              {value}
+            </BpmTableCellContainer>
           );
         },
       },
@@ -81,11 +69,11 @@ const UserList = (props) => {
         customBodyRender: (value, tableMeta) => {
           const user = getUserObjectFromArray(tableMeta.rowData);
           return (
-            <MyTableCellContainer userId={user.id}>
-              <MyEditButtonContainer
+            <BpmTableCellContainer userId={user.id}>
+              <BpmEditButtonContainer
                 userId={user.id}
               />
-            </MyTableCellContainer>
+            </BpmTableCellContainer>
           );
         },
       },
@@ -99,11 +87,11 @@ const UserList = (props) => {
         customBodyRender: (value, tableMeta) => {
           const user = getUserObjectFromArray(tableMeta.rowData);
           return (
-            <MyTableCellContainer userId={user.id}>
-              <MyDeleteButtonContainer
+            <BpmTableCellContainer userId={user.id}>
+              <BpmDeleteButtonContainer
                 userId={user.id}
               />
-            </MyTableCellContainer>
+            </BpmTableCellContainer>
           );
         },
       },

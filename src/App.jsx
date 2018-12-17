@@ -6,9 +6,10 @@ import UserListContainer from './component/container/UserListContainer';
 import ErrorSnackbarContainer from './component/container/ErrorSnackbarContainer';
 import Footer from './component/presentational/Footer';
 import { AppConst } from './constants';
-import FloatingActionButtonContainer from './component/container/FloatingActionButtonContainer';
+import NewPersonButtonContainer from './component/container/NewPersonButtonContainer';
 import DeleteDialogContainer from './component/container/DeleteDialogContainer';
-import PasswordDialogContainer from './component/container/PasswordDialogContainer';
+import CreateUserDialogContainer from './component/container/CreateUserDialogContainer';
+import EditUserDialogContainer from './component/container/EditUserDialogContainer';
 
 function App() {
   return (
@@ -22,10 +23,11 @@ function App() {
       </AppBar>
       <UserListContainer />
       <Footer />
-      <FloatingActionButtonContainer />
+      <NewPersonButtonContainer />
       <ErrorSnackbarContainer />
       <DeleteDialogContainer />
-      <PasswordDialogContainer />
+      <CreateUserDialogContainer />
+      <EditUserDialogContainer />
     </div>
   );
 }

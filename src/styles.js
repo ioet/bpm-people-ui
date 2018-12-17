@@ -36,11 +36,12 @@ export const RootTheme = createMuiTheme({
   },
 });
 
-export const FabStyles = () => ({
-  fab: {
+export const BpmButtonStyles = theme => ({
+  button: {
     position: 'fixed',
-    bottom: '3%',
-    right: '5%',
+    top: theme.spacing.unit * 13,
+    left: theme.spacing.unit * 22,
+    zIndex: 100,
   },
 });
 
@@ -84,7 +85,7 @@ export const UserListStyles = theme => ({
   },
 });
 
-export const MyIconButtonStyles = () => ({
+export const BpmIconButtonStyles = () => ({
   hide: {
     visibility: 'hidden',
   },

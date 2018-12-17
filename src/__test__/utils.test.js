@@ -83,6 +83,17 @@ describe('utils test', () => {
       .toEqual(false);
   });
 
+  it('should return false when password does not fulfill the criteria', () => {
+    const mockUser = {
+      password: 'A',
+      password_confirm: 'A',
+    };
+
+    const store = mockStore({});
+    expect(actions.validatePasswordInputWithErrorMessages(store.dispatch, mockUser))
+      .toEqual(false);
+  });
+
   it('should return a sorted list of users when given a unsorted list', () => {
     const firstUser = ['someId1', 'AAA Name', 'some@email.com'];
     const secondUser = ['someId2', 'ZZZ Name', 'some@email.com'];

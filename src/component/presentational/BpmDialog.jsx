@@ -2,20 +2,19 @@ import React from 'react';
 import Dialog from '@material-ui/core/Dialog/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText/DialogContentText';
 import DialogActions from '@material-ui/core/DialogActions/DialogActions';
 import Button from '@material-ui/core/Button/Button';
 import Slide from '@material-ui/core/Slide/Slide';
 import PropTypes from 'prop-types';
-import { DeleteDialogConst } from '../../constants';
+import { DialogConst } from '../../constants';
 
 function Transition(props) {
   return <Slide direction="up" {...props} />;
 }
 
-const DeleteDialog = (props) => {
+const BpmDialog = (props) => {
   const {
-    open, handleClose, userIds, username,
+    open, handleClose, children, dialogTitle, positiveButtonLabel,
   } = props;
 
   return (
@@ -25,55 +24,46 @@ const DeleteDialog = (props) => {
       keepMounted
       onClose={(e) => {
         e.preventDefault();
-        handleClose();
+        handleClose(false);
       }}
     >
       <DialogTitle>
-        {DeleteDialogConst.TITLE}
+        {dialogTitle}
       </DialogTitle>
       <DialogContent>
-        <DialogContentText>
-          {DeleteDialogConst.CONTENT_TEXT_1}
-          <b>
-            {username}
-          </b>
-          {DeleteDialogConst.CONTENT_TEXT_2}
-        </DialogContentText>
+        {children}
       </DialogContent>
+
       <DialogActions>
         <Button
           onClick={(e) => {
             e.preventDefault();
-            handleClose();
+            handleClose(false);
           }}
           color="primary"
         >
-          {DeleteDialogConst.DISAGREE}
+          {DialogConst.CANCEL}
         </Button>
         <Button
           onClick={(e) => {
             e.preventDefault();
-            handleClose(userIds);
+            handleClose(true);
           }}
           color="primary"
         >
-          {DeleteDialogConst.AGREE}
+          {positiveButtonLabel}
         </Button>
       </DialogActions>
     </Dialog>
   );
 };
 
-DeleteDialog.defaultProps = {
-  userIds: [''],
-  username: '',
-};
-
-DeleteDialog.propTypes = {
+BpmDialog.propTypes = {
   open: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,
-  userIds: PropTypes.arrayOf(PropTypes.string),
-  username: PropTypes.string,
+  children: PropTypes.element.isRequired,
+  dialogTitle: PropTypes.string.isRequired,
+  positiveButtonLabel: PropTypes.string.isRequired,
 };
 
-export default DeleteDialog;
+export default BpmDialog;

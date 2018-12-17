@@ -1,9 +1,7 @@
 /* eslint-disable no-plusplus */
 import { combineReducers } from 'redux';
-import { arrayToUserObject, getUserToBeCreated } from './component/utils/Utils';
-import {
-  DeleteAction, HoverAction, InputErrorAction, MessageAction, UserAction,
-} from './action-types';
+import { arrayToUserObject } from './component/utils/Utils';
+import { DeleteAction, HoverAction, InputErrorAction, MessageAction, UserAction, } from './action-types';
 
 export const message = (state = { open: false }, action) => {
   switch (action.type) {
@@ -36,34 +34,24 @@ export const inputError = (state = {}, action) => {
   }
 };
 
-export const userEdit = (state = { editing: false, passwordDialogOpen: false }, action) => {
+export const userEdit = (state = { editing: false }, action) => {
   switch (action.type) {
     case UserAction.EDIT_START:
-      return ({
+      return {
         ...state,
-        id: action.id,
         editing: true,
-      });
+        id: action.id,
+        name: action.name,
+        authentication_identity: action.authentication_identity,
+      };
     case UserAction.EDIT_DATA:
-      return ({
+      return {
         ...state,
         [action.field]: action.value,
-      });
-    case UserAction.EDIT_END:
-      return ({
-        ...state,
-        id: undefined,
-        editing: false,
-      });
-    case UserAction.OPEN_PASSWORD_DIALOG:
-      return {
-        ...state,
-        passwordDialogOpen: true,
       };
-    case UserAction.CLOSE_PASSWORD_DIALOG:
+    case UserAction.EDIT_END:
       return {
-        ...state,
-        passwordDialogOpen: false,
+        editing: false,
       };
     case UserAction.RESET_PASSWORD_FIELDS:
       return {
@@ -94,10 +82,6 @@ export const userDelete = (state = { open: false }, action) => {
 
 export const user = (state = {}, action) => {
   switch (action.type) {
-    case UserAction.ADD_EMPTY_ROW:
-      return {
-        [getUserToBeCreated().id]: getUserToBeCreated(),
-      };
     case UserAction.ADD_USER:
       return {
         [action.user.id]: action.user,
@@ -111,14 +95,6 @@ export const user = (state = {}, action) => {
 export const userList = (state = {}, action) => {
   const copy = Object.assign({}, state);
   switch (action.type) {
-    case UserAction.ADD_EMPTY_ROW:
-      return {
-        ...user(undefined, action),
-        ...state,
-      };
-    case UserAction.REMOVE_EMPTY_ROW:
-      delete copy[getUserToBeCreated().id];
-      return { ...copy };
     case UserAction.ADD_USER:
       return {
         ...state,
