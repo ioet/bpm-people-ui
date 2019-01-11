@@ -1,5 +1,5 @@
 /* eslint-disable camelcase,prefer-destructuring */
-import { Person, PersonControllerApi } from 'swagger_bpm_people_api';
+import axios from 'axios';
 import { validateEmail, validatePassword } from './component/utils/Utils';
 import {
   DeleteAction, HoverAction, InputErrorAction, MessageAction, UserAction,
@@ -17,7 +17,9 @@ import {
   getUserNameForId,
 } from './selectors';
 
-const peopleApi = new PersonControllerApi();
+const PEOPLE_API_PATH = '/people';
+axios.defaults.baseURL = process.env.BPM_PEOPLE_API_URL;
+axios.defaults.headers.common['Content-Type'] = 'application/json';
 
 export const addUsers = allUsers => ({
   type: UserAction.ADD_USERS,
@@ -92,12 +94,12 @@ export const removeUser = userId => ({
 });
 
 export const getAllUsersAsync = () => (
-  dispatch => peopleApi.getAllPersonsUsingGET()
-    .then((data) => {
-      dispatch(addUsers(data));
+  dispatch => axios.get(PEOPLE_API_PATH)
+    .then((response) => {
+      dispatch(addUsers(response.data));
     })
     .catch((error) => {
-      // console.log(error); find a way to log this error
+      console.log(error);
       dispatch(showMessage(ErrorMessage.FAILED_TO_LOAD_USERS));
     })
 );
@@ -127,16 +129,16 @@ export const createUserAsync = () => (
     const authentication_identity = getUserEditAuthenticationIdentity(state);
     const password = getUserEditPassword(state);
 
-    const personToCreate = new Person();
-    personToCreate.name = name;
-    personToCreate.authentication_identity = authentication_identity;
-    personToCreate.password = password;
     dispatch(resetPasswordFields());
-    return peopleApi.createPersonUsingPOST(personToCreate)
-      .then((data) => {
+    return axios.post(PEOPLE_API_PATH, {
+      name,
+      authentication_identity,
+      password,
+    })
+      .then((response) => {
         dispatch(endEditUser());
-        dispatch(addUser(data));
-        dispatch(showMessage(data.name + NotificationMessage.USER_CREATED_SUCCESSFULLY));
+        dispatch(addUser(response.data));
+        dispatch(showMessage(response.data.name + NotificationMessage.USER_CREATED_SUCCESSFULLY));
       })
       .catch((error) => {
         // console.log(error); find a way to log this error
@@ -172,13 +174,13 @@ export const updateUserAsync = () => (
       return null;
     }
 
-    const personToUpdate = new Person();
-    personToUpdate.name = name;
-    personToUpdate.authentication_identity = authentication_identity;
-    return peopleApi.updatePersonUsingPUT(userId, personToUpdate)
-      .then((data) => {
+    return axios.put(`${PEOPLE_API_PATH}/${userId}`, {
+      authentication_identity,
+      name,
+    })
+      .then((response) => {
         dispatch(endEditUser());
-        dispatch(setUpdateUser(data));
+        dispatch(setUpdateUser(response.data));
         dispatch(showMessage(NotificationMessage.CHANGES_UPDATED_SUCCESSFULLY));
       })
       .catch((error) => {
@@ -243,7 +245,7 @@ export const handleCloseEditUserDialog = confirmed => (
 );
 
 export const removeUserAsync = userId => (
-  (dispatch, getState) => peopleApi.deletePersonUsingDELETE(userId)
+  (dispatch, getState) => axios.delete(`${PEOPLE_API_PATH}/${userId}`)
     .then(() => {
       dispatch(showMessage(getUserNameForId(getState(), userId) + NotificationMessage.USER_DELETED_SUCCESSFULLY));
       dispatch(removeUser(userId));
