@@ -1,37 +1,9 @@
 # bpm-people-ui
 
-In order to set up and run the project, follow these steps:
-
-## Java needs to be installed on your machine!
-You know how do to it... Don't forget to set the JAVA_HOME variable
-
-## Installing the dependencies
-
-Make sure you have installed wget, otherwise install it using the following command:
-
+Run this command and everything should be setup
 ```
-$ brew install wget --with-libressl
+npm install
 ```
-
-
-run this command and everything should be setup
-```
-npm run setup
-```
-
-## Swagger Codegen for API client
-The swagger client will be generated with the setup command.  
-However to build the client independently run this command:
-```
-npm run generate-swagger-client
-```
-You can also specify a URL to a swagger.json, run this command to get help
-```
-npm run generate-swagger-client -- -h
-```
-
-In order to always have the latest api client
-we should version the swagger.json created by the bpm-people-api here!
 
 ## To run the app locally with docker-compose
 You will need a file called `aws.env` inside your root directory containing these environment variables.
@@ -48,6 +20,13 @@ docker-compose up
 
 ## Running the app
 
+Export this environment variable `BPM_PEOPLE_API_URL` to define the APIs URL.  
+If you're running the API with docker-compose this is the URL:
+```
+export BPM_PEOPLE_API_URL=http://localhost:9081/people-service
+```
+
+Then run this command to start the application
 ```
 npm start
 ```

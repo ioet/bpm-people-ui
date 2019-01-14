@@ -1,8 +1,7 @@
 import configureMockStore from 'redux-mock-store';
-import { ApiClient } from 'swagger_bpm_people_api';
 import thunk from 'redux-thunk';
 import expect from 'expect';
-import nock from 'nock';
+import moxios from 'moxios';
 import * as types from '../action-types';
 import * as actions from '../actions';
 import {
@@ -11,7 +10,6 @@ import {
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
-const peopleApiClient = new ApiClient();
 
 describe('actions', () => {
   it('should create an action to add many users', () => {
@@ -200,6 +198,14 @@ describe('actions', () => {
 });
 
 describe('async actions', () => {
+  beforeEach(() => {
+    moxios.install();
+  });
+
+  afterEach(() => {
+    moxios.uninstall();
+  });
+
   it('creates ADD_USERS when getting all users was successful', () => {
     const getPeopleMock = [
       {
@@ -214,9 +220,13 @@ describe('async actions', () => {
       },
     ];
 
-    nock(peopleApiClient.basePath)
-      .get('/people')
-      .reply(200, getPeopleMock);
+    moxios.wait(() => {
+      const request = moxios.requests.mostRecent();
+      request.respondWith({
+        status: 200,
+        response: getPeopleMock,
+      });
+    });
 
     const expectedActions = [
       {
@@ -235,9 +245,12 @@ describe('async actions', () => {
   });
 
   it('creates ADD_USERS when getting all users was NOT successful', () => {
-    nock(peopleApiClient.basePath)
-      .get('/people')
-      .reply(404);
+    moxios.wait(() => {
+      const request = moxios.requests.mostRecent();
+      request.respondWith({
+        status: 404,
+      });
+    });
 
     const expectedActions = [
       {
@@ -262,9 +275,12 @@ describe('async actions', () => {
       authentication_identity: 'test@mail.com',
     };
 
-    nock(peopleApiClient.basePath)
-      .post('/people')
-      .reply(404);
+    moxios.wait(() => {
+      const request = moxios.requests.mostRecent();
+      request.respondWith({
+        status: 404,
+      });
+    });
 
     const expectedActions = [
       {
@@ -292,9 +308,13 @@ describe('async actions', () => {
       password: 'Asdf123#',
     };
 
-    nock(peopleApiClient.basePath)
-      .post('/people')
-      .reply(201, createUserMock);
+    moxios.wait(() => {
+      const request = moxios.requests.mostRecent();
+      request.respondWith({
+        status: 201,
+        response: createUserMock,
+      });
+    });
 
     const expectedActions = [
       {
@@ -343,9 +363,12 @@ describe('async actions', () => {
       authentication_identity: 'test@mail.com',
     };
 
-    nock(peopleApiClient.basePath)
-      .delete(`/people/${removeUserMock.id}`)
-      .reply(204);
+    moxios.wait(() => {
+      const request = moxios.requests.mostRecent();
+      request.respondWith({
+        status: 204,
+      });
+    });
 
     const expectedActions = [
       {
@@ -374,9 +397,12 @@ describe('async actions', () => {
       authentication_identity: 'test@mail.com',
     };
 
-    nock(peopleApiClient.basePath)
-      .delete('/people')
-      .reply(404);
+    moxios.wait(() => {
+      const request = moxios.requests.mostRecent();
+      request.respondWith({
+        status: 404,
+      });
+    });
 
     const expectedActions = [
       {
@@ -406,9 +432,13 @@ describe('async actions', () => {
       authentication_identity: 'oldTest@mail.com',
     };
 
-    nock(peopleApiClient.basePath)
-      .put(`/people/${userToUpdate.id}`)
-      .reply(200, updatedUserMock);
+    moxios.wait(() => {
+      const request = moxios.requests.mostRecent();
+      request.respondWith({
+        status: 200,
+        response: updatedUserMock,
+      });
+    });
 
     const expectedActions = [
       {
@@ -489,9 +519,13 @@ describe('async actions', () => {
       authentication_identity: 'oldTest@mail.com',
     };
 
-    nock(peopleApiClient.basePath)
-      .put(`/people/${userToUpdate.id}`)
-      .reply(200, updatedUserMock);
+    moxios.wait(() => {
+      const request = moxios.requests.mostRecent();
+      request.respondWith({
+        status: 200,
+        response: updatedUserMock,
+      });
+    });
 
     const expectedActions = [
       {
@@ -575,9 +609,12 @@ describe('async actions', () => {
       authentication_identity: 'oldTest@mail.com',
     };
 
-    nock(peopleApiClient.basePath)
-      .put(`/people/${userToUpdate.id}`)
-      .reply(404);
+    moxios.wait(() => {
+      const request = moxios.requests.mostRecent();
+      request.respondWith({
+        status: 404,
+      });
+    });
 
     const expectedActions = [
       {
@@ -711,9 +748,13 @@ describe('async actions', () => {
       authentication_identity: 'oldTest@mail.com',
     };
 
-    nock(peopleApiClient.basePath)
-      .put(`/people/${userToUpdate.id}`)
-      .reply(200, updatedUserMock);
+    moxios.wait(() => {
+      const request = moxios.requests.mostRecent();
+      request.respondWith({
+        status: 200,
+        response: updatedUserMock,
+      });
+    });
 
     const expectedActions = [
       {
