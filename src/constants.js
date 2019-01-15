@@ -28,7 +28,7 @@ export const PromptMessage = {
 };
 
 export const AppConst = {
-  APP_TITLE: 'Here are all users currently saved in our system',
+  APP_TITLE: 'Here are all users currently saved in our system - master',
 };
 
 export const ErrorSnackbarConst = {
