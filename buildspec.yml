@@ -1,41 +1,12 @@
 version: 0.2
 
-  #env:
-  #variables:
-  # key: "value"
-  # key: "value"
-  #parameter-store:
-  # key: "value"
-# key: "value"
-
 phases:
   install:
     commands:
       - npm install
-        # - command
-        # - command
-        #pre_build:
-        #commands:
-        # - command
-      # - command
+
   build:
     commands:
       - npm run build
       - aws s3 sync dist/ s3://bpm-deploy-people-ui/ --delete
       - echo "S3 Upload Complete"
-        # - command
-        # - command
-        #post_build:
-        #commands:
-        # - command
-      # - command
-    #artifacts:
-    #files:
-    # - location
-    # - location
-    #name: $(date +%Y-%m-%d)
-    #discard-paths: yes
-    #base-directory: location
-    #cache:
-    #paths:
-    # - paths
