@@ -115,6 +115,7 @@ aws.env
 build/
 react
 react-dom
+dist
 
 generated_swagger_client/
 swagger-codegen/swagger-codegen-cli.jar
